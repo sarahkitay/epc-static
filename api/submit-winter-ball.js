@@ -42,9 +42,9 @@ export default async function handler(req, res) {
             'Athlete Name': athleteName,
             'Age': age || '',
             'Position': position || '',
-            'Club or School': clubOrSchool || '',
-            'Parent Name': parentName,
-            'Phone': phone,
+            'Club or School Team': clubOrSchool || '',
+            'Parent/Guardian Name': parentName,
+            'Phone Number': phone,
             'Email': email,
             'Program': program,
             'Submitted At': new Date().toISOString()

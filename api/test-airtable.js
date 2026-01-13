@@ -37,9 +37,18 @@ export default async function handler(req, res) {
       });
     }
 
+    // Get field names for each table
+    const tablesWithFields = data.tables?.map(table => ({
+      name: table.name,
+      fields: table.fields?.map(f => ({
+        name: f.name,
+        type: f.type
+      })) || []
+    })) || [];
+
     return res.status(200).json({
       success: true,
-      tables: data.tables?.map(t => t.name) || [],
+      tables: tablesWithFields,
       baseId: baseId.substring(0, 10) + '...'
     });
   } catch (error) {

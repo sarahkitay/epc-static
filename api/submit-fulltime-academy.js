@@ -44,16 +44,16 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           fields: {
-            'First Name': firstName,
-            'Last Name': lastName,
-            'Parent Name': parentName,
-            'Phone': phone,
+            'Athlete First Name': firstName,
+            'Athlete Last Name': lastName,
+            'Parent/Guardian Name': parentName,
+            'Preferred Contact Phone': phone,
             'Email': email,
             'Grade': grade || '',
             'Sport': sport || '',
             'Date of Birth': dob || '',
-            'Start Term': startTerm || '',
-            'Homeschool Program': homeschoolProgram || '',
+            'Desired Start Term': startTerm || '',
+            'Current/Preferred Homeschool Program': homeschoolProgram || '',
             'Academic Priorities': academicPriorities || '',
             'Highlight Tape URL': highlightTapeUrl || '',
             'Additional Notes': additionalNotes || '',
@@ -64,9 +64,21 @@ export default async function handler(req, res) {
     );
 
     if (!airtableResponse.ok) {
-      const errorData = await airtableResponse.json().catch(() => ({}));
+      const errorText = await airtableResponse.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { error: errorText };
+      }
       console.error('Airtable error:', errorData);
-      return res.status(500).json({ error: 'Failed to save to Airtable' });
+      console.error('Airtable status:', airtableResponse.status);
+      console.error('Airtable URL:', `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Full-Time Academy Applications')}`);
+      return res.status(500).json({ 
+        error: 'Failed to save to Airtable', 
+        details: errorData.error || errorText,
+        status: airtableResponse.status
+      });
     }
 
     // Send email notification (don't fail if email fails)
