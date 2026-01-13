@@ -92,33 +92,35 @@
       <section id="wb-registration" class="wb-form-section">
         <h2 class="wb-formTitle">Register Now</h2>
         
-        <form action="https://formspree.io/f/xbddrdbv" method="POST" class="wb-form">
+        <form id="winterBallForm" class="wb-form">
+          <div id="wb-form-error" style="display: none; background: rgba(255,107,107,0.1); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-size: 14px;"></div>
+          <div id="wb-form-success" style="display: none; background: rgba(201,178,127,0.1); border: 1px solid #C9B27F; color: #C9B27F; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-size: 14px;">Thank you! Your registration has been submitted successfully.</div>
           
           <div class="wb-field">
             <label for="athlete-name">Athlete Name <span class="wb-required">*</span></label>
-            <input type="text" id="athlete-name" name="athlete_name" required>
+            <input type="text" id="athlete-name" name="athleteName" required>
           </div>
 
           <div class="wb-field-row">
             <div class="wb-field">
-              <label for="age">Age <span class="wb-required">*</span></label>
-              <input type="number" id="age" name="age" min="8" max="18" required>
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" min="8" max="18">
             </div>
 
             <div class="wb-field">
-              <label for="position">Position <span class="wb-required">*</span></label>
-              <input type="text" id="position" name="position" required>
+              <label for="position">Position</label>
+              <input type="text" id="position" name="position">
             </div>
           </div>
 
           <div class="wb-field">
             <label for="team">Club or School Team</label>
-            <input type="text" id="team" name="team" placeholder="Optional">
+            <input type="text" id="team" name="clubOrSchool" placeholder="Optional">
           </div>
 
           <div class="wb-field">
             <label for="parent-name">Parent/Guardian Name <span class="wb-required">*</span></label>
-            <input type="text" id="parent-name" name="parent_name" required>
+            <input type="text" id="parent-name" name="parentName" required>
           </div>
 
           <div class="wb-field-row">
@@ -137,17 +139,56 @@
             <label for="program">Interested In <span class="wb-required">*</span></label>
             <select id="program" name="program" required>
               <option value="">Select a program</option>
-              <option value="outdoor">Outdoor ($500/month)</option>
-              <option value="indoor">Indoor ($600/month)</option>
-              <option value="bundle">Full Bundle ($1,400 for 8 weeks)</option>
+              <option value="Outdoor ($500/month)">Outdoor ($500/month)</option>
+              <option value="Indoor ($600/month)">Indoor ($600/month)</option>
+              <option value="Full Bundle ($1,400 for 8 weeks)">Full Bundle ($1,400 for 8 weeks)</option>
             </select>
           </div>
 
-          <input type="hidden" name="_subject" value="New Winter Ball Registration">
-          <input type="hidden" name="_next" value="https://www.epcla.com/thank-you">
-
           <button type="submit" class="wb-submit">Submit Registration</button>
         </form>
+        <script>
+          document.getElementById('winterBallForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const errorDiv = document.getElementById('wb-form-error');
+            const successDiv = document.getElementById('wb-form-success');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            try {
+              const response = await fetch('/api/submit-winter-ball', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+              
+              const result = await response.json();
+              
+              if (response.ok && result.success) {
+                successDiv.style.display = 'block';
+                form.reset();
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              } else {
+                errorDiv.textContent = result.error || 'Failed to submit. Please try again.';
+                errorDiv.style.display = 'block';
+              }
+            } catch (error) {
+              errorDiv.textContent = 'Network error. Please check your connection and try again.';
+              errorDiv.style.display = 'block';
+            } finally {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Registration';
+            }
+          });
+        </script>
       </section>
 
       <!-- Contact CTA -->

@@ -386,10 +386,10 @@
       </style>
 
       <div class="epc-ig-wrap">
-        <img src="/Users/sarahkitay/Desktop/epc-static/img/IMG_8071.jpg" alt="Elite Performance Clinic Instagram post">
-        <img src="/Users/sarahkitay/Desktop/epc-static/img/IMG_8076.jpg" alt="Elite Performance Clinic Instagram post">
-        <img src="/Users/sarahkitay/Desktop/epc-static/img/IMG_8077.jpg" alt="Elite Performance Clinic Instagram post">
-        <img src="/Users/sarahkitay/Desktop/epc-static/img/IMG_8081.jpg" alt="Elite Performance Clinic Instagram post">
+        <img src="img/IMG_8071.jpg" alt="Elite Performance Clinic Instagram post">
+        <img src="img/IMG_8076.jpg" alt="Elite Performance Clinic Instagram post">
+        <img src="img/IMG_8077.jpg" alt="Elite Performance Clinic Instagram post">
+        <img src="img/IMG_8081.jpg" alt="Elite Performance Clinic Instagram post">
         
         <a class="epc-ig-overlay"
            href="https://www.instagram.com/elite.performance.clinic/?hl=en"
@@ -1151,7 +1151,7 @@
       <span class="insider-benefit">Early access</span>
     </div>
 
-    <form class="insider-form" action="https://formspree.io/f/xvzgrvrg" method="POST" id="insiderForm">
+    <form class="insider-form" id="insiderForm">
       <input 
         type="email" 
         name="email" 
@@ -1160,40 +1160,41 @@
         required
         aria-label="Email address"
       >
-      <input type="hidden" name="_subject" value="EPC Insider Newsletter Signup">
-      <input type="hidden" name="_next" value="#insider-success">
+      <input type="hidden" name="source" value="homepage">
       <button type="submit" class="insider-submit">Join</button>
     </form>
 
     <div class="insider-success" id="insider-success">
-      Thank you for joining EPC Insider. Check your email for confirmation.
+      Thank you for joining EPC Insider.
     </div>
   </div>
 </section>
 
 <script>
-  // Handle form submission
-  document.getElementById('insiderForm').addEventListener('submit', function(e) {
+  // Handle email signup form submission
+  document.getElementById('insiderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = this;
-    const formData = new FormData(form);
     const submitButton = form.querySelector('.insider-submit');
     const successMessage = document.getElementById('insider-success');
+    const emailInput = form.querySelector('input[type="email"]');
     
     // Disable button
     submitButton.disabled = true;
     submitButton.textContent = 'Joining...';
     
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
     // Submit form
-    fetch(form.action, {
+    fetch('/api/submit-email-signup', {
       method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     })
-    .then(response => {
-      if (response.ok) {
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
         form.reset();
         successMessage.classList.add('show');
         submitButton.textContent = 'Joined';
@@ -1203,7 +1204,7 @@
           submitButton.textContent = 'Join';
         }, 5000);
       } else {
-        throw new Error('Network response was not ok');
+        throw new Error(result.error || 'Failed to submit');
       }
     })
     .catch(error => {
