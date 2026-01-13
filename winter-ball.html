@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="8 Week Winter Ball program at Elite Performance Clinic. Indoor and outdoor training options for athletes." />
+  <title>8 Week Winter Ball | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./epc-sections.css">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="./epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="team.html" class="nav-link">Team</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="blog.html" class="nav-link">Journal</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- ===== EPC | 8 WEEK WINTER BALL REGISTRATION ===== -->
+    <section id="winterball" class="wb-root" aria-label="Winter Ball Registration">
+
+      <!-- Hero -->
+      <header class="wb-hero">
+        <div class="wb-badge">Elite Performance</div>
+        <h1 class="wb-title">8 WEEK WINTER BALL</h1>
+        <p class="wb-sub">Indoor • Outdoor • Full Program Bundle</p>
+      </header>
+
+      <!-- Pricing Cards -->
+      <section class="wb-pricing" aria-label="Program Options">
+        
+        <article class="wb-priceCard">
+          <h3 class="wb-priceTitle">Outdoor</h3>
+          <p class="wb-priceAmount">$500<span>/month</span></p>
+          <ul class="wb-priceFeatures">
+            <li>2 field sessions per week</li>
+            <li>Position-specific work</li>
+            <li>Speed & agility training</li>
+            <li>Game IQ development</li>
+          </ul>
+        </article>
+
+        <article class="wb-priceCard">
+          <h3 class="wb-priceTitle">Indoor</h3>
+          <p class="wb-priceAmount">$600<span>/month</span></p>
+          <ul class="wb-priceFeatures">
+            <li>2 gym sessions per week</li>
+            <li>Strength & conditioning</li>
+            <li>Recovery protocols</li>
+            <li>Performance tracking</li>
+          </ul>
+        </article>
+
+        <article class="wb-priceCard wb-priceCard--featured">
+          <div class="wb-badge-best">Best Value</div>
+          <h3 class="wb-priceTitle">Full Bundle</h3>
+          <p class="wb-priceAmount">$1,400<span>/8 weeks</span></p>
+          <ul class="wb-priceFeatures">
+            <li>2 field sessions per week</li>
+            <li>2 gym sessions per week</li>
+            <li>Strength & conditioning</li>
+            <li>Recovery protocols</li>
+            <li>Complete performance tracking</li>
+          </ul>
+        </article>
+
+      </section>
+
+      <!-- Registration Form -->
+      <section id="wb-registration" class="wb-form-section">
+        <h2 class="wb-formTitle">Register Now</h2>
+        
+        <form action="https://formspree.io/f/xbddrdbv" method="POST" class="wb-form">
+          
+          <div class="wb-field">
+            <label for="athlete-name">Athlete Name <span class="wb-required">*</span></label>
+            <input type="text" id="athlete-name" name="athlete_name" required>
+          </div>
+
+          <div class="wb-field-row">
+            <div class="wb-field">
+              <label for="age">Age <span class="wb-required">*</span></label>
+              <input type="number" id="age" name="age" min="8" max="18" required>
+            </div>
+
+            <div class="wb-field">
+              <label for="position">Position <span class="wb-required">*</span></label>
+              <input type="text" id="position" name="position" required>
+            </div>
+          </div>
+
+          <div class="wb-field">
+            <label for="team">Club or School Team</label>
+            <input type="text" id="team" name="team" placeholder="Optional">
+          </div>
+
+          <div class="wb-field">
+            <label for="parent-name">Parent/Guardian Name <span class="wb-required">*</span></label>
+            <input type="text" id="parent-name" name="parent_name" required>
+          </div>
+
+          <div class="wb-field-row">
+            <div class="wb-field">
+              <label for="phone">Phone Number <span class="wb-required">*</span></label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="wb-field">
+              <label for="email">Email <span class="wb-required">*</span></label>
+              <input type="email" id="email" name="email" required>
+            </div>
+          </div>
+
+          <div class="wb-field">
+            <label for="program">Interested In <span class="wb-required">*</span></label>
+            <select id="program" name="program" required>
+              <option value="">Select a program</option>
+              <option value="outdoor">Outdoor ($500/month)</option>
+              <option value="indoor">Indoor ($600/month)</option>
+              <option value="bundle">Full Bundle ($1,400 for 8 weeks)</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="_subject" value="New Winter Ball Registration">
+          <input type="hidden" name="_next" value="https://www.epcla.com/thank-you">
+
+          <button type="submit" class="wb-submit">Submit Registration</button>
+        </form>
+      </section>
+
+      <!-- Contact CTA -->
+      <section class="wb-contact">
+        <p class="wb-contactText">Questions about the program?</p>
+        <div class="wb-contactRow">
+          <a class="epc-btn epc-btn--outline" href="tel:+18186447078">Call (818) 644-7078</a>
+          <a class="epc-btn epc-btn--outline" href="mailto:info@epcla.com">Email Us</a>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">Services</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    :root{ --bg:#0000; --ink:#F2EDE6; --dim:#D8D2C7; --gold:#C9B27F; --gold2:#E1D3A8; --line:#23201B; }
+
+    /* Root */
+    .wb-root{
+      background:var(--bg); color:var(--ink);
+      max-width:1200px; margin:0 auto;
+      padding:120px 20px 80px;
+      font-family: ui-sans-serif, system-ui, -apple-system,"Segoe UI",Roboto,Arial;
+    }
+    @media (max-width:768px){
+      .wb-root{ padding-top:100px; }
+    }
+
+    /* Buttons */
+    .epc-btn{
+      display:inline-flex; justify-content:center; align-items:center; gap:10px;
+      padding:14px 24px; border-radius:10px; text-decoration:none; font-variant:small-caps;
+      letter-spacing:.16em; font-weight:600; color:var(--gold2) !important; -webkit-text-fill-color:var(--gold2) !important;
+      border:1.2px solid var(--gold);
+      background: radial-gradient(160% 220% at 50% -40%, rgba(255,255,255,.08), rgba(0,0,0,0) 60%),
+                  linear-gradient(180deg, rgba(201,178,127,.16), rgba(201,178,127,0));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 0 14px rgba(201,178,127,.26), 0 10px 24px -16px rgba(0,0,0,.55);
+      transition: transform .18s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .epc-btn--outline{
+      color:var(--ink) !important; -webkit-text-fill-color:var(--ink) !important;
+      border:1px solid color-mix(in oklab, var(--gold) 85%, #000);
+      background: radial-gradient(140% 180% at 50% -30%, rgba(255,255,255,.03), rgba(0,0,0,0) 65%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .epc-btn:hover{
+      transform:translateY(-1px);
+      border-color: color-mix(in oklab, var(--gold) 92%, #000);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 0 18px rgba(201,178,127,.35), 0 12px 26px -14px rgba(0,0,0,.6);
+    }
+
+    /* Hero */
+    .wb-hero{ text-align:center; padding:24px 10px 32px; }
+    .wb-badge{ display:inline-block; color:var(--gold); letter-spacing:.18em; font-family:"Playfair Display",serif; font-weight:700; font-size:13px; margin-bottom:8px; text-transform:uppercase; }
+    .wb-title{ font-family:"Playfair Display",serif; font-weight:300; letter-spacing:.18em; font-size:clamp(32px,6vw,64px); margin:0 0 8px; color:var(--gold); text-transform:uppercase; text-shadow:0 0 10px rgba(201,178,127,.25); }
+    .wb-sub{ margin:0; color:var(--dim); letter-spacing:.08em; font-size:16px; }
+
+    /* Pricing Cards */
+    .wb-pricing{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+      max-width:1000px;
+      margin:0 auto 60px;
+    }
+    @media (min-width:768px){
+      .wb-pricing{ grid-template-columns:repeat(3,1fr); gap:24px; }
+    }
+
+    .wb-priceCard{
+      position:relative;
+      background:#111;
+      border:1px solid rgba(201,178,127,.28);
+      border-radius:12px;
+      padding:28px 24px;
+      text-align:center;
+      transition:transform .18s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .wb-priceCard:hover{
+      transform:translateY(-2px);
+      border-color:var(--gold);
+      box-shadow:0 0 18px rgba(201,178,127,.35), 0 18px 40px -18px rgba(0,0,0,.9);
+    }
+
+    .wb-priceCard--featured{
+      border-color:var(--gold);
+      box-shadow:0 0 20px rgba(201,178,127,.3);
+    }
+
+    .wb-badge-best{
+      position:absolute;
+      top:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      background:var(--gold);
+      color:#000;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .wb-priceTitle{
+      font-family:"Playfair Display",serif;
+      color:var(--gold);
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:22px;
+      margin:0 0 12px;
+    }
+
+    .wb-priceAmount{
+      font-size:48px;
+      font-weight:300;
+      color:var(--ink);
+      margin:0 0 20px;
+      line-height:1;
+    }
+    .wb-priceAmount span{
+      font-size:16px;
+      color:var(--dim);
+      font-weight:400;
+    }
+
+    .wb-priceFeatures{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+    .wb-priceFeatures li{
+      color:var(--dim);
+      margin:10px 0;
+      padding-left:20px;
+      position:relative;
+      text-align:left;
+    }
+    .wb-priceFeatures li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.5em;
+      width:8px;
+      height:8px;
+      border-radius:2px;
+      border:1px solid var(--gold);
+      box-shadow:0 0 8px rgba(201,178,127,.2);
+    }
+
+    /* Form Section */
+    .wb-form-section{
+      max-width:700px;
+      margin:0 auto 60px;
+    }
+
+    .wb-formTitle{
+      font-family:"Playfair Display",serif;
+      color:var(--gold);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:28px;
+      margin:0 0 32px;
+      text-align:center;
+    }
+
+    .wb-form{
+      background:#111;
+      border:1px solid rgba(201,178,127,.28);
+      border-radius:12px;
+      padding:32px 18px;
+    }
+
+    .wb-field{
+      margin-bottom:32px;
+    }
+
+    .wb-field-row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:40px;
+      margin-bottom:32px;
+    }
+    @media (min-width:600px){
+      .wb-field-row{ grid-template-columns:1fr 1fr; }
+    }
+
+    .wb-field label{
+      display:block;
+      color:var(--gold2);
+      font-size:14px;
+      font-weight:600;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .wb-required{
+      color:#ff6b6b;
+    }
+
+    .wb-field input,
+    .wb-field select{
+      width:100%;
+      padding:14px 16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(201,178,127,.3);
+      border-radius:8px;
+      color:var(--ink);
+      font-size:16px;
+      font-family:inherit;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .wb-field input:focus,
+    .wb-field select:focus{
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(201,178,127,.1);
+    }
+
+    .wb-field input::placeholder{
+      color:var(--dim);
+      opacity:0.6;
+    }
+
+    .wb-submit{
+      width:100%;
+      padding:16px 24px;
+      background:var(--gold);
+      color:#000;
+      border:none;
+      border-radius:10px;
+      font-family:inherit;
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .22s ease;
+    }
+
+    .wb-submit:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(201,178,127,.4);
+    }
+
+    /* Contact Section */
+    .wb-contact{
+      max-width:600px;
+      margin:0 auto;
+      text-align:center;
+    }
+
+    .wb-contactText{
+      color:var(--dim);
+      font-size:18px;
+      margin:0 0 20px;
+      letter-spacing:.04em;
+    }
+
+    .wb-contactRow{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+  </style>
+
+  <script>
+    // Optional: Auto-select program based on URL parameter
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const program = params.get('program');
+      if(program){
+        const select = document.getElementById('program');
+        if(select){
+          const option = Array.from(select.options).find(opt => opt.value === program);
+          if(option) select.value = option.value;
+        }
+      }
+    })();
+  </script>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

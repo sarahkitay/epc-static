@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elite Performance Clinic - Comprehensive Recovery, Performance Training, and Wellness Services in Sherman Oaks, CA." />
+  <title>Services | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./epc-sections.css">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="./epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link active">Services</a></li>
+        <li><a href="team.html" class="nav-link">Team</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="blog.html" class="nav-link">Journal</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section id="services" class="epc-services-pro" aria-label="EPC Services">
+      <style>
+        /* ========================================
+           ELITE SERVICES PAGE - WORLD-CLASS DESIGN
+           ======================================== */
+        :root {
+          --gold: #C9B27F;
+          --gold2: #E1D3A8;
+          --gold-glow: rgba(201, 178, 127, .6);
+          --ink: #F2EDE6;
+          --ink-dim: rgba(242, 237, 230, .82);
+          --line: rgba(201, 178, 127, .18);
+          --plate: rgba(12, 12, 12, .92);
+          --bg: #000;
+        }
+
+        .epc-services-pro {
+          background: var(--bg);
+          color: var(--ink);
+          font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+          padding: 0;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        /* Subtle dot grid background */
+        .epc-services-pro::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background-image: radial-gradient(circle, rgba(201, 178, 127, .03) 1px, transparent 1px);
+          background-size: 32px 32px;
+          pointer-events: none;
+          z-index: 0;
+          opacity: .4;
+        }
+
+        /* Animated gradient background */
+        .services-bg-gradient {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 100vh;
+          background:
+            radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 178, 127, .08), transparent),
+            radial-gradient(circle at 80% 80%, rgba(230, 57, 70, .05), transparent 50%),
+            radial-gradient(circle at 20% 60%, rgba(255, 159, 28, .03), transparent 50%);
+          pointer-events: none;
+          z-index: 0;
+          animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+          0%, 100% { opacity: .6; transform: scale(1) rotate(0deg); }
+          50% { opacity: .8; transform: scale(1.05) rotate(2deg); }
+        }
+
+        .services-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 clamp(20px, 4vw, 60px);
+          position: relative;
+          z-index: 1;
+        }
+
+        /* ========================================
+           HEADER - EDITORIAL, MINIMAL
+           ======================================== */
+        .services-hero {
+          padding: clamp(120px, 12vw, 140px) 0 clamp(60px, 6vw, 80px);
+          position: relative;
+          border-bottom: 1px solid rgba(201, 178, 127, .1);
+          margin-bottom: clamp(60px, 8vw, 100px);
+        }
+
+        /* Minimal Page Label */
+        .services-page-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 11px;
+          letter-spacing: .2em;
+          text-transform: uppercase;
+          color: rgba(201, 178, 127, .6);
+          font-weight: 400;
+          margin-bottom: 32px;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        .services-page-label::before {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: rgba(201, 178, 127, .4);
+        }
+
+        .services-hero .hero-subtitle {
+          display: none;
+        }
+
+        /* Minimal Search Bar - Top Right */
+        .services-search {
+          position: absolute;
+          top: clamp(120px, 12vw, 140px);
+          right: 0;
+          width: 280px;
+          max-width: 100%;
+        }
+
+        .services-search input {
+          width: 100%;
+          padding: 10px 36px 10px 16px;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid rgba(201, 178, 127, .2);
+          color: var(--ink);
+          font-size: 13px;
+          font-family: inherit;
+          font-weight: 300;
+          letter-spacing: .04em;
+          transition: all .3s ease;
+        }
+
+        .services-search input:focus {
+          outline: none;
+          border-bottom-color: var(--gold);
+        }
+
+        .services-search input::placeholder {
+          color: rgba(242, 237, 230, .35);
+          font-weight: 300;
+        }
+
+        .services-search-icon {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 14px;
+          height: 14px;
+          pointer-events: none;
+          opacity: .5;
+        }
+
+        .services-search-icon svg {
+          width: 100%;
+          height: 100%;
+          stroke: var(--gold);
+          fill: none;
+          stroke-width: 1.5;
+        }
+
+        @media (max-width: 768px) {
+          .services-search {
+            position: relative;
+            top: auto;
+            right: auto;
+            width: 100%;
+            margin-bottom: 32px;
+          }
+        }
+
+        /* Category Filter Chips - Minimal */
+        .category-chips {
+          display: flex;
+          gap: 0;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+          margin-bottom: 0;
+          border-bottom: 1px solid rgba(201, 178, 127, .1);
+        }
+
+        .chip {
+          padding: 16px 24px;
+          background: transparent;
+          border: none;
+          border-bottom: 2px solid transparent;
+          color: rgba(242, 237, 230, .5);
+          font-size: 12px;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all .25s ease;
+          font-weight: 400;
+          font-family: 'Montserrat', sans-serif;
+          margin-bottom: -1px;
+        }
+
+        .chip:hover {
+          color: var(--gold);
+        }
+
+        .chip.active {
+          color: var(--gold);
+          border-bottom-color: var(--gold);
+        }
+
+        /* ========================================
+           SERVICE CATEGORIES - ELITE DESIGN
+           ======================================== */
+        .service-category {
+          margin-bottom: clamp(120px, 15vw, 200px);
+          opacity: 0;
+          transform: translateY(50px);
+          transition: opacity .8s cubic-bezier(.4, 0, .2, 1), transform .8s cubic-bezier(.4, 0, .2, 1);
+          will-change: opacity, transform;
+        }
+
+        .service-category.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Category divider - Animated gold line with diamond */
+        .category-divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 24px;
+          margin: clamp(60px, 8vw, 100px) 0;
+          opacity: 0;
+          transform: scaleX(0);
+          transition: opacity .8s ease .3s, transform .8s cubic-bezier(.4, 0, .2, 1) .3s;
+        }
+
+        .service-category.revealed + .category-divider {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+
+        .divider-line {
+          width: clamp(80px, 12vw, 150px);
+          height: 1px;
+          background: linear-gradient(90deg, transparent, var(--gold), transparent);
+          box-shadow: 0 0 8px rgba(201, 178, 127, .4);
+        }
+
+        .divider-diamond {
+          width: 8px;
+          height: 8px;
+          background: var(--gold);
+          transform: rotate(45deg);
+          box-shadow: 0 0 12px rgba(201, 178, 127, .6);
+        }
+
+        .category-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: clamp(40px, 6vw, 80px);
+          align-items: start;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+          .category-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+        }
+
+        /* Image Card - Premium Treatment */
+        .category-media {
+          position: relative;
+          overflow: hidden;
+          border-radius: 24px;
+          min-height: 480px;
+          border: 1px solid rgba(201, 178, 127, .25);
+          box-shadow: 
+            0 20px 60px rgba(0, 0, 0, .5),
+            inset 0 0 0 1px rgba(255, 255, 255, .05);
+          background: #0d0d0d;
+          cursor: pointer;
+          transition: transform .5s cubic-bezier(.4, 0, .2, 1), 
+                      box-shadow .5s ease,
+                      border-color .5s ease;
+          will-change: transform;
+        }
+
+        .category-media::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 24px;
+          padding: 2px;
+          background: linear-gradient(135deg, rgba(201, 178, 127, 0), rgba(201, 178, 127, .3), rgba(201, 178, 127, 0));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity .5s ease;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        .category-media:hover {
+          transform: translateY(-12px) scale(1.02);
+          border-color: rgba(201, 178, 127, .5);
+          box-shadow:
+            0 30px 80px rgba(0, 0, 0, .7),
+            0 0 40px rgba(201, 178, 127, .2),
+            inset 0 0 0 1px rgba(255, 255, 255, .1);
+        }
+
+        .category-media:hover::before {
+          opacity: 1;
+        }
+
+        @media (max-width: 1024px) {
+          .category-media { min-height: 320px; }
+        }
+
+        .category-media img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          filter: saturate(.92) contrast(1.08) brightness(.85);
+          transition: transform .8s cubic-bezier(.4, 0, .2, 1), filter .8s ease;
+          will-change: transform;
+        }
+
+        .category-media:hover img {
+          transform: scale(1.1);
+          filter: saturate(1.05) contrast(1.12) brightness(.9);
+        }
+
+        /* Image overlay gradient */
+        .category-media::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, .1) 0%,
+            rgba(0, 0, 0, .3) 50%,
+            rgba(0, 0, 0, .75) 100%
+          );
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .category-tag {
+          position: absolute;
+          left: 24px;
+          bottom: 24px;
+          z-index: 2;
+          color: var(--ink);
+          background: rgba(0, 0, 0, .7);
+          backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid rgba(201, 178, 127, .4);
+          padding: 12px 20px;
+          border-radius: 999px;
+          font: 700 11px/1 'Montserrat', sans-serif;
+          letter-spacing: .3em;
+          text-transform: uppercase;
+          box-shadow: 
+            0 4px 16px rgba(0, 0, 0, .4),
+            0 0 20px rgba(201, 178, 127, .2);
+          transition: all .4s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .category-media:hover .category-tag {
+          background: rgba(201, 178, 127, .95);
+          color: #000;
+          transform: translateY(-4px);
+          box-shadow: 
+            0 8px 24px rgba(201, 178, 127, .4),
+            0 0 30px rgba(201, 178, 127, .3);
+        }
+
+        /* Category Description */
+        .category-description {
+          margin-bottom: 48px;
+          padding-bottom: 0;
+          border-bottom: none;
+          text-align: center;
+          max-width: 900px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .category-description p {
+          font-size: clamp(14px, 1.6vw, 17px);
+          line-height: 1.75;
+          color: var(--ink-dim);
+          font-weight: 200;
+          letter-spacing: .02em;
+          margin: 0;
+          opacity: 0.7;
+        }
+
+        /* Accordion - Premium Design */
+        .category-accordion {
+          border: 1px solid rgba(201, 178, 127, .25);
+          border-radius: 20px;
+          overflow: hidden;
+          background: rgba(0, 0, 0, .4);
+          backdrop-filter: blur(20px) saturate(180%);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, .3),
+            inset 0 0 0 1px rgba(255, 255, 255, .03);
+        }
+
+        .acc-item {
+          border-top: 1px solid rgba(201, 178, 127, .12);
+          transition: background .3s ease;
+        }
+
+        .acc-item:first-child { border-top: none; }
+
+        .acc-item:hover {
+          background: rgba(255, 255, 255, .03);
+        }
+
+        .acc-trigger {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          padding: 24px 28px;
+          background: transparent;
+          border: 0;
+          color: var(--ink);
+          text-align: left;
+          cursor: pointer;
+          font: 400 clamp(17px, 1.9vw, 22px)/1.4 'Montserrat', sans-serif;
+          letter-spacing: .04em;
+          transition: color .3s ease, transform .2s ease;
+          position: relative;
+        }
+
+        .acc-trigger::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 4px;
+          height: 0;
+          background: var(--gold);
+          transition: height .3s cubic-bezier(.4, 0, .2, 1);
+          border-radius: 0 2px 2px 0;
+        }
+
+        .acc-item:hover .acc-trigger::before,
+        .acc-trigger[aria-expanded="true"]::before {
+          height: 60%;
+        }
+
+        .acc-trigger:hover {
+          color: var(--gold2);
+          transform: translateX(4px);
+        }
+
+        .acc-trigger:focus-visible {
+          outline: 2px solid var(--gold);
+          outline-offset: 2px;
+          border-radius: 12px;
+        }
+
+        .chev {
+          flex: 0 0 auto;
+          width: 16px;
+          height: 16px;
+          border-right: 3px solid var(--gold);
+          border-bottom: 3px solid var(--gold);
+          transform: rotate(-45deg);
+          transition: transform .4s cubic-bezier(.4, 0, .2, 1), 
+                      border-color .3s ease,
+                      filter .3s ease;
+          opacity: .9;
+        }
+
+        .acc-trigger:hover .chev {
+          border-color: var(--gold2);
+          filter: drop-shadow(0 0 8px rgba(201, 178, 127, .4));
+        }
+
+        .acc-trigger[aria-expanded="true"] .chev {
+          transform: rotate(45deg);
+          border-color: var(--gold);
+          filter: drop-shadow(0 0 12px var(--gold-glow));
+        }
+
+        .acc-panel {
+          overflow: hidden;
+          max-height: 0;
+          background:
+            radial-gradient(140% 200% at 50% -80%, rgba(255, 255, 255, .04), transparent 8%),
+            linear-gradient(180deg, rgba(12, 12, 12, .95), rgba(12, 12, 12, .88));
+          transition: max-height .6s cubic-bezier(.4, 0, .2, 1);
+          will-change: max-height;
+        }
+
+        .acc-inner {
+          padding: 0 28px 28px;
+          color: var(--ink-dim);
+          line-height: 1.75;
+          font-size: clamp(15px, 1.4vw, 18px);
+          font-weight: 300;
+        }
+
+        .pricing {
+          color: var(--gold);
+          font-weight: 700;
+          display: block;
+          margin-bottom: 16px;
+          font-size: clamp(16px, 1.5vw, 19px);
+          letter-spacing: .02em;
+          text-shadow: 0 0 12px rgba(201, 178, 127, .3);
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        .learn-more {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin-top: 18px;
+          color: var(--gold);
+          text-decoration: none;
+          font-size: 14px;
+          letter-spacing: .16em;
+          font-weight: 700;
+          text-transform: uppercase;
+          transition: all .3s cubic-bezier(.4, 0, .2, 1);
+          font-family: 'Montserrat', sans-serif;
+          position: relative;
+          padding-bottom: 4px;
+        }
+
+        .learn-more::after {
+          content: '→';
+          font-size: 18px;
+          transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .learn-more::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: var(--gold);
+          transition: width .3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .learn-more:hover {
+          color: var(--gold2);
+          transform: translateX(6px);
+          text-shadow: 0 0 12px rgba(201, 178, 127, .5);
+        }
+
+        .learn-more:hover::after {
+          transform: translateX(6px);
+        }
+
+        .learn-more:hover::before {
+          width: 100%;
+        }
+
+        /* ========================================
+           CATEGORY CTA - TEXT LINK WITH ARROW
+           ======================================== */
+        .category-cta {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 32px;
+        }
+
+        @media (max-width: 1024px) {
+          .category-cta { justify-content: center; }
+        }
+
+        .category-cta-link {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding-left: 24px;
+          text-decoration: none;
+          font: 400 16px/1.5 'Montserrat', sans-serif;
+          letter-spacing: .08em;
+          color: var(--ink);
+          transition: all .3s cubic-bezier(.4, 0, .2, 1);
+          cursor: pointer;
+        }
+
+        /* Thin gold accent line at starting point */
+        .category-cta-link::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 1px;
+          height: 24px;
+          background: var(--gold);
+          transition: height .3s cubic-bezier(.4, 0, .2, 1), background .3s ease;
+        }
+
+        .category-cta-link:hover::before {
+          height: 32px;
+          background: var(--gold2);
+        }
+
+        /* Arrow */
+        .category-cta-link::after {
+          content: '→';
+          font-size: 20px;
+          color: var(--gold);
+          transition: transform .3s cubic-bezier(.4, 0, .2, 1), color .3s ease;
+        }
+
+        .category-cta-link:hover {
+          color: var(--gold2);
+        }
+
+        .category-cta-link:hover::after {
+          transform: translateX(6px);
+          color: var(--gold2);
+        }
+
+        /* Special Offers Button - Keep original button style */
+        .special-offers-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 18px 40px;
+          border-radius: 999px;
+          text-decoration: none;
+          font: 700 13px/1 'Montserrat', sans-serif;
+          letter-spacing: .22em;
+          text-transform: uppercase;
+          border: 2px solid var(--gold);
+          color: var(--gold);
+          background: transparent;
+          overflow: hidden;
+          transition: all .4s cubic-bezier(.4, 0, .2, 1);
+          cursor: pointer;
+        }
+
+        .special-offers-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, var(--gold), var(--gold2));
+          transform: translateX(-100%);
+          transition: transform .5s cubic-bezier(.4, 0, .2, 1);
+          z-index: -1;
+        }
+
+        .special-offers-btn::after {
+          content: '→';
+          font-size: 18px;
+          transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .special-offers-btn:hover {
+          color: #000;
+          transform: translateY(-4px);
+          border-color: var(--gold2);
+          box-shadow:
+            0 0 40px rgba(201, 178, 127, .6),
+            0 12px 40px rgba(0, 0, 0, .4);
+        }
+
+        .special-offers-btn:hover::before {
+          transform: translateX(0);
+        }
+
+        .special-offers-btn:hover::after {
+          transform: translateX(4px);
+        }
+
+        .special-offers-btn:active {
+          transform: translateY(-2px);
+        }
+
+        /* No Results */
+        .no-results {
+          display: none;
+          text-align: center;
+          padding: 100px 20px;
+          color: var(--ink-dim);
+        }
+
+        .no-results.show {
+          display: block;
+          animation: fadeIn .4s ease;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .no-results h3 {
+          font-family: "Playfair Display", serif;
+          font-size: 32px;
+          color: var(--gold);
+          margin: 0 0 16px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          .services-hero {
+            padding: 100px 0 40px;
+            margin-bottom: 40px;
+          }
+          
+          .services-page-label {
+            margin-bottom: 24px;
+          }
+          
+          .category-chips {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          
+          .category-chips::-webkit-scrollbar {
+            display: none;
+          }
+          
+          .chip {
+            padding: 14px 20px;
+            white-space: nowrap;
+            font-size: 11px;
+          }
+
+          .category-media {
+            min-height: 280px;
+          }
+
+          .acc-trigger {
+            padding: 20px 24px;
+            font-size: 16px;
+          }
+
+        }
+      </style>
+
+      <!-- Animated background -->
+      <div class="services-bg-gradient"></div>
+
+      <div class="services-container">
+        
+        <!-- Header - Minimal, Editorial -->
+        <div class="services-hero">
+          <div class="services-page-label">Services</div>
+          
+          <div class="services-search">
+            <input 
+              type="text" 
+              id="servicesSearch" 
+              placeholder="Search"
+              aria-label="Search services"
+            >
+            <span class="services-search-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+          </div>
+
+          <!-- Category Filter Chips -->
+          <div class="category-chips">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="recovery">Recovery</button>
+            <button class="chip" data-filter="performance">Performance</button>
+            <button class="chip" data-filter="wellness">Wellness</button>
+          </div>
+        </div>
+
+        <!-- CATEGORY 1: Recovery & Rehabilitation -->
+        <div class="service-category reveal" data-category="recovery">
+          <div class="category-grid">
+            <figure class="category-media" aria-hidden="true">
+              <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/237f6ee8-a71b-4023-ad0f-7a379cba954c/IMG_2833.jpg?content-type=image%2Fjpeg" alt="">
+              <span class="category-tag">Recovery & Rehabilitation</span>
+            </figure>
+
+            <div>
+              <div class="category-accordion">
+                
+                <div class="acc-item" data-keywords="physical therapy pt rehab pain injury">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Comprehensive Physical Therapy <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Out of Pocket (No Insurance) - $125.00</span>
+                      <p>One-on-one evaluation and treatment tailored to your goals: manual therapy, corrective exercise, progressive loading, and return-to-sport planning. Fully individualized, results-driven.</p>
+                      <a href="physical-therapy.html" class="learn-more">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="surgery pre post operative rehab recovery">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Pre / Post-Operative Rehab <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Out of Pocket (No Insurance) - $125.00</span>
+                      <p>Restore range of motion, manage swelling, and rebuild strength with a structured protocol coordinated with your surgeon and our clinical team.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="massage therapy bodywork recovery">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Massage Therapy <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">50 Minutes - $100.00 | 90 Minutes - $150.00</span>
+                      <p>Therapeutic massage focused on recovery and performance: pressure and techniques matched to your needs.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="shockwave piezowave wave therapy pain">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Piezowave Wave Therapy <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">1 Session - $200.00 | 5 Sessions - $750.00</span>
+                      <p>Advanced acoustic wave therapy designed to reduce pain, restore mobility, and accelerate healing: a targeted adjunct to your rehab plan.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="estim hwave electrical stimulation pain">
+                  <button class="acc-trigger" aria-expanded="false">
+                    E-Stim / H-Wave <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">1 Session - $50.00</span>
+                      <p>Prescription electrical stimulation to modulate pain and support tissue recovery, used alongside exercise and manual therapy.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="red light pemf therapy recovery">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Red Light & PEMF Therapy <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">$50 per session</span>
+                      <p>Targeted photobiomodulation and PEMF sessions to support recovery, reduce soreness, and improve cellular function as part of a comprehensive rehab plan.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="category-divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- CATEGORY 2: Performance Optimization -->
+        <div class="service-category reveal" data-category="performance">
+          <div class="category-grid">
+            <div>
+              <div class="category-accordion">
+                
+                <div class="acc-item" data-keywords="personal training strength conditioning">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Personal Training <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Starting at $200 per session | Packages available</span>
+                      <p>One-on-one, goal-driven programming across strength, conditioning, and mobility: designed by clinicians and coaches together for measurable results.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="group training fitness class">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Group Training <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Starting at $100 per session</span>
+                      <p>High-energy small groups that build capacity, resilience, and accountability: coached with precise progressions.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="assessment evaluation pedics proteus movement screening">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Assessment <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Comprehensive evaluation combining Pedics gait analysis, Proteus power testing, functional movement screening, and speed/agility assessment to pinpoint strengths, weaknesses, and create your ideal treatment plan.</p>
+                      <a class="learn-more" href="assessment.html">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="team spa sprint performance agility speed youth">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Team Training: S.P.A <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Grades 2-12 · 1 hour · $30 per student</span>
+                      <p>Learn sprint fundamentals for faster, safer movement. Explosive first steps sharpen agility, speed, and reaction time to build a strong foundation for athletic performance, resilience, and growth.</p>
+                      <a class="learn-more" href="spa-page.html">View S.P.A Programs</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="football academy youth training">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Football Academy <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Elite youth development program combining sport-specific training, tactical education, and performance optimization for aspiring athletes.</p>
+                      <a class="learn-more" href="football.html">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="proteus assessment movement analysis">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Proteus® Assessment <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">$200 per session</span>
+                      <p>3D resistance testing to profile power and asymmetries: establish a baseline and retest for objective progress.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="cold plunge sauna contrast therapy recovery">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Cold Plunge & Sauna Sessions <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Contrast therapy to boost circulation, speed recovery, and support resilience: coached and controlled.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <figure class="category-media" aria-hidden="true">
+              <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/0df36fd8-ce3d-4150-a35d-15acbecfc890/IMG_2837+%281%29.jpg?content-type=image%2Fjpeg" alt="">
+              <span class="category-tag">Performance Optimization</span>
+            </figure>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="category-divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- CATEGORY 3: Health & Wellness Enhancement -->
+        <div class="service-category reveal" data-category="wellness">
+          <div class="category-grid">
+            <figure class="category-media" aria-hidden="true">
+              <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/51dece17-5419-472e-b3d4-c001ca11fd75/tempImagebMKQdA.jpg?content-type=image%2Fjpeg" alt="">
+              <span class="category-tag">Regenerative & Integrative</span>
+            </figure>
+
+            <div>
+              <div class="category-accordion">
+                
+                <div class="acc-item" data-keywords="optimization consult bloodwork labs physician">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Optimization Consult <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Review recent labs with our physician partner to identify opportunities around recovery, energy, and performance. Recommendations are individualized and coordinated with your EPC care plan when appropriate.</p>
+                      <p><em>Consultation only; not a substitute for ongoing primary care.</em></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="peptide therapy physician directed">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Peptide Therapies: Physician-Directed <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Following a medical evaluation, certain peptide options may be considered. Availability and indications vary; some compounds are not FDA-approved for specific uses. All decisions are made between you and the physician after informed consent.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="iv drip therapy nutrients hydration">
+                  <button class="acc-trigger" aria-expanded="false">
+                    IV Drip Therapy: By Medical Appointment <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Individualized IV nutrient therapy may be offered by our medical partner when clinically appropriate. Candidacy and specific formulations are determined after medical review.</p>
+                      <p><em>Not intended to diagnose, treat, cure, or prevent any disease.</em></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="stem cell prp regenerative medicine">
+                  <button class="acc-trigger" aria-expanded="false">
+                    Stem Cell & Cellular Medicine: Consultation <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <p>Evaluation with our board-certified internal medicine partner to discuss candidacy, risks, and potential next steps. If appropriate, care is coordinated directly with the physician.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-item" data-keywords="emsculpt muscle building fat loss body sculpting">
+                  <button class="acc-trigger" aria-expanded="false">
+                    EMSculpt Treatment <span class="chev"></span>
+                  </button>
+                  <div class="acc-panel">
+                    <div class="acc-inner">
+                      <span class="pricing">Limited Time: $250 for 2 sessions</span>
+                      <p>Build muscle and burn fat simultaneously using high-intensity electromagnetic energy. Painless, non-invasive treatment equivalent to 20,000 crunches or squats per session.</p>
+                      <a class="learn-more" href="/emsculpt">Learn More</a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="noResults">
+          <h3>No services found</h3>
+          <p>Try searching for something else or browse all services above.</p>
+        </div>
+
+        <!-- Special Offers Section -->
+        <div class="service-category reveal" style="margin-top: 120px;">
+          <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-family:'Playfair Display',serif; font-size:clamp(36px,5vw,56px); color:var(--gold); letter-spacing:.16em; text-transform:uppercase; margin:0 0 20px; font-weight:300;">Special Offers</h2>
+            <p style="color:var(--ink-dim); font-size:18px; max-width:600px; margin:0 auto; line-height:1.7;">Limited-time programs and packages designed for serious athletes.</p>
+          </div>
+          
+          <div style="max-width:900px; margin:0 auto;">
+            <div style="background:rgba(0,0,0,.6); border:1px solid rgba(201,178,127,.28); border-radius:24px; padding:50px; text-align:center; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,.4);">
+              <h3 style="font-family:'Playfair Display',serif; font-size:32px; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; margin:0 0 24px; font-weight:300;">8 Week Winter Ball</h3>
+              <p style="color:var(--ink-dim); font-size:17px; line-height:1.75; margin:0 0 40px; max-width:600px; margin-left:auto; margin-right:auto;">Indoor and outdoor training options for athletes. Full program bundle available at special pricing.</p>
+              <a href="winter-ball.html" class="special-offers-btn">Learn More & Register</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+ <script>
+  (function(){
+    'use strict';
+
+    const root = document.querySelector('.epc-services-pro');
+    if (!root) return;
+
+    const searchInput = document.getElementById('servicesSearch');
+    const categories = root.querySelectorAll('.service-category');
+    const noResults = document.getElementById('noResults');
+    const chips = root.querySelectorAll('.chip');
+    
+    // ========================================
+    // ACCORDION FUNCTIONALITY
+    // ========================================
+    const triggers = root.querySelectorAll('.acc-trigger');
+    
+    triggers.forEach(btn => {
+      const panel = btn.nextElementSibling;
+      if (!panel) return;
+      
+      btn.addEventListener('click', () => {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        const accordion = btn.closest('.category-accordion');
+        
+        // Close all other panels
+        accordion.querySelectorAll('.acc-trigger').forEach(otherBtn => {
+          if (otherBtn !== btn && otherBtn.getAttribute('aria-expanded') === 'true') {
+            otherBtn.setAttribute('aria-expanded', 'false');
+            otherBtn.nextElementSibling.style.maxHeight = '0px';
+          }
+        });
+        
+        // Toggle this panel
+        if (isOpen) {
+          btn.setAttribute('aria-expanded', 'false');
+          panel.style.maxHeight = '0px';
+        } else {
+          btn.setAttribute('aria-expanded', 'true');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          
+          // Recalculate after transition
+          setTimeout(() => {
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              panel.style.maxHeight = panel.scrollHeight + 'px';
+            }
+          }, 600);
+        }
+      });
+
+      // Keyboard support
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+    
+    // ========================================
+    // CATEGORY FILTER CHIPS
+    // ========================================
+    let currentFilter = 'all';
+    
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        
+        currentFilter = chip.dataset.filter;
+        
+        // Clear search when filtering
+        if (searchInput) {
+          searchInput.value = '';
+        }
+        
+        // Apply category filter
+        categories.forEach(cat => {
+          if (currentFilter === 'all') {
+            cat.style.display = '';
+          } else {
+            cat.style.display = cat.dataset.category === currentFilter ? '' : 'none';
+          }
+        });
+        
+        // Show/hide dividers based on filter
+        const dividers = root.querySelectorAll('.category-divider');
+        dividers.forEach(divider => {
+          divider.style.display = currentFilter === 'all' ? '' : 'none';
+        });
+        
+        // Reset all accordion items to be visible when filtering
+        categories.forEach(category => {
+          if (category.style.display !== 'none') {
+            const items = category.querySelectorAll('.acc-item');
+            items.forEach(item => item.style.display = '');
+          }
+        });
+        
+        // Hide no results message
+        if (noResults) {
+          noResults.classList.remove('show');
+        }
+      });
+    });
+    
+    // ========================================
+    // SEARCH FUNCTIONALITY
+    // ========================================
+    function filterServices(query) {
+      let visibleCount = 0;
+      
+      categories.forEach(category => {
+        // Respect category filter
+        const shouldShowCategory = currentFilter === 'all' || category.dataset.category === currentFilter;
+        
+        if (!shouldShowCategory) {
+          category.style.display = 'none';
+          return;
+        }
+        
+        const items = category.querySelectorAll('.acc-item');
+        let categoryHasMatch = false;
+        
+        items.forEach(item => {
+          const keywords = item.dataset.keywords || '';
+          const title = item.querySelector('.acc-trigger').textContent.toLowerCase();
+          const content = item.querySelector('.acc-inner')?.textContent.toLowerCase() || '';
+          
+          const matches = !query || 
+                         keywords.includes(query) || 
+                         title.includes(query) || 
+                         content.includes(query);
+          
+          item.style.display = matches ? '' : 'none';
+          if (matches) categoryHasMatch = true;
+        });
+        
+        category.style.display = categoryHasMatch ? '' : 'none';
+        if (categoryHasMatch) visibleCount++;
+      });
+      
+      if (noResults) {
+        noResults.classList.toggle('show', visibleCount === 0 && query.length > 0);
+      }
+    }
+    
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        filterServices(query);
+      });
+    }
+    
+    // ========================================
+    // SCROLL REVEAL ANIMATIONS
+    // ========================================
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -80px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.service-category.reveal').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Observe dividers
+    document.querySelectorAll('.category-divider').forEach(divider => {
+      observer.observe(divider);
+    });
+    
+    // ========================================
+    // SMOOTH SCROLL BEHAVIOR
+    // ========================================
+    if ('scrollBehavior' in document.documentElement.style) {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    }
+    
+  })();
+</script>
+    </section>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">Services</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

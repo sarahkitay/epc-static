@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Performance Pyramid: Building Athletic Foundation at Every Age. Learn the progression model that builds injury-resistant, high-performing athletes at every stage." />
+  <title>The Performance Pyramid: Building Athletic Foundation at Every Age | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../epc-sections.css">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="../epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="../services.html" class="nav-link">Services</a></li>
+        <li><a href="../team.html" class="nav-link">Team</a></li>
+        <li><a href="../about.html" class="nav-link">About</a></li>
+        <li><a href="../blog.html" class="nav-link active">Journal</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <style>
+      .epc-blog-post {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 40px 80px;
+        font-family: 'Playfair Display', Georgia, serif;
+        background: #000;
+        color: #fff;
+      }
+      
+      .epc-blog-header {
+        text-align: center;
+        margin-bottom: 80px;
+        padding-bottom: 40px;
+        border-bottom: 1px solid #C9B991;
+      }
+      
+      .epc-blog-title {
+        font-size: 56px;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        color: #C9B991;
+        letter-spacing: 2px;
+      }
+      
+      .epc-blog-meta {
+        font-size: 12px;
+        color: #C9B991;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 300;
+      }
+      
+      .epc-blog-intro {
+        font-size: 24px;
+        line-height: 1.8;
+        color: #fff;
+        margin-bottom: 60px;
+        text-align: center;
+        font-weight: 300;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-blog-section {
+        margin-bottom: 50px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-section-title {
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 20px;
+        color: #C9B991;
+        margin-top: 50px;
+        letter-spacing: 1px;
+      }
+      
+      .epc-blog-text {
+        font-size: 18px;
+        margin-bottom: 25px;
+        line-height: 1.9;
+        color: #fff;
+        font-weight: 300;
+      }
+      
+      .epc-example {
+        background: transparent;
+        border-left: 2px solid #C9B991;
+        padding: 25px 30px;
+        margin: 35px 0;
+        font-style: italic;
+        color: #C9B991;
+      }
+      
+      .epc-example strong {
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 14px;
+      }
+      
+      .epc-highlight-box {
+        background: transparent;
+        border: 1px solid #C9B991;
+        color: #fff;
+        padding: 50px;
+        margin: 60px auto;
+        max-width: 900px;
+      }
+      
+      .epc-highlight-box h3 {
+        color: #C9B991;
+        margin-top: 0;
+        font-size: 32px;
+        margin-bottom: 30px;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
+      
+      .epc-highlight-box p {
+        font-size: 18px;
+        line-height: 1.8;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      
+      .epc-highlight-box li {
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 18px;
+        line-height: 1.8;
+        font-size: 17px;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box li:before {
+        content: "-";
+        position: absolute;
+        left: 0;
+        color: #C9B991;
+      }
+
+      /* Data Tables */
+      .epc-data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 40px 0;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
+
+      .epc-data-table thead {
+        border-bottom: 2px solid #C9B991;
+      }
+
+      .epc-data-table th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        color: #C9B991;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .epc-data-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(201, 185, 145, 0.2);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 300;
+      }
+
+      .epc-data-table tbody tr:hover {
+        background: rgba(201, 185, 145, 0.05);
+      }
+      
+      .epc-cta {
+        background: transparent;
+        border: 1px solid #C9B991;
+        padding: 60px 40px;
+        margin: 80px auto;
+        text-align: center;
+        max-width: 900px;
+      }
+      
+      .epc-cta-text {
+        font-size: 22px;
+        font-weight: 300;
+        margin-bottom: 35px;
+        line-height: 1.8;
+        color: #fff;
+      }
+      
+      .epc-cta-button {
+        display: inline-block;
+        background: transparent;
+        color: #C9B991;
+        padding: 18px 50px;
+        text-decoration: none;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 12px;
+        border: 1px solid #C9B991;
+        transition: all 0.3s ease;
+        margin: 10px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
+      
+      .epc-cta-button:hover {
+        background: #C9B991;
+        color: #000;
+      }
+      
+      .epc-divider {
+        width: 100px;
+        height: 1px;
+        background: #C9B991;
+        margin: 60px auto;
+      }
+
+      /* Stat Highlight */
+      .epc-stat-box {
+        background: transparent;
+        border: 1px solid #C9B991;
+        padding: 50px 40px;
+        margin: 60px auto;
+        text-align: center;
+        max-width: 900px;
+      }
+
+      .epc-stat-number {
+        font-size: 72px;
+        font-weight: 400;
+        color: #C9B991;
+        display: block;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+      }
+
+      .epc-stat-label {
+        font-size: 18px;
+        font-weight: 300;
+        color: #fff;
+        line-height: 1.8;
+        font-style: italic;
+      }
+      
+      @media (max-width: 768px) {
+        .epc-blog-post {
+          padding: 100px 20px 60px;
+        }
+        
+        .epc-blog-title {
+          font-size: 36px;
+        }
+        
+        .epc-blog-intro {
+          font-size: 20px;
+        }
+        
+        .epc-section-title {
+          font-size: 26px;
+        }
+        
+        .epc-blog-text {
+          font-size: 16px;
+        }
+        
+        .epc-highlight-box {
+          padding: 30px 25px;
+        }
+        
+        .epc-cta {
+          padding: 40px 25px;
+        }
+
+        .epc-stat-box {
+          padding: 40px 25px;
+        }
+
+        .epc-stat-number {
+          font-size: 48px;
+        }
+
+        .epc-data-table {
+          font-size: 14px;
+        }
+
+        .epc-data-table th,
+        .epc-data-table td {
+          padding: 12px 14px;
+        }
+      }
+    </style>
+
+    <div class="epc-blog-post">
+      <div class="epc-blog-header">
+        <h1 class="epc-blog-title">The Performance Pyramid: Building Athletic Foundation at Every Age</h1>
+        <div class="epc-blog-meta">Elite Performance Clinic • December 2025</div>
+      </div>
+      
+      <div class="epc-blog-intro">
+        From youth development to professional athletics, learn the progression model that builds injury-resistant, high-performing athletes at every stage.
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <p class="epc-blog-text">
+          Athletic development isn't linear-it's hierarchical. Before an athlete can express maximum power, they need foundational strength. Before building strength, they need movement competency. Before refining movement, they need basic motor skills and physical literacy. This progression forms what we call the Performance Pyramid.
+        </p>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we've worked with athletes from age 8 to professional level across every sport. The athletes who reach the highest levels aren't those who specialize earliest or train hardest-they're the ones who build proper foundations at each developmental stage. This article breaks down the Performance Pyramid framework and explains what athletes need at each level to progress safely and effectively.
+        </p>
+      </div>
+
+      <div class="epc-stat-box">
+        <span class="epc-stat-number">70%</span>
+        <span class="epc-stat-label">of youth sport injuries are attributed to overuse and overtraining-consequences of skipping foundational development phases in pursuit of early specialization and performance.</span>
+      </div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Understanding the Pyramid Structure</h2>
+        <p class="epc-blog-text">
+          The Performance Pyramid is built from the ground up. Each level provides the foundation for what comes next. Attempting to build higher levels without proper foundation leads to injury, burnout, and performance plateaus. The pyramid consists of five levels, progressing from foundational to sport-specific.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>The Five Levels of the Performance Pyramid</h3>
+          <ul>
+            <li><strong>Level 1: Movement Competency</strong> - Basic motor patterns and coordination</li>
+            <li><strong>Level 2: Functional Strength</strong> - General strength and work capacity</li>
+            <li><strong>Level 3: Sports Performance</strong> - Speed, power, and athletic qualities</li>
+            <li><strong>Level 4: Sport-Specific Skills</strong> - Technical and tactical development</li>
+            <li><strong>Level 5: Elite Performance</strong> - Optimization and competitive edge</li>
+          </ul>
+        </div>
+
+        <div class="epc-example">
+          <strong>Why pyramids matter:</strong> A pyramid is stable because it has a wide base. Top-heavy structures collapse. The same principle applies to athletic development-athletes with narrow foundations (early specialization, poor movement quality, inadequate strength) inevitably break down. Building a wide base takes time, but it allows sustainable progression to the top.
+        </div>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Level 1: Movement Competency (Ages 6-12)</h2>
+        <p class="epc-blog-text">
+          The foundation of all athletic development is movement literacy-the ability to perform basic human movements with coordination, control, and consistency. This phase builds the neuromuscular patterns that everything else depends on.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Core Movement Patterns to Master</h3>
+          <ul>
+            <li>Squatting (sitting and standing)</li>
+            <li>Hinging (bending and lifting)</li>
+            <li>Pushing (vertical and horizontal)</li>
+            <li>Pulling (vertical and horizontal)</li>
+            <li>Rotating (turning and twisting)</li>
+            <li>Locomotion (running, jumping, skipping, hopping)</li>
+            <li>Balancing (single-leg stability)</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text"><strong>Age-Appropriate Training Focus</strong></p>
+
+        <table class="epc-data-table">
+          <thead>
+            <tr>
+              <th>Age Range</th>
+              <th>Primary Focus</th>
+              <th>Training Methods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>6-8 years</td>
+              <td>Fundamental movements, play</td>
+              <td>Games, obstacle courses, tag, gymnastics</td>
+            </tr>
+            <tr>
+              <td>9-10 years</td>
+              <td>Movement refinement, coordination</td>
+              <td>Sport sampling, skill drills, bodyweight training</td>
+            </tr>
+            <tr>
+              <td>11-12 years</td>
+              <td>Movement consistency, basic strength</td>
+              <td>Structured warm-ups, light resistance, technique work</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="epc-example">
+          <strong>Critical period for motor learning:</strong> Ages 6-12 represent the "golden window" for developing coordination, balance, and movement patterns. Neural plasticity is highest, and movement skills learned now become deeply ingrained. This is why multi-sport participation matters-exposure to varied movements builds a richer motor repertoire than single-sport specialization.
+        </div>
+
+        <p class="epc-blog-text">
+          <strong>Common Mistakes at This Level</strong><br>
+          Early sport specialization, excessive competition volume, neglecting fundamental movements in favor of sport-specific skills, and introducing strength training before movement competency is established. These mistakes create performance ceilings and injury risk later in development.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Level 2: Functional Strength (Ages 13-16)</h2>
+        <p class="epc-blog-text">
+          Once movement competency is established, the next phase focuses on building general strength-the ability to produce force across all fundamental movement patterns. This phase coincides with adolescence and puberty, when hormonal changes make strength development particularly effective.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Strength Development Priorities</h3>
+          <ul>
+            <li>Relative strength (strength-to-bodyweight ratio)</li>
+            <li>Unilateral strength (single-leg and single-arm work)</li>
+            <li>Eccentric strength (controlling lowering phases)</li>
+            <li>Isometric strength (holding positions under load)</li>
+            <li>Core stability and anti-rotation strength</li>
+            <li>Work capacity (ability to maintain effort)</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text"><strong>Progressive Training Guidelines</strong></p>
+
+        <table class="epc-data-table">
+          <thead>
+            <tr>
+              <th>Age Range</th>
+              <th>Training Focus</th>
+              <th>Volume Guidelines</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>13-14 years</td>
+              <td>Bodyweight mastery, light loading</td>
+              <td>2-3x per week, 8-12 reps, submaximal loads</td>
+            </tr>
+            <tr>
+              <td>15-16 years</td>
+              <td>Progressive loading, strength foundation</td>
+              <td>3-4x per week, 5-8 reps, moderate loads</td>
+            </tr>
+            <tr>
+              <td>17-18 years</td>
+              <td>Strength maximization, power intro</td>
+              <td>4x per week, varied rep ranges, structured periodization</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="epc-example">
+          <strong>Puberty and trainability:</strong> During puberty, testosterone and growth hormone levels surge, creating optimal conditions for strength development. Athletes who miss this window (due to injury, specialization without strength work, or fear of "getting bulky") face much slower strength gains later. This is why structured strength training-not just sport practice-is critical during adolescence.
+        </div>
+
+        <p class="epc-blog-text">
+          <strong>Strength Training Myths for Youth Athletes</strong><br>
+          "Lifting weights stunts growth" - False. Proper strength training enhances bone density and growth plate health.<br>
+          "Athletes will get too bulky" - False. Youth athletes rarely gain excessive muscle mass; they gain functional strength.<br>
+          "Sport practice is enough" - False. Sport practice develops skill; strength training develops physical capacity.<br>
+          "Strength training causes injury" - False. Poor technique and excessive volume cause injury. Proper training prevents it.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Level 3: Sports Performance (Ages 16-20)</h2>
+        <p class="epc-blog-text">
+          With movement competency and general strength established, athletes can now develop athletic qualities-speed, power, agility, and conditioning. These are the physical traits that directly impact sport performance and separate good athletes from great ones.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Athletic Qualities to Develop</h3>
+          <ul>
+            <li>Maximum velocity sprinting and acceleration</li>
+            <li>Reactive strength and plyometric capacity</li>
+            <li>Multi-directional speed and change of direction</li>
+            <li>Power production (vertical and horizontal)</li>
+            <li>Aerobic and anaerobic conditioning</li>
+            <li>Movement efficiency under fatigue</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text"><strong>Performance Training Progression</strong></p>
+
+        <table class="epc-data-table">
+          <thead>
+            <tr>
+              <th>Physical Quality</th>
+              <th>Training Methods</th>
+              <th>Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Speed Development</td>
+              <td>Sprint mechanics, acceleration work, max velocity runs</td>
+              <td>2-3x per week</td>
+            </tr>
+            <tr>
+              <td>Power Development</td>
+              <td>Olympic lifts, plyometrics, medicine ball throws</td>
+              <td>2-3x per week</td>
+            </tr>
+            <tr>
+              <td>Agility Training</td>
+              <td>Change of direction drills, reactive drills, cutting mechanics</td>
+              <td>2x per week</td>
+            </tr>
+            <tr>
+              <td>Conditioning</td>
+              <td>Interval training, tempo runs, sport-specific energy system work</td>
+              <td>2-4x per week</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="epc-example">
+          <strong>Performance testing matters here:</strong> At this stage, objective testing becomes critical. Vertical jump, sprint times, agility scores, and power output should be tracked regularly. Data reveals whether training is working and identifies physical limiters holding performance back. Without testing, programming is guesswork.
+        </div>
+
+        <p class="epc-blog-text">
+          <strong>Balancing Performance Training with Sport Practice</strong><br>
+          This is where things get complicated. Athletes are training with club teams, playing high school sports, and trying to fit in performance work. Total training volume must be managed to avoid overuse injury. The rule: performance training complements sport practice-it doesn't replace it or double down on it.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Level 4: Sport-Specific Skills (Ages 18-22)</h2>
+        <p class="epc-blog-text">
+          Sport-specific skill development has been happening throughout the pyramid, but at this level it becomes the primary focus. Physical qualities are well-developed; now the challenge is expressing those qualities within the technical and tactical demands of the sport.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Sport-Specific Development</h3>
+          <ul>
+            <li>Technical refinement of sport skills under pressure</li>
+            <li>Tactical awareness and decision-making speed</li>
+            <li>Positional-specific conditioning demands</li>
+            <li>Mental skills (focus, confidence, resilience)</li>
+            <li>Competition preparation and recovery strategies</li>
+            <li>Injury management and prevention protocols</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text">
+          At the collegiate and early professional level, most athletes have similar physical capabilities. What separates performers is technical mastery, tactical intelligence, and mental toughness. Physical training shifts from general development to maintenance and optimization-keeping athletes healthy and available to practice and compete.
+        </p>
+
+        <div class="epc-example">
+          <strong>The performance paradox:</strong> At elite levels, the athlete who trains less often performs better. This seems counterintuitive, but it reflects proper periodization and recovery. Elite athletes do focused, high-quality training sessions-not high-volume grinding. They understand that adaptation happens during recovery, not during training.
+        </div>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Level 5: Elite Performance (Professional Level)</h2>
+        <p class="epc-blog-text">
+          At the apex of the pyramid, the focus is optimization and competitive edge. Physical development is maximized; now the goal is extracting every possible advantage through biomechanical efficiency, recovery optimization, nutrition precision, and psychological mastery.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Elite-Level Optimization</h3>
+          <ul>
+            <li>Biomechanical analysis and movement optimization</li>
+            <li>Advanced recovery modalities (compression, contrast therapy, sleep optimization)</li>
+            <li>Precision nutrition and supplementation strategies</li>
+            <li>Load management and GPS monitoring</li>
+            <li>Psychological performance coaching</li>
+            <li>Technology integration (wearables, motion capture, force plates)</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text">
+          Professional athletes work with teams of specialists-strength coaches, physical therapists, nutritionists, sport psychologists, sleep specialists, and more. Performance gains at this level are measured in percentages, not orders of magnitude. A 2% improvement in vertical jump or 3% reduction in sprint time can be career-defining.
+        </p>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">What Happens When You Skip Levels</h2>
+        <p class="epc-blog-text">
+          The most common mistake in youth sports is attempting to build Level 3 or 4 (performance and sport-specific skills) without establishing Levels 1 and 2 (movement competency and functional strength). This creates fragile athletes who perform well initially but break down under sustained stress.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Consequences of Skipping Foundation</h3>
+          <ul>
+            <li>Higher injury rates (overuse and acute injuries)</li>
+            <li>Earlier burnout and dropout from sport</li>
+            <li>Performance plateaus in late adolescence</li>
+            <li>Poor movement quality under fatigue</li>
+            <li>Asymmetries and compensation patterns</li>
+            <li>Reduced long-term athletic potential</li>
+          </ul>
+        </div>
+
+        <div class="epc-example">
+          <strong>The early specialization trap:</strong> A 10-year-old plays club soccer year-round, trains 5 days per week, and competes every weekend. She develops excellent ball skills but never does structured strength training or movement work. At age 15, she tears her ACL-poor landing mechanics and quad dominance finally caught up. She had Level 4 skills sitting on a Level 1 foundation. The pyramid collapsed.
+        </div>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Long-Term Athletic Development Model</h2>
+        <p class="epc-blog-text">
+          The Performance Pyramid aligns with Long-Term Athletic Development (LTAD) principles, which emphasize age-appropriate training and progressive skill acquisition. The goal isn't to produce 12-year-old champions-it's to develop 22-year-old champions who are still healthy, motivated, and improving.
+        </p>
+
+        <p class="epc-blog-text"><strong>LTAD Stages Mapped to Performance Pyramid</strong></p>
+
+        <table class="epc-data-table">
+          <thead>
+            <tr>
+              <th>LTAD Stage</th>
+              <th>Age Range</th>
+              <th>Pyramid Level</th>
+              <th>Focus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>FUNdamentals</td>
+              <td>6-9 years</td>
+              <td>Level 1</td>
+              <td>Movement literacy, fun</td>
+            </tr>
+            <tr>
+              <td>Learn to Train</td>
+              <td>9-12 years</td>
+              <td>Level 1-2</td>
+              <td>Sport sampling, basic strength</td>
+            </tr>
+            <tr>
+              <td>Train to Train</td>
+              <td>12-16 years</td>
+              <td>Level 2-3</td>
+              <td>Strength, conditioning, skill</td>
+            </tr>
+            <tr>
+              <td>Train to Compete</td>
+              <td>16-20 years</td>
+              <td>Level 3-4</td>
+              <td>Performance, specialization</td>
+            </tr>
+            <tr>
+              <td>Train to Win</td>
+              <td>20+ years</td>
+              <td>Level 4-5</td>
+              <td>Optimization, mastery</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Practical Application: How to Use the Pyramid</h2>
+        
+        <p class="epc-blog-text">
+          <strong>For Youth Athletes (Ages 8-14)</strong><br>
+          Priority 1: Master fundamental movements through varied activities and play. Priority 2: Sample multiple sports-don't specialize yet. Priority 3: Begin bodyweight strength training around age 12-13. Priority 4: Limit competition volume-practice and training matter more than games.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>For High School Athletes (Ages 14-18)</strong><br>
+          Priority 1: Structured strength training 3-4x per week year-round. Priority 2: Performance testing every 8-12 weeks to track progress. Priority 3: Address movement deficits and asymmetries early. Priority 4: Manage total training volume to avoid overuse injury.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>For College Athletes (Ages 18-22)</strong><br>
+          Priority 1: Optimize physical qualities specific to your position/sport. Priority 2: Maintain strength and power during competitive season. Priority 3: Prioritize recovery and injury prevention. Priority 4: Develop mental skills and tactical awareness.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>For Adult Athletes (Ages 22+)</strong><br>
+          Priority 1: Maintain movement quality and address compensations. Priority 2: Strength training for injury prevention and longevity. Priority 3: Smart training-high quality, appropriate volume. Priority 4: Recovery optimization becomes increasingly important.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">How Elite Performance Clinic Applies the Pyramid</h2>
+        <p class="epc-blog-text">
+          At EPC, every athlete's training program is built according to the Performance Pyramid framework. We assess which level they're at, identify gaps in lower levels, and create programming that addresses deficits while continuing development at their current level.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>EPC's Pyramid-Based Approach</h3>
+          <ul>
+            <li>Comprehensive movement screening to assess Level 1 competency</li>
+            <li>Strength testing to determine Level 2 foundation</li>
+            <li>Performance testing (speed, power, agility) for Level 3 assessment</li>
+            <li>Sport-specific evaluation for Level 4 readiness</li>
+            <li>Individualized programming that addresses gaps at all levels</li>
+            <li>Ongoing monitoring to ensure proper progression</li>
+            <li>Collaboration with coaches to integrate pyramid principles into sport training</li>
+          </ul>
+        </div>
+
+        <p class="epc-blog-text">
+          We frequently work with youth athletes who have Level 4 skills (sport-specific proficiency) but Level 1 or 2 deficits (poor movement quality, inadequate strength). Our job is building the foundation while maintaining sport performance-not easy, but essential for long-term success and injury prevention.
+        </p>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Frequently Asked Questions</h2>
+        
+        <p class="epc-blog-text">
+          <strong>What if my athlete is already specialized and has been skipping levels?</strong><br>
+          It's never too late to address foundation. Many athletes need to "go back to basics" and fill gaps in movement competency and strength while continuing sport practice. This requires careful programming but dramatically reduces injury risk and unlocks performance potential.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>How do I know which level my athlete is at?</strong><br>
+          Comprehensive assessment by a qualified professional (physical therapist, strength coach, or performance specialist) reveals movement quality, strength levels, and performance capabilities. Testing removes guesswork and provides a roadmap.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>Can adult athletes still build foundational levels?</strong><br>
+          Absolutely. Many adult athletes have spent years training at higher levels without proper foundation. Addressing movement quality and building functional strength improves performance and reduces injury risk at any age.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>How long does it take to progress through each level?</strong><br>
+          It varies by age, training history, and individual development. Generally, young athletes (6-12) spend 2-4 years establishing Level 1. Adolescents (13-16) build Level 2 over 3-4 years. Late teens and college athletes (17-22) develop Levels 3-4. There's no shortcut-proper development takes time.
+        </p>
+
+        <p class="epc-blog-text">
+          <strong>What's more important: sport practice or performance training?</strong><br>
+          Both are essential, and they serve different purposes. Sport practice develops technical skills, tactical awareness, and sport-specific fitness. Performance training develops physical capacity, movement quality, and injury resilience. Elite athletes do both, and they're integrated strategically.
+        </p>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Bottom Line</h2>
+        <p class="epc-blog-text">
+          The Performance Pyramid provides a framework for sustainable athletic development. It prioritizes long-term success over short-term results, builds injury resilience through proper foundation, and creates athletes who continue improving into their twenties rather than peaking at fifteen.
+        </p>
+        <p class="epc-blog-text">
+          For parents, coaches, and athletes: resist the pressure to specialize early, skip levels, or chase immediate results. The athletes who reach the highest levels-and stay there-are those who build wide, stable foundations and progress systematically through each stage of development. The pyramid model works because it respects biological maturation, prioritizes movement quality, and recognizes that athletic excellence is built over years, not months.
+        </p>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we guide athletes through every level of the Performance Pyramid. Whether you're starting with a 10-year-old learning fundamental movements or a college athlete optimizing elite performance, our approach is rooted in this framework. Build the base, respect the progression, and the peak will take care of itself.
+        </p>
+      </div>
+
+      <div class="epc-divider"></div>
+
+      <div class="epc-cta">
+        <p class="epc-cta-text">
+          Want to assess where your athlete is on the Performance Pyramid? Elite Performance Clinic offers comprehensive evaluations and individualized development programs for athletes at every level.
+        </p>
+        <a href="tel:8186460040" class="epc-cta-button">Call (818) 646-0040</a>
+        <a href="../contact.html" class="epc-cta-button">Schedule Assessment</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../services.html">Services</a></li>
+              <li><a href="../team.html">Team</a></li>
+              <li><a href="../about.html">About</a></li>
+              <li><a href="../blog.html">Journal</a></li>
+              <li><a href="../contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="../careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>

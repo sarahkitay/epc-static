@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Join the Elite Performance Clinic team. Career opportunities for Physical Therapists, PTAs, and PT Aids." />
+  <title>Careers | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./epc-sections.css">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="./epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="team.html" class="nav-link">Team</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="blog.html" class="nav-link">Journal</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="careers-root">
+
+      <!-- Hero -->
+      <header class="careers-hero">
+        <h1 class="careers-title">Join the Elite Performance Team</h1>
+        <p class="careers-sub">Shape the future of movement, recovery, and high-performance training.</p>
+      </header>
+
+      <!-- Buttons -->
+      <div class="careers-buttons">
+        <button class="role-btn" data-role="pt">Physical Therapist</button>
+        <button class="role-btn" data-role="assistant">Physical Therapist Assistant</button>
+        <button class="role-btn" data-role="aid">Physical Therapist Aid</button>
+      </div>
+
+      <!-- Dynamic Output -->
+      <div id="careers-output" class="careers-output">
+        <p class="placeholder">Select a position above to learn more.</p>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">Services</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    .careers-root{
+      background:#000000;
+      color:#f2ede6;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      padding:120px 20px 80px;
+      max-width:900px;
+      margin:0 auto;
+      text-align:center;
+    }
+
+    .careers-title{
+      font-family:"Playfair Display",serif;
+      font-size:clamp(32px,5vw,48px);
+      color:#c9b27f;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      margin:0 0 12px;
+    }
+
+    .careers-sub{
+      font-size:18px;
+      color:#d6d0c4;
+      margin-bottom:40px;
+    }
+
+    .careers-buttons{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      padding: 16px;
+      justify-content:center;
+      margin-bottom:22px;
+    }
+
+    .role-btn{
+      padding:12px 22px;
+      border:1px solid #c9b27f;
+      border-radius:8px;
+      background:rgba(255,255,255,0.03);
+      color:#e1d3a8;
+      letter-spacing:.1em;
+      font-variant:small-caps;
+      cursor:pointer;
+      transition:.2s ease;
+      font-family:inherit;
+      font-size:14px;
+      font-weight:600;
+    }
+    .role-btn:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,0.07);
+      border-color:#d4c08f;
+    }
+
+    .careers-output{
+      margin-top:20px;
+      background:#111;
+      border:1px solid rgba(201,178,127,.2);
+      border-radius:12px;
+      padding:30px 22px;
+      text-align:left;
+    }
+
+    .careers-output h2{
+      font-family:"Playfair Display",serif;
+      font-size:26px;
+      color:#c9b27f;
+      letter-spacing:.08em;
+      margin-top:0;
+    }
+
+    .careers-output p{
+      line-height:1.7;
+      color:#d8d2c7;
+    }
+
+    .careers-output ul{
+      margin:12px 0;
+      padding-left:20px;
+    }
+
+    .careers-output li{
+      margin:6px 0;
+      color:#d8d2c7;
+    }
+
+    .apply-btn{
+      margin-top:20px;
+      display:inline-block;
+      padding:12px 20px;
+      border:1px solid #c9b27f;
+      border-radius:10px;
+      text-decoration:none;
+      color:#e1d3a8;
+      letter-spacing:.12em;
+      font-variant:small-caps;
+      transition:.2s ease;
+    }
+    .apply-btn:hover{
+      background:rgba(201,178,127,.2);
+      transform:translateY(-1px);
+    }
+
+    .placeholder{
+      text-align:center;
+      color:#7f796e;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+
+      const output = document.getElementById('careers-output');
+
+      const roles = {
+        pt: `
+          <h2>Physical Therapist</h2>
+          <p><strong>What We're Looking For:</strong></p>
+          <ul>
+            <li>Licensed DPT in California</li>
+            <li>Experience with athletes or high-performance populations</li>
+            <li>Strong understanding of biomechanics + manual therapy</li>
+            <li>Ability to communicate treatment plans clearly</li>
+            <li>Excited about innovation + collaborative training models</li>
+          </ul>
+          <a class="apply-btn" href="mailto:info@epcla.com?subject=Physical%20Therapist%20Application">Apply Now</a>
+        `,
+
+        assistant: `
+          <h2>Physical Therapist Assistant</h2>
+          <p><strong>What We're Looking For:</strong></p>
+          <ul>
+            <li>Licensed PTA in California (or in-process with clear timeline)</li>
+            <li>Comfort carrying out PT-designed treatment plans</li>
+            <li>Skill with exercise progression, cueing, and patient education</li>
+            <li>Professional, reassuring bedside manner with teens and parents</li>
+            <li>Team-first mindset working alongside DPTs, DCs, and trainers</li>
+          </ul>
+          <a class="apply-btn" href="mailto:info@epcla.com?subject=Physical%20Therapist%20Assistant%20Application">Apply Now</a>
+        `,
+
+        aid: `
+          <h2>Physical Therapist Aid</h2>
+          <p><strong>What We're Looking For:</strong></p>
+          <ul>
+            <li>Interest in sports medicine, rehab, or strength training</li>
+            <li>Ability to assist PT staff with warmups, stretching, and room set-ups</li>
+            <li>Comfort cleaning equipment and maintaining a tidy, elite environment</li>
+            <li>Great with people, calm under pressure, and positive energy</li>
+            <li>Reliable, punctual, and eager to learn from clinical staff</li>
+          </ul>
+          <a class="apply-btn" href="mailto:info@epcla.com?subject=Physical%20Therapy%20Aid%20Application">Apply Now</a>
+        `
+      };
+
+      document.querySelectorAll('.role-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const role = btn.dataset.role;
+
+          // If / else logic controlling displayed content
+          if(role === 'pt'){
+            output.innerHTML = roles.pt;
+          } else if(role === 'assistant'){
+            output.innerHTML = roles.assistant;
+          } else if(role === 'aid'){
+            output.innerHTML = roles.aid;
+          } else {
+            output.innerHTML = `<p class="placeholder">Select a position above to learn more.</p>`;
+          }
+        });
+      });
+
+    });
+  </script>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

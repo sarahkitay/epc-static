@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Proteus: Next-Generation Power Assessment. The Proteus Motion system is one of the rarest pieces of equipment in performance training. Discover how it measures true power output in 3D space." />
+  <title>The Proteus: Next-Generation Power Assessment | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../epc-sections.css">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="../epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="../services.html" class="nav-link">Services</a></li>
+        <li><a href="../team.html" class="nav-link">Team</a></li>
+        <li><a href="../about.html" class="nav-link">About</a></li>
+        <li><a href="../blog.html" class="nav-link active">Journal</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <style>
+      .epc-blog-post {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 40px 80px;
+        font-family: 'Playfair Display', Georgia, serif;
+        background: #000;
+        color: #fff;
+      }
+      
+      .epc-blog-header {
+        text-align: center;
+        margin-bottom: 80px;
+        padding-bottom: 40px;
+        border-bottom: 1px solid #C9B991;
+      }
+      
+      .epc-blog-title {
+        font-size: 56px;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        color: #C9B991;
+        letter-spacing: 2px;
+      }
+      
+      .epc-blog-meta {
+        font-size: 12px;
+        color: #C9B991;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 300;
+      }
+      
+      .epc-blog-intro {
+        font-size: 24px;
+        line-height: 1.8;
+        color: #fff;
+        margin-bottom: 60px;
+        text-align: center;
+        font-weight: 300;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-blog-section {
+        margin-bottom: 50px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-section-title {
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 20px;
+        color: #C9B991;
+        margin-top: 50px;
+        letter-spacing: 1px;
+      }
+      
+      .epc-blog-text {
+        font-size: 18px;
+        margin-bottom: 25px;
+        line-height: 1.9;
+        color: #fff;
+        font-weight: 300;
+      }
+      
+      .epc-example {
+        background: transparent;
+        border-left: 2px solid #C9B991;
+        padding: 25px 30px;
+        margin: 35px 0;
+        font-style: italic;
+        color: #C9B991;
+      }
+      
+      .epc-example strong {
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 14px;
+      }
+      
+      .epc-highlight-box {
+        background: transparent;
+        border: 1px solid #C9B991;
+        color: #fff;
+        padding: 50px;
+        margin: 60px auto;
+        max-width: 900px;
+      }
+      
+      .epc-highlight-box h3 {
+        color: #C9B991;
+        margin-top: 0;
+        font-size: 32px;
+        margin-bottom: 30px;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
+      
+      .epc-highlight-box p {
+        font-size: 18px;
+        line-height: 1.8;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      
+      .epc-highlight-box li {
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 18px;
+        line-height: 1.8;
+        font-size: 17px;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box li:before {
+        content: "-";
+        position: absolute;
+        left: 0;
+        color: #C9B991;
+      }
+      
+      .epc-cta {
+        background: transparent;
+        border: 1px solid #C9B991;
+        padding: 60px 40px;
+        margin: 80px auto;
+        text-align: center;
+        max-width: 900px;
+      }
+      
+      .epc-cta-text {
+        font-size: 22px;
+        font-weight: 300;
+        margin-bottom: 35px;
+        line-height: 1.8;
+        color: #fff;
+      }
+      
+      .epc-cta-button {
+        display: inline-block;
+        background: transparent;
+        color: #C9B991;
+        padding: 18px 50px;
+        text-decoration: none;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 12px;
+        border: 1px solid #C9B991;
+        transition: all 0.3s ease;
+        margin: 10px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
+      
+      .epc-cta-button:hover {
+        background: #C9B991;
+        color: #000;
+      }
+      
+      .epc-divider {
+        width: 100px;
+        height: 1px;
+        background: #C9B991;
+        margin: 60px auto;
+      }
+      
+      @media (max-width: 768px) {
+        .epc-blog-post {
+          padding: 100px 20px 60px;
+        }
+        
+        .epc-blog-title {
+          font-size: 36px;
+        }
+        
+        .epc-blog-intro {
+          font-size: 20px;
+        }
+        
+        .epc-section-title {
+          font-size: 26px;
+        }
+        
+        .epc-blog-text {
+          font-size: 16px;
+        }
+        
+        .epc-highlight-box {
+          padding: 30px 25px;
+        }
+        
+        .epc-cta {
+          padding: 40px 25px;
+        }
+      }
+    </style>
+
+    <div class="epc-blog-post">
+      <div class="epc-blog-header">
+        <h1 class="epc-blog-title">The Proteus: Next-Generation Power Assessment</h1>
+        <div class="epc-blog-meta">Elite Performance Clinic • December 2025</div>
+      </div>
+      
+      <div class="epc-blog-intro">
+        The Proteus Motion system is one of the rarest pieces of equipment in performance training. It measures true power output in 3D space, revealing exactly how force travels through your body—and where it's being lost.
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <p class="epc-blog-text">
+          Most training equipment measures force in one plane. A barbell moves up and down. A cable pulls in a fixed direction. But human movement doesn't work that way. When you sprint, throw, jump, or rotate, force travels through multiple planes simultaneously—and traditional equipment can't capture that reality.
+        </p>
+        <p class="epc-blog-text">
+          The Proteus Motion system changes everything. At Elite Performance Clinic, this technology allows us to assess power output, identify mechanical inefficiencies, and design training protocols that translate directly to sport and life. It's not just rare—there are fewer than 100 units worldwide. It's revolutionary.
+        </p>
+      </div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">What Is the Proteus?</h2>
+        <p class="epc-blog-text">
+          The Proteus is a 3D resistance training system that uses intelligent, computer-controlled resistance to measure and display force output in real time. Unlike traditional weights or cables that resist in only one direction, the Proteus provides resistance in all three planes of motion simultaneously—matching the exact direction and magnitude of force you're producing.
+        </p>
+        <div class="epc-example">
+          <strong>What makes it unique:</strong> The system captures data at 333 Hz (333 times per second), tracking force, velocity, power, and movement path in three-dimensional space. This gives us an unprecedented view of how your body produces and transfers force.
+        </div>
+        <p class="epc-blog-text">
+          The result is objective, quantifiable data that reveals exactly where you're strong, where you're losing power, and how efficiently your kinetic chain is functioning. This isn't subjective observation—it's biomechanical truth displayed in real time.
+        </p>
+      </div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Why 3D Assessment Matters</h2>
+        <p class="epc-blog-text">
+          Traditional strength testing measures force production in isolated, single-plane movements. A leg press tells you how much force your legs can produce moving straight up and down. A bench press measures horizontal pushing strength. But these tests don't capture how force transfers through your body during complex, multi-planar movements.
+        </p>
+        <div class="epc-example">
+          <strong>Real-world application:</strong> A tennis serve requires hip rotation, thoracic extension, shoulder external rotation, and arm acceleration—all coordinated in a precise sequence. If force is leaking at any point in that chain, your serve loses velocity and accuracy. The Proteus identifies exactly where that breakdown occurs.
+        </div>
+        <p class="epc-blog-text">
+          The same principle applies to everything from a golf swing to picking up your child. Movement is three-dimensional, and your training assessment should be too.
+        </p>
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">What the Proteus Reveals</h2>
+        
+        <p class="epc-blog-text">
+          <strong>True Power Output Across All Planes</strong><br>
+          Power isn't just about how much force you produce—it's about how quickly you produce it. The Proteus measures peak power, average power, and power across specific phases of movement, giving us insight into your rate of force development and explosive capacity.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Movement Efficiency and Compensation Patterns</strong><br>
+          When you perform a rotational movement on the Proteus, the system tracks the exact path your hands travel through space. If you're compensating—shifting weight unevenly, using excessive arm movement instead of core rotation, or losing tension at specific points—the data shows it immediately.
+        </p>
+        
+        <div class="epc-example">
+          <strong>Clinical insight:</strong> We often see athletes who test strong in isolated exercises but show significant power leaks during functional movements. The Proteus exposes these inefficiencies so we can address them with targeted corrective work.
+        </div>
+        
+        <p class="epc-blog-text">
+          <strong>Bilateral Asymmetries</strong><br>
+          Most people have strength imbalances between their left and right sides. The Proteus quantifies these asymmetries with precision, measuring not just force output but also velocity, timing, and coordination differences between limbs.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Fatigue Resistance and Consistency</strong><br>
+          By tracking performance across multiple repetitions, the Proteus reveals how well you maintain power output under fatigue. This is critical for athletes who need to perform at high levels late in competition—or anyone who wants to move well when tired.
+        </p>
+      </div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">How We Use the Proteus at EPC</h2>
+        
+        <p class="epc-blog-text">
+          <strong>Initial Assessment and Baseline Testing</strong><br>
+          Every performance training program at EPC begins with a comprehensive movement assessment. The Proteus is a key component of this process, giving us objective data on power production, movement quality, and asymmetries that need to be addressed.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Sport-Specific Power Development</strong><br>
+          Because the Proteus allows for fully customizable movement patterns, we can replicate the exact demands of your sport. A baseball pitcher works rotational power in patterns that match their delivery. A soccer player trains explosive hip extension for sprinting and kicking. The system adapts to the athlete, not the other way around.
+        </p>
+        
+        <div class="epc-example">
+          <strong>The EPC approach:</strong> We don't just use the Proteus for testing—we integrate it into training. Athletes perform sport-specific movements against intelligent resistance while receiving real-time feedback on their power output, creating a closed-loop system that accelerates learning and adaptation.
+        </div>
+        
+        <p class="epc-blog-text">
+          <strong>Post-Injury Return-to-Performance</strong><br>
+          Returning from injury isn't just about regaining range of motion or basic strength—it's about restoring power production and movement quality under load. The Proteus allows us to track progress objectively and ensure athletes are truly ready before returning to sport.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Longitudinal Tracking and Program Optimization</strong><br>
+          Because the Proteus captures precise, repeatable data, we can track your progress over weeks, months, and years. This allows us to see what's working, identify when progress plateaus, and adjust programming to ensure continued adaptation.
+        </p>
+      </div>
+      
+      <div class="epc-highlight-box">
+        <h3>What a Proteus Assessment Includes</h3>
+        <ul>
+          <li>Bilateral power output comparison to identify left/right asymmetries and imbalances</li>
+          <li>Multi-planar movement analysis including rotation, pressing, pulling, and complex diagonal patterns</li>
+          <li>Peak and average power metrics across multiple velocity ranges</li>
+          <li>Movement path visualization to identify compensation patterns and inefficiencies</li>
+          <li>Fatigue resistance testing to assess power maintenance under repeated efforts</li>
+          <li>Sport-specific movement replication for targeted performance assessment</li>
+          <li>Comprehensive report with baseline data and training recommendations</li>
+        </ul>
+      </div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Proteus Training Applications</h2>
+        
+        <p class="epc-blog-text">
+          <strong>Rotational Power for Bat and Racquet Sports</strong><br>
+          Baseball, softball, tennis, golf—all require explosive rotational power. The Proteus allows athletes to train rotation at game speed while tracking power output in real time. This creates immediate feedback loops that accelerate skill development.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Explosive Hip Extension for Sprinting and Jumping</strong><br>
+          Speed and vertical jump are largely determined by how quickly you can extend your hips. The Proteus measures peak force, peak velocity, and peak power during explosive hip movements, allowing us to optimize training loads and rest intervals for maximum adaptation.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Upper Body Power for Throwing and Contact Sports</strong><br>
+          Throwing velocity, punching power, and contact force all depend on coordinated upper body power development. The Proteus trains these patterns while providing objective feedback on force production and movement efficiency.
+        </p>
+        
+        <p class="epc-blog-text">
+          <strong>Functional Movement for Everyday Performance</strong><br>
+          You don't have to be an elite athlete to benefit from the Proteus. Anyone who wants to move powerfully, prevent injury, and maintain physical capacity as they age can use this technology to optimize their training.
+        </p>
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Why This Technology Is Rare</h2>
+        <p class="epc-blog-text">
+          The Proteus Motion system represents the cutting edge of performance training technology. Its rarity isn't just about cost—it's about the expertise required to use it effectively. The system generates massive amounts of data, and interpreting that data requires a deep understanding of biomechanics, motor learning, and sport-specific demands.
+        </p>
+        <p class="epc-blog-text">
+          At EPC, our performance coaches and physical therapists work collaboratively to integrate Proteus data into comprehensive training programs. The technology is powerful, but it's only as good as the clinical team using it.
+        </p>
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Bottom Line</h2>
+        <p class="epc-blog-text">
+          The Proteus Motion system isn't just rare equipment—it's a paradigm shift in how we assess and develop power. By measuring force production in three-dimensional space, it reveals inefficiencies that traditional testing misses and allows for training protocols that directly transfer to sport and life.
+        </p>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we don't just have access to this technology—we've built our performance training model around it. Whether you're an elite athlete chasing milliseconds and inches, or someone who simply wants to move powerfully and age well, the Proteus gives us objective data to guide your training and track your progress.
+        </p>
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-cta">
+        <p class="epc-cta-text">
+          Ready to see how your body produces power? Schedule a Proteus assessment and discover exactly where your performance can improve.
+        </p>
+        <a href="tel:8186460040" class="epc-cta-button">Call (818) 646-0040</a>
+        <a href="../contact.html" class="epc-cta-button">Book Assessment</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../services.html">Services</a></li>
+              <li><a href="../team.html">Team</a></li>
+              <li><a href="../about.html">About</a></li>
+              <li><a href="../blog.html">Journal</a></li>
+              <li><a href="../contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="../careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
