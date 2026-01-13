@@ -28,6 +28,21 @@ export default async function handler(req, res) {
       });
     }
 
+    // Build fields object, only including optional fields if they have values
+    const fields = {
+      'Athlete Name': athleteName,
+      'Parent/Guardian Name': parentName,
+      'Phone Number': phone,
+      'Email': email,
+      'Program': program,
+      'Submitted At': new Date().toISOString()
+    };
+
+    // Add optional fields only if they have values
+    if (age) fields['Age'] = age;
+    if (position) fields['Position'] = position;
+    if (clubOrSchool) fields['Club or School Team'] = clubOrSchool;
+
     // Save to Airtable
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Winter Ball Registrations')}`,
@@ -37,19 +52,7 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${process.env.AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          fields: {
-            'Athlete Name': athleteName,
-            'Age': age || '',
-            'Position': position || '',
-            'Club or School Team': clubOrSchool || '',
-            'Parent/Guardian Name': parentName,
-            'Phone Number': phone,
-            'Email': email,
-            'Program': program,
-            'Submitted At': new Date().toISOString()
-          }
-        })
+        body: JSON.stringify({ fields })
       }
     );
 

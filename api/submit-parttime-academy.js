@@ -33,6 +33,26 @@ export default async function handler(req, res) {
       });
     }
 
+    // Build fields object, only including optional fields if they have values
+    const fields = {
+      'Athlete First Name': firstName,
+      'Athlete Last Name': lastName,
+      'Parent/Guardian Name': parentName,
+      'Preferred Contact Phone': phone,
+      'Email': email,
+      'Submitted At': new Date().toISOString()
+    };
+
+    // Add optional fields only if they have values
+    if (grade) fields['Grade'] = grade;
+    if (sport) fields['Sport'] = sport;
+    if (dob) fields['Date of Birth'] = dob;
+    if (startTerm) fields['Desired Start Term'] = startTerm;
+    if (trainingSchedule) fields['Training Schedule/Availability'] = trainingSchedule;
+    if (developmentGoals) fields['Primary Development Goals'] = developmentGoals;
+    if (highlightTapeUrl) fields['Highlight Tape URL'] = highlightTapeUrl;
+    if (additionalNotes) fields['Additional Notes'] = additionalNotes;
+
     // Save to Airtable
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Part-Time Academy Applications')}`,
@@ -42,24 +62,7 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${process.env.AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          fields: {
-            'Athlete First Name': firstName,
-            'Athlete Last Name': lastName,
-            'Parent/Guardian Name': parentName,
-            'Preferred Contact Phone': phone,
-            'Email': email,
-            'Grade': grade || '',
-            'Sport': sport || '',
-            'Date of Birth': dob || '',
-            'Desired Start Term': startTerm || '',
-            'Training Schedule/Availability': trainingSchedule || '',
-            'Primary Development Goals': developmentGoals || '',
-            'Highlight Tape URL': highlightTapeUrl || '',
-            'Additional Notes': additionalNotes || '',
-            'Submitted At': new Date().toISOString()
-          }
-        })
+        body: JSON.stringify({ fields })
       }
     );
 

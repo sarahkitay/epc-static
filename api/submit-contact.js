@@ -19,6 +19,18 @@ export default async function handler(req, res) {
       });
     }
 
+    // Build fields object, only including optional fields if they have values
+    const fields = {
+      'Name': name,
+      'Email': email,
+      'Subject': subject,
+      'Message': message,
+      'Submitted At': new Date().toISOString()
+    };
+
+    // Add optional fields only if they have values
+    if (phone) fields['Phone'] = phone;
+
     // Save to Airtable
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Contact Form Submissions')}`,
@@ -28,16 +40,7 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${process.env.AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          fields: {
-            'Name': name,
-            'Email': email,
-            'Phone': phone || '',
-            'Subject': subject,
-            'Message': message,
-            'Submitted At': new Date().toISOString()
-          }
-        })
+        body: JSON.stringify({ fields })
       }
     );
 
