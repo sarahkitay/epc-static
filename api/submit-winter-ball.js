@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     // Save to Airtable
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Winter Ball Registrations`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Winter Ball Registrations')}`,
       {
         method: 'POST',
         headers: {

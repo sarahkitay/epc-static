@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
     // Save to Airtable
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Contact Form Submissions`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Contact Form Submissions')}`,
       {
         method: 'POST',
         headers: {

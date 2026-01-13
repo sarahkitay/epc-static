@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     // Save to Airtable
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Part-Time Academy Applications`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Part-Time Academy Applications')}`,
       {
         method: 'POST',
         headers: {
