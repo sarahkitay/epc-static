@@ -25,6 +25,7 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           fields: {
+            'Name': name || '',
             'Email': email,
             'Source': source || '',
             'Submitted At': new Date().toISOString()
