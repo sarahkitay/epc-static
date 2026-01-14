@@ -264,7 +264,9 @@ img {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 0 18px;
+  /* Anchor content lower so it doesn't cover the "ELITE" lettering baked into the hero video */
+  align-self: end;
+  padding: 120px 18px clamp(110px, 14vh, 190px);
 }
 
 .hero-kicker {
@@ -396,7 +398,7 @@ img {
 }
 
 .hero-sub {
-  margin-top: 178px;
+  margin-top: 18px;
   font-family: 'Montserrat', system-ui, sans-serif;
   letter-spacing: .22em;
   text-transform: uppercase;
@@ -438,14 +440,14 @@ img {
     min-height: 600px;
   }
   .hero-content {
-    padding: 0 20px;
+    padding: 110px 20px clamp(96px, 12vh, 150px);
   }
   .hero-title {
     gap: clamp(12px, 3vw, 40px);
     font-size: clamp(48px, 12vw, 180px);
   }
   .hero-sub {
-    margin-top: 120px;
+    margin-top: 16px;
     font-size: 11px;
     letter-spacing: .2em;
   }
@@ -467,7 +469,7 @@ img {
     gap: clamp(8px, 2.5vw, 30px);
   }
   .hero-sub {
-    margin-top: 80px;
+    margin-top: 14px;
     font-size: 10px;
   }
 }
