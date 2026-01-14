@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Request a booking at Elite Performance Clinic. Share preferred days and times and our team will confirm by phone or email." />
+  <title>Booking Request | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./epc-sections.css">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="./epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="team.html" class="nav-link">Team</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="blog.html" class="nav-link">Journal</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions" aria-label="Quick actions">
+        <a class="nav-phone" href="tel:+13233636324" data-track="nav_call">(323) 363-6324</a>
+        <a class="nav-book" href="booking.html" data-track="nav_book">Book Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="bk-root" aria-label="Booking request">
+      <header class="bk-hero">
+        <div class="bk-badge">Elite Performance Clinic</div>
+        <h1 class="bk-title">BOOKING REQUEST</h1>
+        <p class="bk-sub">Share a few times that work for you. Our team will confirm by phone or email.</p>
+      </header>
+
+      <section class="bk-panel" aria-label="Request form">
+        <form id="bookingForm" class="bk-form" novalidate>
+          <div id="booking-error" class="bk-message bk-message--error" style="display:none;"></div>
+          <div id="booking-success" class="bk-message bk-message--success" style="display:none;">Thank you. Your request has been sent. We will follow up shortly.</div>
+
+          <div class="bk-grid">
+            <div class="bk-field">
+              <label for="bk-name">Name <span class="bk-req">*</span></label>
+              <input id="bk-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="bk-field">
+              <label for="bk-email">Email <span class="bk-req">*</span></label>
+              <input id="bk-email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="bk-field">
+              <label for="bk-phone">Phone <span class="bk-req">*</span></label>
+              <input id="bk-phone" name="phone" type="tel" autocomplete="tel" required />
+            </div>
+            <div class="bk-field">
+              <label for="bk-service">Service of interest</label>
+              <select id="bk-service" name="service">
+                <option value="">Select</option>
+                <option value="Assessment">Assessment</option>
+                <option value="Physical Therapy">Physical Therapy</option>
+                <option value="Performance Training">Performance Training</option>
+                <option value="Recovery Services">Recovery Services</option>
+                <option value="Football Academy">Football Academy</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="bk-split">
+            <div class="bk-block">
+              <h2 class="bk-h2">Preferred days</h2>
+              <div class="bk-chips" role="group" aria-label="Preferred days">
+                <label class="bk-chip"><input type="checkbox" name="days" value="Mon" />Mon</label>
+                <label class="bk-chip"><input type="checkbox" name="days" value="Tue" />Tue</label>
+                <label class="bk-chip"><input type="checkbox" name="days" value="Wed" />Wed</label>
+                <label class="bk-chip"><input type="checkbox" name="days" value="Thu" />Thu</label>
+                <label class="bk-chip"><input type="checkbox" name="days" value="Fri" />Fri</label>
+                <label class="bk-chip"><input type="checkbox" name="days" value="Sat" />Sat</label>
+              </div>
+              <p class="bk-note">Select any days that work. We will confirm availability.</p>
+            </div>
+
+            <div class="bk-block">
+              <h2 class="bk-h2">Preferred time window</h2>
+              <div class="bk-chips" role="group" aria-label="Preferred time window">
+                <label class="bk-chip"><input type="checkbox" name="times" value="Morning" />Morning</label>
+                <label class="bk-chip"><input type="checkbox" name="times" value="Midday" />Midday</label>
+                <label class="bk-chip"><input type="checkbox" name="times" value="Afternoon" />Afternoon</label>
+                <label class="bk-chip"><input type="checkbox" name="times" value="Evening" />Evening</label>
+              </div>
+              <p class="bk-note">Optional. If you can, add specific time options below.</p>
+            </div>
+          </div>
+
+          <div class="bk-block">
+            <h2 class="bk-h2">Suggested time options</h2>
+            <p class="bk-note">Add up to three options. Leave blank if not sure.</p>
+            <div class="bk-grid bk-grid--3">
+              <div class="bk-field">
+                <label for="bk-slot-1">Option 1</label>
+                <input id="bk-slot-1" name="slot1" type="datetime-local" />
+              </div>
+              <div class="bk-field">
+                <label for="bk-slot-2">Option 2</label>
+                <input id="bk-slot-2" name="slot2" type="datetime-local" />
+              </div>
+              <div class="bk-field">
+                <label for="bk-slot-3">Option 3</label>
+                <input id="bk-slot-3" name="slot3" type="datetime-local" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bk-field">
+            <label for="bk-notes">Notes</label>
+            <textarea id="bk-notes" name="notes" rows="5" placeholder="Any details that help us confirm the right session."></textarea>
+          </div>
+
+          <div class="bk-actions">
+            <button class="bk-btn bk-btn--primary" type="submit">Send request</button>
+            <a class="bk-btn bk-btn--outline" href="tel:+13233636324" data-track="booking_call">Call (323) 363-6324</a>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">Services</a></li>
+              <li><a href="team.html">Team</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="blog.html">Journal</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    :root{
+      --bg:#070707;
+      --ink:#F2EDE6;
+      --dim:rgba(242,237,230,.72);
+      --gold:#C9B27F;
+      --gold2:#E1D3A8;
+      --line:rgba(201,178,127,.22);
+      --plate:rgba(201,178,127,.08);
+    }
+
+    .bk-root{
+      background:var(--bg);
+      color:var(--ink);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 110px 20px 80px;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+
+    .bk-hero{
+      text-align:center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 44px;
+      margin-bottom: 44px;
+    }
+
+    .bk-badge{
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .bk-title{
+      font-family: "Playfair Display", serif;
+      font-size: clamp(34px, 5.5vw, 56px);
+      font-weight: 400;
+      letter-spacing: .08em;
+      margin: 0 0 14px 0;
+    }
+
+    .bk-sub{
+      margin: 0 auto;
+      max-width: 760px;
+      color: var(--dim);
+      font-size: 16px;
+      line-height: 1.8;
+      letter-spacing: .01em;
+    }
+
+    .bk-panel{
+      border: 1px solid var(--line);
+      background: var(--plate);
+      border-radius: 14px;
+      padding: 34px;
+    }
+
+    .bk-form{ margin: 0; }
+
+    .bk-message{
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .bk-message--error{ color: #ffd6d6; background: rgba(230,57,70,.08); border-color: rgba(230,57,70,.25); }
+    .bk-message--success{ color: #d6ffe8; background: rgba(46,196,118,.08); border-color: rgba(46,196,118,.22); }
+
+    .bk-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 18px;
+      margin-bottom: 18px;
+    }
+    .bk-grid--3{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .bk-field label{
+      display:block;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(242,237,230,.8);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .bk-req{ color: var(--gold); }
+
+    .bk-field input,
+    .bk-field select,
+    .bk-field textarea{
+      width:100%;
+      box-sizing: border-box;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(201,178,127,.18);
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 15px;
+      outline: none;
+    }
+    .bk-field textarea{ resize: vertical; min-height: 120px; }
+    .bk-field input:focus,
+    .bk-field select:focus,
+    .bk-field textarea:focus{
+      border-color: rgba(201,178,127,.5);
+      box-shadow: 0 0 0 4px rgba(201,178,127,.12);
+    }
+
+    .bk-split{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 18px 0;
+    }
+
+    .bk-block{
+      border: 1px solid rgba(201,178,127,.16);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .bk-h2{
+      font-family: "Playfair Display", serif;
+      font-weight: 400;
+      letter-spacing: .06em;
+      font-size: 18px;
+      margin: 0 0 12px 0;
+      color: var(--gold2);
+    }
+
+    .bk-note{
+      margin: 10px 0 0 0;
+      color: rgba(242,237,230,.64);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .bk-chips{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .bk-chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(201,178,127,.22);
+      background: rgba(201,178,127,.06);
+      color: rgba(242,237,230,.88);
+      font-size: 13px;
+      letter-spacing: .06em;
+      user-select:none;
+    }
+    .bk-chip input{ width: 14px; height: 14px; accent-color: var(--gold); }
+
+    .bk-actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-start;
+      margin-top: 18px;
+    }
+
+    .bk-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-variant: small-caps;
+      letter-spacing: .16em;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: transparent;
+      cursor:pointer;
+    }
+    .bk-btn--primary{
+      border-color: var(--gold);
+      color: var(--gold2) !important;
+      -webkit-text-fill-color: var(--gold2) !important;
+      background:
+        radial-gradient(160% 220% at 50% -40%, rgba(255,255,255,.08), rgba(0,0,0,0) 60%),
+        linear-gradient(180deg, rgba(201,178,127,.18), rgba(201,178,127,0));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 0 14px rgba(201,178,127,.22), 0 10px 24px -16px rgba(0,0,0,.55);
+    }
+    .bk-btn--primary:hover{ transform: translateY(-1px); }
+    .bk-btn--outline:hover{ background: rgba(201,178,127,.08); border-color: rgba(201,178,127,.45); }
+
+    @media (max-width: 900px){
+      .bk-grid{ grid-template-columns: 1fr; }
+      .bk-grid--3{ grid-template-columns: 1fr; }
+      .bk-split{ grid-template-columns: 1fr; }
+      .bk-panel{ padding: 22px; }
+    }
+  </style>
+
+  <script>
+    (function(){
+      const form = document.getElementById('bookingForm');
+      if (!form) return;
+
+      const errorEl = document.getElementById('booking-error');
+      const successEl = document.getElementById('booking-success');
+
+      const showError = (msg) => {
+        if (successEl) successEl.style.display = 'none';
+        if (!errorEl) return;
+        errorEl.textContent = msg;
+        errorEl.style.display = 'block';
+      };
+
+      const showSuccess = () => {
+        if (errorEl) errorEl.style.display = 'none';
+        if (!successEl) return;
+        successEl.style.display = 'block';
+      };
+
+      const getChecked = (name) =>
+        Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fd = new FormData(form);
+        const name = String(fd.get('name') || '').trim();
+        const email = String(fd.get('email') || '').trim();
+        const phone = String(fd.get('phone') || '').trim();
+        const service = String(fd.get('service') || '').trim();
+        const notes = String(fd.get('notes') || '').trim();
+
+        const days = getChecked('days');
+        const times = getChecked('times');
+        const slot1 = String(fd.get('slot1') || '').trim();
+        const slot2 = String(fd.get('slot2') || '').trim();
+        const slot3 = String(fd.get('slot3') || '').trim();
+
+        if (!name) return showError('Please enter your name.');
+        if (!email) return showError('Please enter your email.');
+        if (!phone) return showError('Please enter your phone number.');
+
+        const subject = service ? `Booking Request: ${service}` : 'Booking Request';
+
+        const messageParts = [
+          'BOOKING REQUEST',
+          '',
+          service ? `Service: ${service}` : null,
+          days.length ? `Preferred days: ${days.join(', ')}` : 'Preferred days: (not specified)',
+          times.length ? `Preferred time window: ${times.join(', ')}` : 'Preferred time window: (not specified)',
+          (slot1 || slot2 || slot3) ? 'Suggested time options:' : 'Suggested time options: (not specified)',
+          slot1 ? `- ${slot1}` : null,
+          slot2 ? `- ${slot2}` : null,
+          slot3 ? `- ${slot3}` : null,
+          '',
+          notes ? `Notes: ${notes}` : 'Notes: (none)',
+          '',
+          '---',
+          'Submitted via booking.html'
+        ].filter(Boolean);
+
+        try {
+          const resp = await fetch('/api/submit-contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              phone,
+              subject,
+              message: messageParts.join('\\n')
+            })
+          });
+
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok) throw new Error(data.error || 'Failed to send booking request.');
+
+          form.reset();
+          showSuccess();
+        } catch (err) {
+          showError(err.message || 'Failed to send booking request.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+

@@ -4,6 +4,29 @@
   const navMenu = document.querySelector(".nav-menu");
   const navLinks = navMenu ? navMenu.querySelectorAll(".nav-link") : [];
 
+  // Basic CTA tracking hook (replace/extend with GA4/Meta/etc later)
+  window.trackCta = window.trackCta || ((name, meta = {}) => {
+    try {
+      const payload = { name, meta, ts: new Date().toISOString() };
+      // eslint-disable-next-line no-console
+      console.log("[cta]", payload);
+      // Optional: persist last CTA for debugging
+      try { window.sessionStorage.setItem("epc_last_cta", JSON.stringify(payload)); } catch {}
+    } catch {}
+  });
+
+  // Track any click with data-track
+  document.addEventListener("click", (e) => {
+    const el = e.target && e.target.closest ? e.target.closest("[data-track]") : null;
+    if (!el) return;
+    const name = el.getAttribute("data-track");
+    if (!name) return;
+    window.trackCta(name, {
+      href: el.getAttribute("href") || null,
+      text: (el.textContent || "").trim().slice(0, 80) || null
+    });
+  }, true);
+
   const onScroll = () => {
     if (!nav) return;
     nav.classList.toggle("scrolled", window.scrollY > 100);
