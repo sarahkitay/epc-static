@@ -1666,6 +1666,28 @@
           ...(protocolItems.length ? protocolItems.map((p) => `- ${p}`) : ['- N/A']),
         ];
 
+        // 1) Save the quiz submission into the dedicated Airtable quiz table (does not email)
+        try {
+          const protocolSummary = (document.getElementById('resultSummary')?.textContent || '').trim();
+          await fetch('/api/submit-quiz', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              goal: formData.goal,
+              body_areas: (formData.body_areas || []).join(', '),
+              activity: formData.activity,
+              priority: formData.priority,
+              source: 'homepage-intake-quiz',
+              protocol_list: protocolItems.join('\n'),
+              protocol_summary: protocolSummary
+            })
+          });
+        } catch (quizErr) {
+          console.warn('Quiz table write failed:', quizErr);
+        }
+
+        // 2) Save full lead into Contact Form Submissions (includes phone) + sends notification email
         const res = await fetch('/api/submit-contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
