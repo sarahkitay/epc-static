@@ -449,35 +449,22 @@
         if (!email) return showError('Please enter your email.');
         if (!phone) return showError('Please enter your phone number.');
 
-        const subject = service ? `Booking Request: ${service}` : 'Booking Request';
-
-        const messageParts = [
-          'BOOKING REQUEST',
-          '',
-          service ? `Service: ${service}` : null,
-          days.length ? `Preferred days: ${days.join(', ')}` : 'Preferred days: (not specified)',
-          times.length ? `Preferred time window: ${times.join(', ')}` : 'Preferred time window: (not specified)',
-          (slot1 || slot2 || slot3) ? 'Suggested time options:' : 'Suggested time options: (not specified)',
-          slot1 ? `- ${slot1}` : null,
-          slot2 ? `- ${slot2}` : null,
-          slot3 ? `- ${slot3}` : null,
-          '',
-          notes ? `Notes: ${notes}` : 'Notes: (none)',
-          '',
-          '---',
-          'Submitted via booking.html'
-        ].filter(Boolean);
-
         try {
-          const resp = await fetch('/api/submit-contact', {
+            const resp = await fetch('/api/submit-booking-request', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               name,
               email,
               phone,
-              subject,
-              message: messageParts.join('\\n')
+                service,
+                preferredDays: days.length ? days.join(', ') : '',
+                preferredTimes: times.length ? times.join(', ') : '',
+                slot1,
+                slot2,
+                slot3,
+                notes,
+                source: 'booking-request-page'
             })
           });
 
