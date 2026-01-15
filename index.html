@@ -153,6 +153,204 @@
     </div>
   </div>
 </section>
+<!-- ===== SERVICES OVERVIEW (Cards) ===== -->
+<section id="services" class="epc-services-snapshot" aria-label="Services overview">
+  <style>
+    .epc-services-snapshot{
+      background: #0B0B0B;
+      color: #F2EDE6;
+      padding: 78px 20px;
+      border-bottom: 1px solid rgba(201,178,127,.18);
+    }
+    .epc-services-inner{
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .epc-services-kicker{
+      margin: 0 0 10px 0;
+      font-size: 11px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: rgba(201,178,127,.9);
+      font-weight: 900;
+    }
+    .epc-services-head{
+      display:flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .epc-services-head h2{
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-weight: 500;
+      letter-spacing: .05em;
+      font-size: clamp(30px, 3.6vw, 44px);
+      line-height: 1.12;
+    }
+    .epc-services-head p{
+      margin: 10px 0 0 0;
+      color: rgba(242,237,230,.72);
+      max-width: 560px;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .svc-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .svc-card{
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(201,178,127,.22);
+      background: rgba(201,178,127,.08);
+      min-height: 230px;
+      display:flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-decoration: none;
+      color: inherit;
+    }
+    .svc-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      filter: brightness(.64) contrast(1.05);
+      transform: scale(1.01);
+    }
+    .svc-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.86), rgba(0,0,0,.18));
+    }
+    .svc-content{
+      position: relative;
+      z-index: 1;
+      padding: 18px;
+    }
+    .svc-badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(201,178,127,.28);
+      background: rgba(201,178,127,.10);
+      color: rgba(242,237,230,.86);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 10px;
+      white-space: nowrap;
+    }
+    .svc-title{
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    .svc-desc{
+      margin: 0 0 14px 0;
+      color: rgba(242,237,230,.75);
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 42ch;
+    }
+    .svc-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .svc-link{
+      color: #C9B27F;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 900;
+      border-bottom: 1px solid rgba(201,178,127,.45);
+      padding-bottom: 2px;
+    }
+    .svc-price{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(201,178,127,.22);
+      background: rgba(0,0,0,.22);
+      color: rgba(242,237,230,.85);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-left: auto;
+    }
+    @media (max-width: 980px){
+      .svc-grid{ grid-template-columns: 1fr; }
+      .svc-price{ margin-left: 0; }
+    }
+  </style>
+
+  <div class="epc-services-inner">
+    <p class="epc-services-kicker">Services</p>
+    <div class="epc-services-head">
+      <div>
+        <h2>Services built for outcomes.</h2>
+        <p>Clinical rehab, performance training, and recovery under one roof. Clear next steps, no guessing.</p>
+      </div>
+      <a class="svc-link" href="services.html" data-track="services_view_all">View all services →</a>
+    </div>
+
+    <div class="svc-grid" aria-label="Featured services">
+      <a class="svc-card" href="services.html" data-track="svc_pt_learn">
+        <img src="img/IMG_8081.jpg" alt="" aria-hidden="true" loading="lazy">
+        <div class="svc-content">
+          <div class="svc-badge">Recovery & Rehabilitation</div>
+          <h3 class="svc-title">Physical Therapy</h3>
+          <p class="svc-desc">Doctor-led care focused on movement quality, pain reduction, and measurable progress.</p>
+          <div class="svc-row">
+            <span class="svc-link" aria-hidden="true">Learn more →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="svc-card" href="assessment.html" data-track="svc_assess_learn">
+        <img src="img/7_22EPC-21.jpg" alt="" aria-hidden="true" loading="lazy">
+        <div class="svc-content">
+          <div class="svc-badge">Performance Optimization</div>
+          <h3 class="svc-title">Comprehensive Assessment</h3>
+          <p class="svc-desc">Pedics, Proteus, movement screening, and optional speed evaluation for a precision plan.</p>
+          <div class="svc-row">
+            <span class="svc-link" aria-hidden="true">Learn more →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="svc-card" href="training.html" data-track="svc_training_learn">
+        <img src="img/IMG_8082.jpg" alt="" aria-hidden="true" loading="lazy">
+        <div class="svc-content">
+          <div class="svc-badge">Training</div>
+          <h3 class="svc-title">Team Training</h3>
+          <p class="svc-desc">Tiered training options built for athletes. Clear structure, coaching, and accountability.</p>
+          <div class="svc-row">
+            <span class="svc-link" aria-hidden="true">Learn more →</span>
+            <span class="svc-price">From $30</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ===== ASSESSMENT CTA #2 (Screen 4) ===== -->
 <section class="epc-assess-cta2" aria-label="Assessment CTA">
   <style>
@@ -494,7 +692,7 @@
     </section>
 
 
-    <section id="services" class="epc-accordion" aria-label="Our Services">
+    <section id="services-accordion" class="epc-accordion" aria-label="Our Services">
       <div class="epc-acc-backdrop" aria-hidden="true"></div>
       <h2 class="epc-services-label">SERVICES</h2>
 
