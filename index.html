@@ -83,8 +83,9 @@
 <section class="epc-conversion-band" aria-label="Quick protocol CTA">
   <style>
     .epc-conversion-band{
-      background: #F5F5F5;
-      color: #111;
+      /* EPC: keep it dark, high-end. This is the first contrast moment (gold on black). */
+      background: linear-gradient(135deg, rgba(201,178,127,.92), rgba(201,178,127,.78));
+      color: #070707;
       padding: 34px 20px;
       border-top: 1px solid rgba(201, 178, 127, 0.22);
       border-bottom: 1px solid rgba(201, 178, 127, 0.22);
@@ -101,9 +102,9 @@
       font-size: 11px;
       letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(17,17,17,.7);
+      color: rgba(7,7,7,.78);
       margin: 0 0 10px 0;
-      font-weight: 800;
+      font-weight: 900;
     }
     .epc-conversion-title{
       font-family: "Playfair Display", serif;
@@ -111,13 +112,13 @@
       font-weight: 500;
       letter-spacing: .03em;
       margin: 0 0 10px 0;
-      color: #111;
+      color: #070707;
     }
     .epc-conversion-sub{
       margin: 0;
       font-size: 14px;
       line-height: 1.7;
-      color: rgba(17,17,17,.72);
+      color: rgba(7,7,7,.70);
     }
     .epc-conversion-actions{
       display: flex;
@@ -131,10 +132,10 @@
       align-items: center;
       justify-content: center;
       padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(201, 178, 127, 0.6);
-      background: rgba(201, 178, 127, 0.18);
-      color: #111;
+      border-radius: 6px;
+      border: 1px solid rgba(7,7,7,0.55);
+      background: rgba(7,7,7,0.10);
+      color: #070707;
       text-decoration: none;
       font-weight: 900;
       font-size: 11px;
@@ -143,14 +144,15 @@
       white-space: nowrap;
     }
     .epc-conversion-btn--primary{
-      background: #C9B27F;
-      border-color: #C9B27F;
+      background: #070707;
+      border-color: #070707;
+      color: #C9B27F;
     }
     .epc-conversion-call{
       font-size: 13px;
-      color: rgba(17,17,17,.8);
+      color: rgba(7,7,7,.86);
       text-decoration: none;
-      border-bottom: 1px solid rgba(201, 178, 127, 0.6);
+      border-bottom: 1px solid rgba(7,7,7,0.45);
       padding-bottom: 2px;
       white-space: nowrap;
     }
@@ -229,7 +231,7 @@
     }
     .svc-card{
       position: relative;
-      border-radius: 16px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid rgba(201,178,127,.22);
       background: rgba(201,178,127,.08);
@@ -265,7 +267,7 @@
       align-items:center;
       gap: 8px;
       padding: 7px 10px;
-      border-radius: 999px;
+      border-radius: 4px;
       border: 1px solid rgba(201,178,127,.28);
       background: rgba(201,178,127,.10);
       color: rgba(242,237,230,.86);
@@ -305,26 +307,13 @@
       border-bottom: 1px solid rgba(201,178,127,.45);
       padding-bottom: 2px;
     }
-    .svc-book{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(201,178,127,.18);
-      border: 1px solid rgba(201,178,127,.55);
-      color: #F2EDE6;
-      text-decoration: none;
-      font-size: 11px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      font-weight: 900;
-    }
+    /* Keep services “selective”: Learn more only (no extra Book CTAs here). */
+    .svc-book{ display:none !important; }
     .svc-price{
       display:inline-flex;
       align-items:center;
       padding: 6px 10px;
-      border-radius: 999px;
+      border-radius: 4px;
       border: 1px solid rgba(201,178,127,.22);
       background: rgba(0,0,0,.22);
       color: rgba(242,237,230,.85);
@@ -359,7 +348,6 @@
           <p class="svc-desc">Doctor-led care focused on movement quality, pain reduction, and measurable progress.</p>
           <div class="svc-row">
             <a class="svc-link" href="services.html" data-track="svc_pt_learn">Learn more →</a>
-            <a class="svc-book" href="booking.html" data-track="svc_pt_book">Book</a>
           </div>
         </div>
       </div>
@@ -372,7 +360,6 @@
           <p class="svc-desc">Pedics, Proteus, movement screening, and optional speed evaluation for a precision plan.</p>
           <div class="svc-row">
             <a class="svc-link" href="assessment.html" data-track="svc_assess_learn">Learn more →</a>
-            <a class="svc-book" href="booking.html" data-track="svc_assess_book">Book</a>
           </div>
         </div>
       </div>
@@ -385,7 +372,6 @@
           <p class="svc-desc">Tiered training options built for athletes. Clear structure, coaching, and accountability.</p>
           <div class="svc-row">
             <a class="svc-link" href="spa-page.html" data-track="svc_team_learn">Learn more →</a>
-            <a class="svc-book" href="booking.html" data-track="svc_team_book">Book</a>
             <span class="svc-price">From $30</span>
           </div>
         </div>
@@ -398,8 +384,8 @@
 <section class="epc-assess-cta2" aria-label="Assessment CTA">
   <style>
     .epc-assess-cta2{
-      background: #FFFFFF;
-      color: #111;
+      background: #0B0B0B;
+      color: #F2EDE6;
       padding: 78px 20px;
       border-bottom: 1px solid rgba(201,178,127,.22);
     }
@@ -416,7 +402,7 @@
       font-size: 11px;
       letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(17,17,17,.7);
+      color: rgba(201,178,127,.82);
       font-weight: 900;
     }
     .cta2-title{
@@ -428,7 +414,7 @@
     }
     .cta2-sub{
       margin: 0;
-      color: rgba(17,17,17,.72);
+      color: rgba(242,237,230,.72);
       line-height: 1.7;
       font-size: 14px;
       max-width: 60ch;
@@ -444,25 +430,10 @@
       align-items:center;
       justify-content:center;
       padding: 12px 16px;
-      border-radius: 999px;
+      border-radius: 6px;
       background: #C9B27F;
       border: 1px solid #C9B27F;
-      color: #111;
-      text-decoration: none;
-      font-weight: 900;
-      font-size: 11px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-    .cta2-secondary{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px 16px;
-      border-radius: 999px;
-      background: rgba(201,178,127,.14);
-      border: 1px solid rgba(201,178,127,.55);
-      color: #111;
+      color: #070707;
       text-decoration: none;
       font-weight: 900;
       font-size: 11px;
@@ -471,8 +442,8 @@
     }
     .cta2-box{
       border: 1px solid rgba(201,178,127,.22);
-      background: rgba(201,178,127,.08);
-      border-radius: 16px;
+      background: rgba(201,178,127,.06);
+      border-radius: 6px;
       padding: 18px;
     }
     .cta2-box h3{
@@ -484,7 +455,7 @@
     .cta2-box ul{
       margin: 0;
       padding-left: 18px;
-      color: rgba(17,17,17,.78);
+      color: rgba(242,237,230,.78);
       line-height: 1.8;
       font-size: 14px;
     }
@@ -500,7 +471,6 @@
       <p class="cta2-sub">Our 60-second quiz creates a clear starting protocol. Then your in-clinic assessment validates it with objective data so your plan is specific and measurable.</p>
       <div class="cta2-actions">
         <a class="cta2-primary" href="#intake" data-track="cta2_get_protocol">Get My Protocol</a>
-        <a class="cta2-secondary" href="booking.html" data-track="cta2_book">Book Now</a>
       </div>
     </div>
     <div class="cta2-box" aria-label="Sample protocol output">
@@ -555,22 +525,11 @@
     .how-step{
       border: 1px solid rgba(201,178,127,.22);
       background: rgba(201,178,127,.08);
-      border-radius: 16px;
+      border-radius: 6px;
       padding: 18px;
     }
-    .how-num{
-      display:inline-flex;
-      width: 34px;
-      height: 34px;
-      align-items:center;
-      justify-content:center;
-      border-radius: 999px;
-      background: rgba(201,178,127,.18);
-      border: 1px solid rgba(201,178,127,.42);
-      color: #F2EDE6;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
+    /* Keep it premium: no “onboarding” numbered bubbles */
+    .how-num{ display:none; }
     .how-step h3{
       margin: 0 0 8px 0;
       font-size: 16px;
@@ -591,24 +550,21 @@
     <div class="how-head">
       <div>
         <h2>How it works</h2>
-        <p>A simple funnel that reduces friction and keeps the next step obvious.</p>
+        <p>Assessment. Protocol. Execution.</p>
       </div>
     </div>
     <div class="how-steps">
       <div class="how-step">
-        <div class="how-num">1</div>
-        <h3>Complete assessment (60 seconds)</h3>
-        <p>Answer a few targeted questions so we understand your goal, body area, and urgency.</p>
+        <h3>Complete assessment</h3>
+        <p>Targeted inputs. No generic intake.</p>
       </div>
       <div class="how-step">
-        <div class="how-num">2</div>
         <h3>Receive a custom protocol</h3>
-        <p>Get a recommended starting protocol and a clear suggestion for what to book next.</p>
+        <p>Precision recommendations based on your goal and body area.</p>
       </div>
       <div class="how-step">
-        <div class="how-num">3</div>
         <h3>Book your first session</h3>
-        <p>Choose book online, request a call, or call us directly - whatever fits your timeline.</p>
+        <p>Book, request a call, or call direct - your choice.</p>
       </div>
     </div>
   </div>
@@ -618,8 +574,8 @@
 <section class="epc-mission" aria-label="Mission statement">
   <style>
     .epc-mission{
-      background: #F5F5F5;
-      color: #111;
+      background: #0A0A0A;
+      color: #F2EDE6;
       padding: 78px 20px;
       border-bottom: 1px solid rgba(201,178,127,.22);
     }
@@ -632,18 +588,17 @@
       align-items: center;
     }
     .mission-photo{
-      border-radius: 18px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid rgba(201,178,127,.22);
-      background: #FFF;
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      background: rgba(201,178,127,.06);
     }
     .mission-photo img{
       width: 100%;
       height: 100%;
       max-height: 420px;
       object-fit: cover;
-      filter: brightness(1.05) contrast(1.02);
+      filter: brightness(.92) contrast(1.08);
       display: block;
     }
     .mission-kicker{
@@ -651,7 +606,7 @@
       font-size: 11px;
       letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(17,17,17,.7);
+      color: rgba(201,178,127,.82);
       font-weight: 900;
     }
     .mission-title{
@@ -664,7 +619,7 @@
     }
     .mission-lede{
       margin: 0;
-      color: rgba(17,17,17,.72);
+      color: rgba(242,237,230,.72);
       font-size: 14px;
       line-height: 1.8;
       max-width: 64ch;
@@ -680,10 +635,10 @@
       align-items:center;
       justify-content:center;
       padding: 12px 16px;
-      border-radius: 999px;
-      background: #111;
-      border: 1px solid #111;
-      color: #F5F5F5;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid rgba(201,178,127,.55);
+      color: #C9B27F;
       text-decoration: none;
       font-weight: 900;
       font-size: 11px;
@@ -968,8 +923,8 @@
     .epc-social-proof{
       position: relative;
       padding: 84px 20px;
-      background: #F5F5F5;
-      color: #111;
+      background: #0B0B0B;
+      color: #F2EDE6;
       overflow: hidden;
       border-top: 1px solid rgba(201,178,127,.22);
       border-bottom: 1px solid rgba(201,178,127,.22);
@@ -977,14 +932,14 @@
     .epc-social-proof .sp-bg{
       position: absolute;
       inset: 0;
-      opacity: .14;
+      opacity: .18;
       pointer-events: none;
     }
     .epc-social-proof .sp-bg img{
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(1.08) contrast(1.02);
+      filter: brightness(.95) contrast(1.08);
     }
     .epc-social-proof .sp-inner{
       position: relative;
@@ -1011,7 +966,7 @@
       font-size: 11px;
       letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(17,17,17,.75);
+      color: rgba(201,178,127,.82);
       font-weight: 800;
     }
     .sp-metrics{
@@ -1021,15 +976,15 @@
       flex-wrap: wrap;
     }
     .sp-pill{
-      border: 1px solid rgba(201,178,127,.35);
-      background: rgba(201,178,127,.16);
-      border-radius: 999px;
+      border: 1px solid rgba(201,178,127,.28);
+      background: rgba(201,178,127,.08);
+      border-radius: 4px;
       padding: 10px 12px;
       font-size: 12px;
       letter-spacing: .12em;
       text-transform: uppercase;
       font-weight: 800;
-      color: rgba(17,17,17,.9);
+      color: rgba(242,237,230,.86);
       white-space: nowrap;
     }
     .sp-google{
@@ -1037,9 +992,9 @@
       align-items: center;
       gap: 10px;
       padding: 10px 12px;
-      border-radius: 14px;
+      border-radius: 6px;
       border: 1px solid rgba(201,178,127,.22);
-      background: rgba(255,255,255,.55);
+      background: rgba(201,178,127,.06);
     }
     .sp-stars{ display:flex; gap: 2px; color: #C9B27F; }
     .sp-stars svg{ width: 16px; height: 16px; fill: currentColor; }
@@ -1053,35 +1008,52 @@
     }
     .sp-card{
       border: 1px solid rgba(201,178,127,.22);
-      background: rgba(255,255,255,.70);
-      border-radius: 16px;
+      background: rgba(255,255,255,.02);
+      border-radius: 6px;
       padding: 18px;
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 12px;
-      align-items: start;
+      position: relative;
     }
-    .sp-avatar{
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(201,178,127,.25);
-      background: rgba(0,0,0,.06);
+    .sp-card::before{
+      content:'';
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width: 2px;
+      background: rgba(201,178,127,.65);
     }
-    .sp-avatar img{ width:100%; height:100%; object-fit: cover; }
+    .sp-metaRow{
+      display:flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .sp-mark{
+      width: 34px;
+      height: 34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(201,178,127,.22);
+      background: rgba(201,178,127,.06);
+      color: rgba(242,237,230,.88);
+      font-weight: 900;
+      letter-spacing: .14em;
+      border-radius: 4px;
+      flex: 0 0 auto;
+    }
     .sp-quote{
       margin: 0 0 10px 0;
       font-size: 14px;
       line-height: 1.7;
-      color: rgba(17,17,17,.82);
+      color: rgba(242,237,230,.78);
     }
     .sp-name{
       margin: 0;
       font-size: 12px;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: rgba(17,17,17,.75);
+      color: rgba(242,237,230,.70);
       font-weight: 800;
     }
     @media (max-width: 900px){
@@ -1119,25 +1091,25 @@
 
     <div class="sp-grid" aria-label="Featured testimonials">
       <article class="sp-card">
-        <div class="sp-avatar" aria-hidden="true"><img src="img/IMG_8082.jpg" alt="" loading="lazy"></div>
-        <div>
-          <p class="sp-quote">A high-end and incredible office. They fixed my low back pain quickly and efficiently, and the clinic has great energy.</p>
+        <div class="sp-metaRow">
+          <div class="sp-mark" aria-hidden="true">SK</div>
           <p class="sp-name">Sarah K.</p>
         </div>
+        <p class="sp-quote">A high-end and incredible office. They fixed my low back pain quickly and efficiently, and the clinic has great energy.</p>
       </article>
       <article class="sp-card">
-        <div class="sp-avatar" aria-hidden="true"><img src="img/IMG_8076.jpg" alt="" loading="lazy"></div>
-        <div>
-          <p class="sp-quote">Hands down one of the best places for recovery, rehab, and overall physical wellness. Professional and thorough every visit.</p>
+        <div class="sp-metaRow">
+          <div class="sp-mark" aria-hidden="true">KM</div>
           <p class="sp-name">Kans M.</p>
         </div>
+        <p class="sp-quote">Hands down one of the best places for recovery, rehab, and overall physical wellness. Professional and thorough every visit.</p>
       </article>
       <article class="sp-card">
-        <div class="sp-avatar" aria-hidden="true"><img src="img/IMG_8071.jpg" alt="" loading="lazy"></div>
-        <div>
-          <p class="sp-quote">The improvement in my pain has been remarkable. Friendly, clinical, and results-focused from start to finish.</p>
+        <div class="sp-metaRow">
+          <div class="sp-mark" aria-hidden="true">PZ</div>
           <p class="sp-name">Peyman Z.</p>
         </div>
+        <p class="sp-quote">The improvement in my pain has been remarkable. Friendly, clinical, and results-focused from start to finish.</p>
       </article>
     </div>
   </div>
