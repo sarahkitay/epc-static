@@ -5,7 +5,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY', 'RESEND_API_KEY'].filter((k) => !process.env[k]);
+    // Airtable config is required. Resend is optional (we'll still save even if email is disabled).
+    const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY'].filter((k) => !process.env[k]);
     if (missingEnv.length) {
       return res.status(500).json({
         error: 'Server configuration missing environment variables',
@@ -97,8 +98,13 @@ export default async function handler(req, res) {
       });
     }
 
-    // Send email notification (don't fail if email fails)
+    // Send email notification (optional - don't fail if email fails)
     try {
+      if (!process.env.RESEND_API_KEY) {
+        console.warn('RESEND_API_KEY missing - skipping email notification (submit-fulltime-academy)');
+        return res.status(200).json({ success: true, emailSent: false });
+      }
+
       const emailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
