@@ -1909,7 +1909,8 @@ img {
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(22px, 3.4vw, 40px);
-  align-items: center;
+  /* Stretch so the image and copy blocks match height on desktop */
+  align-items: stretch;
   position:relative;
 }
 
@@ -1920,13 +1921,14 @@ img {
   border:1px solid rgba(201,178,127,.18);
   box-shadow: 0 28px 70px rgba(0,0,0,.55);
   background:#050505;
+  height: 100%;
 }
 
 .epc-about .media img{
   display:block;
   width:100%;
-  height:auto;
-  aspect-ratio: 4 / 4;
+  height: 100%;
+  aspect-ratio: auto;
   object-fit:cover;
   filter: contrast(1.02) saturate(.92);
   transform: scale(1.02);
@@ -1947,6 +1949,7 @@ img {
   padding: clamp(22px, 3vw, 34px);
   box-shadow: 0 30px 80px rgba(0,0,0,.55);
   backdrop-filter: blur(10px);
+  height: 100%;
 }
 
 .epc-about .eyebrow{
@@ -2020,20 +2023,37 @@ img {
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid rgba(201,178,127,.18);
-  display:flex;
-  flex-wrap:wrap;
-  gap: 10px;
 }
 
-.epc-about .pill{
-  font-size:10px;
-  letter-spacing:.18em;
+.epc-about .tools-list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+}
+
+.epc-about .tools-list li{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 11px;
+  letter-spacing: .22em;
   text-transform:uppercase;
   color: rgba(242,237,230,.76);
-  border:1px solid rgba(201,178,127,.22);
-  background: transparent;
+  line-height: 1.5;
+}
+
+.epc-about .tools-list li::before{
+  content:"";
+  width:6px;
+  height:6px;
   border-radius: 999px;
-  padding: 10px 12px;
+  background: var(--epc-gold);
+  margin-top: 7px;
+  flex: 0 0 auto;
+  opacity: .9;
 }
 
 .epc-about .cta{
@@ -2103,7 +2123,10 @@ img {
 
 @media (max-width: 900px){
   .epc-about .wrap{ grid-template-columns: 1fr; }
-  .epc-about .media img{ aspect-ratio: 16 / 10; }
+  .epc-about .media{ height: auto; }
+  .epc-about .card{ height: auto; }
+  .epc-about .media img{ height: auto; aspect-ratio: 16 / 10; }
+  .epc-about .tools-list{ grid-template-columns: 1fr; }
 }
 
 /* ===== INSTAGRAM ===== */
