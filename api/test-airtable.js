@@ -14,10 +14,21 @@ export default async function handler(req, res) {
     });
   }
 
-  // Test by listing tables in the base
+  // Validate baseId format (helps catch accidental full URLs pasted into env vars)
+  const baseIdLooksWrong = !String(baseId).startsWith('app') || String(baseId).includes('/') || String(baseId).includes('http');
+  if (baseIdLooksWrong) {
+    return res.status(500).json({
+      error: 'AIRTABLE_BASE_ID looks invalid. It should look like appXXXXXXXXXXXXXX (no slashes).',
+      baseIdPrefix: String(baseId).slice(0, 12) + '...'
+    });
+  }
+
+  const table = String(req.query?.table || 'Email List Signups');
+
+  // Test by reading 1 record from a real table endpoint (does not require schema/meta permissions)
   try {
     const response = await fetch(
-      `https://api.airtable.com/v0/meta/bases/${baseId}/tables`,
+      `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}?maxRecords=1`,
       {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -26,29 +37,31 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
+    }
     
     if (!response.ok) {
       return res.status(response.status).json({
         error: 'Failed to connect to Airtable',
         status: response.status,
         details: data,
+        table,
         baseId: baseId.substring(0, 10) + '...' // Show first 10 chars only
       });
     }
 
-    // Get field names for each table
-    const tablesWithFields = data.tables?.map(table => ({
-      name: table.name,
-      fields: table.fields?.map(f => ({
-        name: f.name,
-        type: f.type
-      })) || []
-    })) || [];
-
     return res.status(200).json({
       success: true,
-      tables: tablesWithFields,
+      table,
+      recordCount: Array.isArray(data.records) ? data.records.length : undefined,
+      sampleRecord: Array.isArray(data.records) && data.records[0]
+        ? { id: data.records[0].id, fields: data.records[0].fields }
+        : null,
       baseId: baseId.substring(0, 10) + '...'
     });
   } catch (error) {

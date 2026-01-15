@@ -5,6 +5,14 @@ export default async function handler(req, res) {
   }
 
   try {
+    const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY', 'RESEND_API_KEY'].filter((k) => !process.env[k]);
+    if (missingEnv.length) {
+      return res.status(500).json({
+        error: 'Server configuration missing environment variables',
+        missingEnv
+      });
+    }
+
     const {
       firstName,
       lastName,
@@ -54,8 +62,9 @@ export default async function handler(req, res) {
     if (additionalNotes) fields['Additional Notes'] = additionalNotes;
 
     // Save to Airtable
+    const tableName = 'Part-Time Academy Applications';
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Part-Time Academy Applications')}`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`,
       {
         method: 'POST',
         headers: {
@@ -67,9 +76,16 @@ export default async function handler(req, res) {
     );
 
     if (!airtableResponse.ok) {
-      const errorData = await airtableResponse.json().catch(() => ({}));
-      console.error('Airtable error:', errorData);
-      return res.status(500).json({ error: 'Failed to save to Airtable' });
+      const errorText = await airtableResponse.text();
+      let errorData;
+      try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
+      console.error('Airtable error (submit-parttime-academy):', airtableResponse.status, errorData);
+      return res.status(502).json({
+        error: 'Failed to save to Airtable',
+        airtableStatus: airtableResponse.status,
+        airtableError: errorData,
+        table: tableName
+      });
     }
 
     // Send email notification (don't fail if email fails)
