@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY'].filter((k) => !process.env[k]);
     if (missingEnv.length) {
       return res.status(500).json({
-        error: 'Server configuration missing environment variables',
+        error: `Server configuration missing environment variables: ${missingEnv.join(', ')}`,
         missingEnv
       });
     }
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       academicPriorities,
       highlightTapeUrl,
       additionalNotes
-    } = req.body;
+    } = req.body || {};
 
     // Validate required fields
     const requiredFields = { firstName, lastName, parentName, phone, email };
@@ -55,7 +55,6 @@ export default async function handler(req, res) {
       'Submitted At': submittedAt
     };
 
-    // Add optional fields only if they have values
     if (grade) fields['Grade'] = grade;
     if (sport) fields['Sport'] = sport;
     if (dob) fields['Date of Birth'] = dob;
@@ -82,14 +81,8 @@ export default async function handler(req, res) {
     if (!airtableResponse.ok) {
       const errorText = await airtableResponse.text();
       let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        errorData = { error: errorText };
-      }
-      console.error('Airtable error:', errorData);
-      console.error('Airtable status:', airtableResponse.status);
-      console.error('Airtable URL:', `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`);
+      try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
+      console.error('Airtable error (submit-fulltime-academy):', airtableResponse.status, errorData);
       return res.status(502).json({
         error: 'Failed to save to Airtable',
         airtableStatus: airtableResponse.status,
@@ -98,7 +91,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Send email notification (optional - don't fail if email fails)
+    // Email notification (optional)
     try {
       if (!process.env.RESEND_API_KEY) {
         console.warn('RESEND_API_KEY missing - skipping email notification (submit-fulltime-academy)');
@@ -134,17 +127,17 @@ export default async function handler(req, res) {
               </h1>
               <div style="background-color: rgba(201,178,127,.04); border-radius: 4px; padding: 24px; margin-bottom: 20px;">
                 <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Student Name:</strong> ${firstName} ${lastName}</p>
-                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Parent Name:</strong> ${parentName}</p>
+                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Parent/Guardian Name:</strong> ${parentName}</p>
                 <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Phone:</strong> ${phone}</p>
                 <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Email:</strong> ${email}</p>
                 ${grade ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Grade:</strong> ${grade}</p>` : ''}
                 ${sport ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Sport:</strong> ${sport}</p>` : ''}
                 ${dob ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Date of Birth:</strong> ${dob}</p>` : ''}
-                ${startTerm ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Start Term:</strong> ${startTerm}</p>` : ''}
-                ${homeschoolProgram ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Homeschool Program:</strong> ${homeschoolProgram}</p>` : ''}
+                ${startTerm ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Desired Start Term:</strong> ${startTerm}</p>` : ''}
+                ${homeschoolProgram ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Current/Preferred Homeschool Program:</strong> ${homeschoolProgram}</p>` : ''}
                 ${academicPriorities ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Academic Priorities:</strong> ${academicPriorities}</p>` : ''}
-                ${highlightTapeUrl ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Highlight Tape:</strong> <a href="${highlightTapeUrl}" style="color: #C9B27F; text-decoration: underline;">View Tape</a></p>` : ''}
-                ${additionalNotes ? `<p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Additional Notes:</strong><br>${additionalNotes.replace(/\n/g, '<br>')}</p>` : ''}
+                ${highlightTapeUrl ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Highlight Tape URL:</strong> <a href="${highlightTapeUrl}" style="color: #C9B27F; text-decoration: underline;">View</a></p>` : ''}
+                ${additionalNotes ? `<p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Additional Notes:</strong><br>${String(additionalNotes).replace(/\n/g, '<br>')}</p>` : ''}
               </div>
               <p style="margin: 20px 0 0 0; font-size: 14px; color: rgba(242,237,230,.6);">
                 Submitted: ${new Date().toLocaleString()}
@@ -162,16 +155,16 @@ export default async function handler(req, res) {
       });
 
       if (!emailResponse.ok) {
-        console.error('Resend email error:', await emailResponse.text());
+        console.error('Resend email error (submit-fulltime-academy):', await emailResponse.text());
       }
     } catch (emailError) {
-      console.error('Email sending error:', emailError);
-      // Continue even if email fails
+      console.error('Email sending error (submit-fulltime-academy):', emailError);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, emailSent: true });
   } catch (error) {
-    console.error('Handler error:', error);
+    console.error('Handler error (submit-fulltime-academy):', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
+

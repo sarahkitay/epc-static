@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY'].filter((k) => !process.env[k]);
     if (missingEnv.length) {
       return res.status(500).json({
-        error: 'Server configuration missing environment variables',
+        error: `Server configuration missing environment variables: ${missingEnv.join(', ')}`,
         missingEnv
       });
     }
