@@ -9,14 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="./epc-sections.css">
-
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-<script src="./epc-sections.js"></script>
 
   <nav class="epc-nav" id="mainNav" aria-label="Primary">
     <div class="nav-container">
@@ -51,41 +48,23 @@
 
     <div class="hero-overlay" aria-hidden="true"></div>
 
-    <div class="hero-content">
-      <p class="hero-kicker" data-track="hero_trust">Trusted by NFL & NBA Athletes</p>
-      <div class="hero-logos" aria-hidden="true">
-        <span class="hero-logo">NFL</span>
-        <span class="hero-logo">NBA</span>
-      </div>
-      <h1 class="visually-hidden">Elite Performance Clinic</h1>
-      <p class="hero-sub">
-        Recovery <span class="dot">•</span> Performance <span class="dot">•</span> Wellness
-      </p>
+    <h1 class="visually-hidden">Elite Performance Clinic</h1>
 
-      <div class="hero-ctaRow" role="navigation" aria-label="Primary calls to action">
-        <a class="hero-cta hero-cta--primary" href="booking.html" data-track="hero_book_assessment">Book Your Assessment</a>
-        <a class="hero-cta hero-cta--secondary" href="#intake" data-track="hero_quiz">Take 60-Second Quiz</a>
-      </div>
-
-      <p class="hero-micro">
-        Limited assessment slots available this week. No spam. Your info stays private.
-      </p>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
     </div>
   </header>
 
 
  
   
-    <!-- Add this QUIZ TEASER section after About, before Instagram (if you want it on homepage) -->
-<!-- OR remove this teaser and move the full quiz to a separate /assessment page -->
-
 <!-- ===== IMMEDIATE CONVERSION BAND (Screen 1.5) ===== -->
 <section class="epc-conversion-band" aria-label="Quick protocol CTA">
   <style>
     .epc-conversion-band{
-      /* EPC: keep it dark, high-end. This is the first contrast moment (gold on black). */
-      background: linear-gradient(135deg, rgba(201,178,127,.92), rgba(201,178,127,.78));
-      color: #070707;
+      background: #000;
+      color: #F2EDE6;
       padding: 34px 20px;
       border-top: 1px solid rgba(201, 178, 127, 0.22);
       border-bottom: 1px solid rgba(201, 178, 127, 0.22);
@@ -102,7 +81,7 @@
       font-size: 11px;
       letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(7,7,7,.78);
+      color: rgba(201,178,127,.82);
       margin: 0 0 10px 0;
       font-weight: 900;
     }
@@ -112,13 +91,13 @@
       font-weight: 500;
       letter-spacing: .03em;
       margin: 0 0 10px 0;
-      color: #070707;
+      color: #C9B27F;
     }
     .epc-conversion-sub{
       margin: 0;
       font-size: 14px;
       line-height: 1.7;
-      color: rgba(7,7,7,.70);
+      color: rgba(242,237,230,.72);
     }
     .epc-conversion-actions{
       display: flex;
@@ -133,9 +112,9 @@
       justify-content: center;
       padding: 12px 16px;
       border-radius: 6px;
-      border: 1px solid rgba(7,7,7,0.55);
-      background: rgba(7,7,7,0.10);
-      color: #070707;
+      border: 1px solid rgba(201,178,127,0.55);
+      background: transparent;
+      color: #C9B27F;
       text-decoration: none;
       font-weight: 900;
       font-size: 11px;
@@ -144,15 +123,15 @@
       white-space: nowrap;
     }
     .epc-conversion-btn--primary{
-      background: #070707;
-      border-color: #070707;
+      background: transparent;
+      border-color: rgba(201,178,127,0.55);
       color: #C9B27F;
     }
     .epc-conversion-call{
       font-size: 13px;
-      color: rgba(7,7,7,.86);
+      color: rgba(242,237,230,.75);
       text-decoration: none;
-      border-bottom: 1px solid rgba(7,7,7,0.45);
+      border-bottom: 1px solid rgba(201,178,127,0.45);
       padding-bottom: 2px;
       white-space: nowrap;
     }
@@ -165,221 +144,15 @@
   <div class="epc-conversion-inner">
     <div>
       <p class="epc-conversion-kicker">Not sure where to start?</p>
-      <h2 class="epc-conversion-title">Discover your personalized protocol in 60 seconds.</h2>
-      <p class="epc-conversion-sub">Not a newsletter. Not a generic checklist. A clear next step based on your goals.</p>
+      <h2 class="epc-conversion-title">Discover Your Personalized Recovery Protocol</h2>
+      <p class="epc-conversion-sub">Take our 60-second assessment and receive a custom protocol designed for your body and goals.</p>
     </div>
     <div class="epc-conversion-actions">
-      <a class="epc-conversion-btn epc-conversion-btn--primary" href="#intake" data-track="band_get_protocol">Get My Protocol</a>
+      <a class="epc-conversion-btn epc-conversion-btn--primary" href="#intake" data-track="band_begin_assessment">Begin Your Assessment</a>
       <a class="epc-conversion-call" href="tel:+13233636324" data-track="band_call">Call us: (323) 363-6324</a>
     </div>
   </div>
 </section>
-<!-- ===== SERVICES OVERVIEW (Screen 3) ===== -->
-<section id="services" class="epc-services-snapshot" aria-label="Services overview">
-  <style>
-    /* Hide legacy homepage service blocks (SVG + accordion) to reduce scroll depth */
-    .epc-draw-break,
-    #services.epc-accordion,
-    .manifesto-section {
-      display: none !important;
-    }
-
-    .epc-services-snapshot{
-      background: #0B0B0B;
-      color: #F2EDE6;
-      padding: 78px 20px;
-      border-bottom: 1px solid rgba(201,178,127,.18);
-    }
-    .epc-services-inner{
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .epc-services-kicker{
-      margin: 0 0 10px 0;
-      font-size: 11px;
-      letter-spacing: .26em;
-      text-transform: uppercase;
-      color: rgba(201,178,127,.9);
-      font-weight: 900;
-    }
-    .epc-services-head{
-      display:flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-    .epc-services-head h2{
-      margin: 0;
-      font-family: "Playfair Display", serif;
-      font-weight: 500;
-      letter-spacing: .05em;
-      font-size: clamp(26px, 3.2vw, 40px);
-    }
-    .epc-services-head p{
-      margin: 10px 0 0 0;
-      color: rgba(242,237,230,.72);
-      max-width: 560px;
-      line-height: 1.7;
-      font-size: 14px;
-    }
-    .svc-grid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .svc-card{
-      position: relative;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid rgba(201,178,127,.22);
-      background: rgba(201,178,127,.08);
-      min-height: 230px;
-      display:flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      text-decoration: none;
-      color: inherit;
-    }
-    .svc-card img{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      filter: brightness(.64) contrast(1.05);
-      transform: scale(1.01);
-    }
-    .svc-card::after{
-      content:'';
-      position:absolute;
-      inset:0;
-      background: linear-gradient(to top, rgba(0,0,0,.86), rgba(0,0,0,.18));
-    }
-    .svc-content{
-      position: relative;
-      z-index: 1;
-      padding: 18px;
-    }
-    .svc-badge{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 4px;
-      border: 1px solid rgba(201,178,127,.28);
-      background: rgba(201,178,127,.10);
-      color: rgba(242,237,230,.86);
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-weight: 900;
-      margin-bottom: 10px;
-      white-space: nowrap;
-    }
-    .svc-title{
-      margin: 0 0 8px 0;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: .02em;
-    }
-    .svc-desc{
-      margin: 0 0 14px 0;
-      color: rgba(242,237,230,.75);
-      font-size: 13px;
-      line-height: 1.7;
-      max-width: 42ch;
-    }
-    .svc-row{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .svc-link{
-      color: #C9B27F;
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-weight: 900;
-      border-bottom: 1px solid rgba(201,178,127,.45);
-      padding-bottom: 2px;
-    }
-    /* Keep services “selective”: Learn more only (no extra Book CTAs here). */
-    .svc-book{ display:none !important; }
-    .svc-price{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: 1px solid rgba(201,178,127,.22);
-      background: rgba(0,0,0,.22);
-      color: rgba(242,237,230,.85);
-      font-size: 11px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-weight: 800;
-      margin-left: auto;
-    }
-    @media (max-width: 980px){
-      .svc-grid{ grid-template-columns: 1fr; }
-      .svc-price{ margin-left: 0; }
-    }
-  </style>
-
-  <div class="epc-services-inner">
-    <p class="epc-services-kicker">Services</p>
-    <div class="epc-services-head">
-      <div>
-        <h2>Services built for outcomes.</h2>
-        <p>Clinical rehab, performance training, and recovery under one roof. Clear next steps, no guessing.</p>
-      </div>
-      <a class="svc-link" href="services.html" data-track="services_view_all">View all services →</a>
-    </div>
-
-    <div class="svc-grid">
-      <div class="svc-card">
-        <img src="img/IMG_8081.jpg" alt="" aria-hidden="true" loading="lazy">
-        <div class="svc-content">
-          <div class="svc-badge">Recovery & Rehabilitation</div>
-          <h3 class="svc-title">Physical Therapy</h3>
-          <p class="svc-desc">Doctor-led care focused on movement quality, pain reduction, and measurable progress.</p>
-          <div class="svc-row">
-            <a class="svc-link" href="services.html" data-track="svc_pt_learn">Learn more →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="svc-card">
-        <img src="img/7_22EPC-21.jpg" alt="" aria-hidden="true" loading="lazy">
-        <div class="svc-content">
-          <div class="svc-badge">Performance Optimization</div>
-          <h3 class="svc-title">Comprehensive Assessment</h3>
-          <p class="svc-desc">Pedics, Proteus, movement screening, and optional speed evaluation for a precision plan.</p>
-          <div class="svc-row">
-            <a class="svc-link" href="assessment.html" data-track="svc_assess_learn">Learn more →</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="svc-card">
-        <img src="img/IMG_8082.jpg" alt="" aria-hidden="true" loading="lazy">
-        <div class="svc-content">
-          <div class="svc-badge">Training</div>
-          <h3 class="svc-title">Team Training</h3>
-          <p class="svc-desc">Tiered training options built for athletes. Clear structure, coaching, and accountability.</p>
-          <div class="svc-row">
-            <a class="svc-link" href="spa-page.html" data-track="svc_team_learn">Learn more →</a>
-            <span class="svc-price">From $30</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ===== ASSESSMENT CTA #2 (Screen 4) ===== -->
 <section class="epc-assess-cta2" aria-label="Assessment CTA">
   <style>
@@ -732,13 +505,13 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="#">Physical Therapy and Chiropractic Care</a></li>
-            <li><a class="acc-link" href="#">Pre and Post Operation Treatments</a></li>
-            <li><a class="acc-link" href="#">PRP and Stem Cell Therapy</a></li>
-            <li><a class="acc-link" href="#">Lymphatic Drainage Massage and Wraps</a></li>
-            <li><a class="acc-link" href="#">Massage Therapy</a></li>
-            <li><a class="acc-link" href="#">Normatec Compression Therapy</a></li>
-            <li><a class="acc-link" href="#">Cupping and Fire Cupping Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Physical Therapy and Chiropractic Care</a></li>
+            <li><a class="acc-link" href="services.html">Pre and Post Operation Treatments</a></li>
+            <li><a class="acc-link" href="services.html">PRP and Stem Cell Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Lymphatic Drainage Massage and Wraps</a></li>
+            <li><a class="acc-link" href="services.html">Massage Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Normatec Compression Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Cupping and Fire Cupping Therapy</a></li>
           </ul>
         </div>
       </div>
@@ -750,11 +523,11 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="#">Personal Training and Group Training</a></li>
-            <li><a class="acc-link" href="#">Proteus Assessments</a></li>
-            <li><a class="acc-link" href="#">Cold Plunge and Sauna Sessions</a></li>
-            <li><a class="acc-link" href="#">Red Light and PEMF Therapy</a></li>
-            <li><a class="acc-link" href="#">Weight Loss and Nutrition Coaching</a></li>
+            <li><a class="acc-link" href="services.html">Personal Training and Group Training</a></li>
+            <li><a class="acc-link" href="assessment.html">Comprehensive Assessment (Pedics, Proteus, Movement Screening)</a></li>
+            <li><a class="acc-link" href="services.html">Cold Plunge and Sauna Sessions</a></li>
+            <li><a class="acc-link" href="services.html">Red Light and PEMF Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Weight Loss and Nutrition Coaching</a></li>
           </ul>
         </div>
       </div>
@@ -766,10 +539,10 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="#">Blood Work Analysis and Peptide Therapy</a></li>
-            <li><a class="acc-link" href="#">Personalized IV Drips</a></li>
-            <li><a class="acc-link" href="#">Meal Prep Services</a></li>
-            <li><a class="acc-link" href="#">Shockwave Therapy and Emsculpt</a></li>
+            <li><a class="acc-link" href="services.html">Blood Work Analysis and Peptide Therapy</a></li>
+            <li><a class="acc-link" href="services.html">Personalized IV Drips</a></li>
+            <li><a class="acc-link" href="services.html">Meal Prep Services</a></li>
+            <li><a class="acc-link" href="services.html">Shockwave Therapy and Emsculpt</a></li>
           </ul>
         </div>
       </div>
@@ -918,200 +691,30 @@
     </section>
   
    <!-- ===== TESTIMONIALS ===== -->
-<section id="epc-testimonials" class="epc-social-proof" aria-label="Client testimonials and social proof">
-  <style>
-    .epc-social-proof{
-      position: relative;
-      padding: 84px 20px;
-      background: #0B0B0B;
-      color: #F2EDE6;
-      overflow: hidden;
-      border-top: 1px solid rgba(201,178,127,.22);
-      border-bottom: 1px solid rgba(201,178,127,.22);
-    }
-    .epc-social-proof .sp-bg{
-      position: absolute;
-      inset: 0;
-      opacity: .18;
-      pointer-events: none;
-    }
-    .epc-social-proof .sp-bg img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(.95) contrast(1.08);
-    }
-    .epc-social-proof .sp-inner{
-      position: relative;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .sp-top{
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
-    .sp-title{
-      margin: 0;
-      font-family: "Playfair Display", serif;
-      font-weight: 500;
-      letter-spacing: .04em;
-      font-size: clamp(26px, 3.2vw, 40px);
-    }
-    .sp-kicker{
-      margin: 0 0 8px 0;
-      font-size: 11px;
-      letter-spacing: .26em;
-      text-transform: uppercase;
-      color: rgba(201,178,127,.82);
-      font-weight: 800;
-    }
-    .sp-metrics{
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .sp-pill{
-      border: 1px solid rgba(201,178,127,.28);
-      background: rgba(201,178,127,.08);
-      border-radius: 4px;
-      padding: 10px 12px;
-      font-size: 12px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: rgba(242,237,230,.86);
-      white-space: nowrap;
-    }
-    .sp-google{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(201,178,127,.22);
-      background: rgba(201,178,127,.06);
-    }
-    .sp-stars{ display:flex; gap: 2px; color: #C9B27F; }
-    .sp-stars svg{ width: 16px; height: 16px; fill: currentColor; }
-    .sp-google .meta{ font-size: 12px; line-height: 1.2; }
-    .sp-google .meta strong{ display:block; font-size: 13px; }
-    .sp-grid{
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 22px;
-    }
-    .sp-card{
-      border: 1px solid rgba(201,178,127,.22);
-      background: rgba(255,255,255,.02);
-      border-radius: 6px;
-      padding: 18px;
-      position: relative;
-    }
-    .sp-card::before{
-      content:'';
-      position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
-      width: 2px;
-      background: rgba(201,178,127,.65);
-    }
-    .sp-metaRow{
-      display:flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .sp-mark{
-      width: 34px;
-      height: 34px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border: 1px solid rgba(201,178,127,.22);
-      background: rgba(201,178,127,.06);
-      color: rgba(242,237,230,.88);
-      font-weight: 900;
-      letter-spacing: .14em;
-      border-radius: 4px;
-      flex: 0 0 auto;
-    }
-    .sp-quote{
-      margin: 0 0 10px 0;
-      font-size: 14px;
-      line-height: 1.7;
-      color: rgba(242,237,230,.78);
-    }
-    .sp-name{
-      margin: 0;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: rgba(242,237,230,.70);
-      font-weight: 800;
-    }
-    @media (max-width: 900px){
-      .sp-grid{ grid-template-columns: 1fr; }
-    }
-  </style>
-
-  <div class="sp-bg" aria-hidden="true">
-    <img src="img/7_22EPC-21.jpg" alt="" loading="lazy" />
-  </div>
-
-  <div class="sp-inner">
-    <div class="sp-top">
-      <div>
-        <p class="sp-kicker">Social proof</p>
-        <h2 class="sp-title">Results backed by a clinical standard.</h2>
-      </div>
-      <div class="sp-metrics">
-        <div class="sp-google" aria-label="Google rating: 4.9 average out of 5">
-          <div class="sp-stars" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.9 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.9 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.9 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.9 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.9 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z"/></svg>
-          </div>
-          <div class="meta">
-            <strong>4.9 average</strong>
-            <span>on Google reviews</span>
-          </div>
-        </div>
-        <div class="sp-pill">100+ professional athletes trained</div>
-      </div>
+<section id="epc-testimonials" class="epc-testimonials" aria-label="Client testimonials">
+  <div class="wrap" data-rotation="8000">
+    <div class="t-top">
+      <span class="t-eyebrow">SOCIAL PROOF</span>
     </div>
 
-    <div class="sp-grid" aria-label="Featured testimonials">
-      <article class="sp-card">
-        <div class="sp-metaRow">
-          <div class="sp-mark" aria-hidden="true">SK</div>
-          <p class="sp-name">Sarah K.</p>
-        </div>
-        <p class="sp-quote">A high-end and incredible office. They fixed my low back pain quickly and efficiently, and the clinic has great energy.</p>
-      </article>
-      <article class="sp-card">
-        <div class="sp-metaRow">
-          <div class="sp-mark" aria-hidden="true">KM</div>
-          <p class="sp-name">Kans M.</p>
-        </div>
-        <p class="sp-quote">Hands down one of the best places for recovery, rehab, and overall physical wellness. Professional and thorough every visit.</p>
-      </article>
-      <article class="sp-card">
-        <div class="sp-metaRow">
-          <div class="sp-mark" aria-hidden="true">PZ</div>
-          <p class="sp-name">Peyman Z.</p>
-        </div>
-        <p class="sp-quote">The improvement in my pain has been remarkable. Friendly, clinical, and results-focused from start to finish.</p>
-      </article>
+    <div class="t-viewport" aria-live="polite">
+      <figure class="t-item is-active">
+        <blockquote class="t-quote">A high-end and incredible office. They fixed my low back pain quickly and efficiently, and the clinic has great energy.</blockquote>
+        <figcaption class="t-meta">Sarah K.</figcaption>
+      </figure>
+
+      <figure class="t-item">
+        <blockquote class="t-quote">Hands down one of the best places for recovery, rehab, and overall physical wellness. Professional and thorough every visit.</blockquote>
+        <figcaption class="t-meta">Kans M.</figcaption>
+      </figure>
+
+      <figure class="t-item">
+        <blockquote class="t-quote">The improvement in my pain has been remarkable. Clinical, thorough, and results-focused from start to finish.</blockquote>
+        <figcaption class="t-meta">Peyman Z.</figcaption>
+      </figure>
     </div>
+
+    <div class="t-dots" aria-label="Testimonial navigation"></div>
   </div>
 </section>
 
@@ -1127,7 +730,7 @@
     </div>
 
     <div class="card reveal delay-1">
-      <p class="eyebrow">About EPC</p>
+      <p class="eyebrow">ABOUT EPC</p>
       <h2>Where clinical precision meets performance level results.</h2>
 
       <p class="lede">
@@ -1136,10 +739,15 @@
         heal faster, and perform with confidence.
       </p>
 
-      <div class="proof reveal delay-2" aria-label="Clinic highlights">
-        <div class="proof-item"><span class="dot" aria-hidden="true"></span><span>Doctor of Physical Therapy led care with individualized plans and measurable progress.</span></div>
-        <div class="proof-item"><span class="dot" aria-hidden="true"></span><span>In house performance training so rehab translates to real movement and strength.</span></div>
-        <div class="proof-item"><span class="dot" aria-hidden="true"></span><span>Modern wellness tech and manual work under one roof for complete recovery support.</span></div>
+      <div class="about-prose reveal delay-2">
+        <p>
+          Care is led by a Doctor of Physical Therapy, built around individualized plans and measurable progress.
+          Our work combines hands-on treatment with modern diagnostics so decisions are specific, not generic.
+        </p>
+        <p>
+          Rehab is supported by in-house performance training, so your recovery translates to real strength and movement.
+          Recovery technology and manual therapy live under one roof, so your plan stays coherent from start to finish.
+        </p>
       </div>
 
       <div class="tools" aria-label="Available services and equipment">
@@ -1153,15 +761,13 @@
       </div>
 
       <div class="cta">
-        <a href="https://www.epcla.com/about" class="btn" aria-label="Learn more about Elite Performance Clinic">Learn more</a>
-        <a href="https://www.epcla.com/services" class="link" aria-label="View services">View services</a>
+        <a href="about.html" class="btn" aria-label="Learn more about Elite Performance Clinic">Learn more</a>
+        <a href="services.html" class="link" aria-label="View services">View services</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- load your JS at the bottom -->
-<script src="./epc-sections.js"></script>
 
    
 
@@ -1172,7 +778,7 @@
   <div class="intake-wrapper">
     <div class="intake-header">
       <h2 class="intake-title">THE EPC INTAKE</h2>
-      <p class="intake-subtitle">Your precision recovery begins here</p>
+      <p class="intake-subtitle">YOUR PRECISION RECOVERY BEGINS HERE</p>
     </div>
 
     <form id="intakeForm" method="POST" novalidate>
@@ -1991,7 +1597,6 @@
       <div class="footer-top">
         <div class="footer-brand">
           <span class="footer-logo">EPC</span>
-          <p class="footer-tagline">Recovery • Performance • Wellness</p>
         </div>
 
         <div class="footer-links">
@@ -2048,8 +1653,6 @@
             </svg>
           </a>
         </div>
-<!-- ===== TAGLINE ===== -->
-<p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
         <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
       </div>
     </div>

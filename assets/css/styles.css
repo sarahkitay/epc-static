@@ -199,14 +199,16 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(20%) brightness(.78);
+  /* Hybrid: keep cinematic contrast but let the "ELITE" lettering read clearly */
+  object-position: center center;
+  filter: grayscale(20%) brightness(.90);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  /* Lightened slightly for better visibility above the fold */
-  background: linear-gradient(to bottom, rgba(11,11,11,.16), rgba(11,11,11,.62));
+  /* EPC: pure black overlay for cinematic, high-end contrast */
+  background: rgba(0,0,0,.62);
 }
 
 /* ===== NAV: PHONE CTA ===== */
@@ -539,7 +541,8 @@ img {
   height: 54px;
   text-decoration: none;
   border: 1px solid var(--epc-line);
-  background: linear-gradient(180deg, #0f0f0f, var(--epc-black));
+  /* Hybrid: outline-only buttons for CALL / LOCATION / EMAIL */
+  background: transparent;
   font-family: "Playfair Display", serif;
   text-transform: uppercase;
   letter-spacing: .18em;
@@ -559,6 +562,22 @@ img {
   margin: 12px auto 0;
   height: 64px;
   letter-spacing: .20em;
+  /* Hybrid: primary CTA filled gold */
+  background: var(--epc-gold);
+  border-color: var(--epc-gold);
+  color: #000;
+}
+
+.epc-cta-btn--book:hover {
+  color: #000;
+}
+
+/* Hybrid: remove CRO-only homepage blocks */
+.epc-assess-cta2,
+.epc-how,
+.epc-mission,
+.epc-draw-break {
+  display: none !important;
 }
 
 @media (max-width: 820px) {
@@ -1007,11 +1026,11 @@ img {
 }
 
 .step-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(201, 178, 127, 0.7);
+  color: rgba(201, 178, 127, 0.62);
   margin-bottom: 24px;
   text-align: center;
 }
@@ -1030,17 +1049,17 @@ img {
 .options-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
-  max-width: 600px;
+  gap: 18px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
 .option-btn {
   background: rgba(17, 17, 17, 0.4);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(201, 178, 127, 0.2);
+  border: 1px solid rgba(201, 178, 127, 0.28);
   color: #F2EDE6;
-  padding: 24px 32px;
+  padding: 28px 34px;
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 300;
@@ -1049,6 +1068,11 @@ img {
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.option-btn:focus-visible{
+  outline: 2px solid rgba(201,178,127,.65);
+  outline-offset: 3px;
 }
 
 .option-btn:hover {
@@ -1574,7 +1598,7 @@ img {
 .epc-testimonials{
   position:relative;
   padding: clamp(84px, 10vw, 124px) 20px;
-  background: var(--epc-bg);
+  background: #000;
   color: var(--epc-ink);
   border-top: 1px solid var(--epc-line);
   overflow:hidden;
@@ -1585,7 +1609,8 @@ img {
   content:"";
   position:absolute;
   inset:-40%;
-  background:radial-gradient(circle at 50% 35%, rgba(201,178,127,.10), transparent 60%);
+  /* Hybrid: subtler glow, more black space */
+  background:radial-gradient(circle at 50% 35%, rgba(201,178,127,.07), transparent 62%);
   pointer-events:none;
 }
 
@@ -1844,6 +1869,20 @@ img {
   letter-spacing:.005em;
 }
 
+.epc-about .about-prose{
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+.epc-about .about-prose p{
+  margin: 0;
+  color: var(--epc-mute);
+  font-size: 14px;
+  line-height: 1.85;
+  font-weight: 350;
+  letter-spacing: .005em;
+}
+
 .epc-about .proof{
   margin-top: 16px;
   display:grid;
@@ -1884,7 +1923,7 @@ img {
   text-transform:uppercase;
   color: rgba(242,237,230,.76);
   border:1px solid rgba(201,178,127,.22);
-  background: rgba(0,0,0,.25);
+  background: transparent;
   border-radius: 999px;
   padding: 10px 12px;
 }
