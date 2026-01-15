@@ -13,6 +13,9 @@ export default async function handler(req, res) {
       });
     }
 
+    // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
+    const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     const {
       email,
       goal,
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
       'Body Areas': String(body_areas).trim(),
       'Activity Level': String(activity).trim(),
       'Priority': String(priority).trim(),
-      'Submitted At': new Date().toISOString()
+      'Submitted At': submittedAt
     };
 
     // Optional tracking fields if present in Airtable

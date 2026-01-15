@@ -13,6 +13,9 @@ export default async function handler(req, res) {
       });
     }
 
+    // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
+    const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     const {
       firstName,
       lastName,
@@ -48,7 +51,7 @@ export default async function handler(req, res) {
       'Parent/Guardian Name': parentName,
       'Preferred Contact Phone': phone,
       'Email': email,
-      'Submitted At': new Date().toISOString()
+      'Submitted At': submittedAt
     };
 
     // Add optional fields only if they have values

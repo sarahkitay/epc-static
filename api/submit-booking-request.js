@@ -12,6 +12,9 @@ export default async function handler(req, res) {
       });
     }
 
+    // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
+    const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     const {
       name,
       email,
@@ -41,7 +44,7 @@ export default async function handler(req, res) {
       'Name': String(name).trim(),
       'Email': String(email).trim(),
       'Phone': String(phone).trim(),
-      'Submitted At': new Date().toISOString()
+      'Submitted At': submittedAt
     };
 
     if (service) fields['Service of Interest'] = String(service).trim();

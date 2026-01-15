@@ -13,6 +13,9 @@ export default async function handler(req, res) {
       });
     }
 
+    // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
+    const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     const { name, email, source } = req.body;
 
     // Validate required fields
@@ -37,7 +40,7 @@ export default async function handler(req, res) {
             'Name': name || '',
             'Email': email,
             'Source': source || '',
-            'Submitted At': new Date().toISOString()
+            'Submitted At': submittedAt
           }
         })
       }
