@@ -1,0 +1,24 @@
+/* Shared lightweight helpers for non-home pages.
+   This file exists because many pages reference it for consistency. */
+
+.skip-link{
+  position:absolute;
+  left:-999px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.skip-link:focus{
+  left:16px;
+  top:16px;
+  width:auto;
+  height:auto;
+  padding:10px 12px;
+  background:#000;
+  color:#fff;
+  border:1px solid rgba(201,178,127,.35);
+  z-index:9999;
+}
+

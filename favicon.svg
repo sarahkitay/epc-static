@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Elite Performance Clinic">
+  <rect width="512" height="512" fill="#5a5a5a"/>
+  <!-- Simple EPC mark approximating provided logo for favicon use -->
+  <g fill="none" stroke="#E7D98E" stroke-linecap="round" stroke-linejoin="round">
+    <!-- E -->
+    <path d="M120 185 H190" stroke-width="18"/>
+    <path d="M120 235 H185" stroke-width="18"/>
+    <path d="M120 285 H190" stroke-width="18"/>
+    <!-- P -->
+    <path d="M235 300 V185" stroke-width="18"/>
+    <path d="M235 185 H285" stroke-width="18"/>
+    <path d="M285 185 Q320 185 320 220 Q320 255 285 255 H235" stroke-width="18"/>
+    <!-- C -->
+    <path d="M395 205 Q365 185 335 205 Q315 220 315 250 Q315 280 335 295 Q365 315 395 295" stroke-width="18"/>
+  </g>
+  <text x="256" y="365" text-anchor="middle"
+        font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="28" fill="#E7D98E" opacity="0.85">
+    Elite Performance Clinic
+  </text>
+</svg>
+
