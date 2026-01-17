@@ -466,13 +466,13 @@ img {
   .epc-hero {
     min-height: 500px;
   }
-  /* Mobile: tune crop so the full "ELITE" word (baked into video) is visible. */
+  /* Mobile: reduce zoom so the full horizontal "ELITE" word (baked into video) shows. */
   .hero-video{
     object-fit: cover;
-    /* Position to show the full "ELITE" word - adjust vertical % to shift up/down */
+    /* Keep horizontal centering, slight vertical bias to show word clearly */
     object-position: 50% 55%;
-    /* Slight zoom, but not too aggressive to avoid cutting off edges */
-    transform: scale(1.02);
+    /* Minimal/no zoom - let the word show fully */
+    transform: scale(1.0);
   }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
