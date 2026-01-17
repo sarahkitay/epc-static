@@ -466,6 +466,12 @@ img {
   .epc-hero {
     min-height: 500px;
   }
+  /* Mobile: the "ELITE" word is baked into the video, so avoid cropping by using contain (letterbox). */
+  .hero-video{
+    object-fit: contain;
+    object-position: center center;
+    background: #000;
+  }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
     gap: clamp(8px, 2.5vw, 30px);
