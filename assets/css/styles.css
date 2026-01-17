@@ -462,6 +462,11 @@ img {
   }
 }
 
+/* Mobile-only ELITE overlay bar */
+.hero-elite-mobile {
+  display: none;
+}
+
 @media (max-width: 480px) {
   .epc-hero {
     min-height: 500px;
@@ -473,6 +478,27 @@ img {
     object-position: 50% 55%;
     /* Minimal/no zoom - let the word show fully */
     transform: scale(1.0);
+  }
+  /* Mobile-only: faded black bar with ELITE text overlay */
+  .hero-elite-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 3;
+    background: linear-gradient(to bottom, rgba(0,0,0,.65), rgba(0,0,0,.75), rgba(0,0,0,.65));
+    padding: 24px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 14vw, 72px);
+    font-weight: 400;
+    letter-spacing: .18em;
+    color: #C9B27F;
+    text-shadow: 0 0 20px rgba(201,178,127,.3);
+    backdrop-filter: blur(2px);
   }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
