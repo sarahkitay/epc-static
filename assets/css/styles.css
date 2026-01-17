@@ -462,43 +462,23 @@ img {
   }
 }
 
-/* Mobile-only ELITE overlay bar */
-.hero-elite-mobile {
-  display: none;
-}
-
 @media (max-width: 480px) {
+  /* Mobile: shorter height to show more width (horizontal ELITE word) */
   .epc-hero {
-    min-height: 500px;
+    height: 70vh;
+    min-height: 400px;
   }
-  /* Mobile: reduce zoom so the full horizontal "ELITE" word (baked into video) shows. */
+  /* Mobile: no zoom, show full width for horizontal ELITE word */
   .hero-video{
     object-fit: cover;
-    /* Keep horizontal centering, slight vertical bias to show word clearly */
-    object-position: 50% 55%;
-    /* Minimal/no zoom - let the word show fully */
-    transform: scale(1.0);
+    object-position: center center;
   }
-  /* Mobile-only: faded black bar with ELITE text overlay */
-  .hero-elite-mobile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    z-index: 3;
-    background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.45), rgba(0,0,0,.35));
-    padding: 24px 20px;
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(48px, 14vw, 72px);
-    font-weight: 400;
-    letter-spacing: .18em;
-    color: rgba(201,178,127,.55);
-    text-shadow: 0 0 15px rgba(201,178,127,.2);
-    backdrop-filter: blur(1px);
+  /* Move content up - reduce padding to eliminate black space */
+  .hero-content {
+    padding: 60px 20px 50px;
+  }
+  .hero-scroll {
+    bottom: 20px;
   }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
