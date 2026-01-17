@@ -490,15 +490,15 @@ img {
     right: 0;
     transform: translateY(-50%);
     z-index: 3;
-    background: linear-gradient(to bottom, rgba(0,0,0,.65), rgba(0,0,0,.75), rgba(0,0,0,.65));
+    background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.45), rgba(0,0,0,.35));
     padding: 24px 20px;
     font-family: 'Playfair Display', serif;
     font-size: clamp(48px, 14vw, 72px);
     font-weight: 400;
     letter-spacing: .18em;
-    color: #C9B27F;
-    text-shadow: 0 0 20px rgba(201,178,127,.3);
-    backdrop-filter: blur(2px);
+    color: rgba(201,178,127,.55);
+    text-shadow: 0 0 15px rgba(201,178,127,.2);
+    backdrop-filter: blur(1px);
   }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
