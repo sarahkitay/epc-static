@@ -466,10 +466,12 @@ img {
   .epc-hero {
     min-height: 500px;
   }
-  /* Mobile: the "ELITE" word is baked into the video, so avoid cropping by using contain (letterbox). */
+  /* Mobile: remove letterboxing, but keep the baked-in "ELITE" word visible by biasing the crop. */
   .hero-video{
-    object-fit: contain;
-    object-position: center center;
+    object-fit: cover;
+    /* Shift crop so the in-video "ELITE" word sits higher and doesn't get clipped */
+    object-position: 50% 62%;
+    transform: scale(1.06);
     background: #000;
   }
   .hero-title {
