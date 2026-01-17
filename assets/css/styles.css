@@ -466,13 +466,13 @@ img {
   .epc-hero {
     min-height: 500px;
   }
-  /* Mobile: remove letterboxing, but keep the baked-in "ELITE" word visible by biasing the crop. */
+  /* Mobile: tune crop so the full "ELITE" word (baked into video) is visible. */
   .hero-video{
     object-fit: cover;
-    /* Shift crop so the in-video "ELITE" word sits higher and doesn't get clipped */
-    object-position: 50% 62%;
-    transform: scale(1.06);
-    background: #000;
+    /* Position to show the full "ELITE" word - adjust vertical % to shift up/down */
+    object-position: 50% 55%;
+    /* Slight zoom, but not too aggressive to avoid cutting off edges */
+    transform: scale(1.02);
   }
   .hero-title {
     font-size: clamp(40px, 10vw, 140px);
