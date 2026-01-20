@@ -1,0 +1,13 @@
+{
+  "name": "epc-static",
+  "version": "1.0.0",
+  "description": "Elite Performance Clinic - Client Management System",
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npx serve . -l 3000"
+  },
+  "devDependencies": {},
+  "keywords": ["epc", "client-management"],
+  "author": "",
+  "license": "ISC"
+}

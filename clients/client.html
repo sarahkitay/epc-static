@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EPC Client Profile" />
+  <title>Client Profile | EPC Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="film-grain"></div>
+  
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="nav-content">
+      <div class="nav-left">
+        <a href="dashboard.html" class="nav-back">&larr; Back to Dashboard</a>
+      </div>
+      <div class="nav-right">
+        <h2 class="client-name" id="clientNameHeader">Client Name</h2>
+        <button class="nav-btn" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="client-main">
+    <!-- Client Info Header -->
+    <header class="client-header">
+      <div class="client-info">
+        <h1 id="clientNameTitle" class="client-title">Client Name</h1>
+        <div class="client-meta">
+          <span class="client-category" id="clientCategoryBadge">Shared</span>
+          <span class="client-divider">•</span>
+          <span id="clientAgeMeta">Age: --</span>
+          <span class="client-divider">•</span>
+          <span id="clientTrainerMeta">Trainer: --</span>
+        </div>
+      </div>
+      <div class="client-actions">
+        <button class="btn-secondary" id="moveClientBtn">Move Client</button>
+        <button class="btn-secondary" id="editClientBtn">Edit Info</button>
+      </div>
+    </header>
+
+    <!-- Tabs Navigation -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="assessment">
+        <span>Initial Assessment</span>
+      </button>
+      <button class="tab-btn" data-tab="program">
+        <span>Program Builder</span>
+      </button>
+      <button class="tab-btn" data-tab="photos">
+        <span>Program Photos</span>
+      </button>
+      <button class="tab-btn" data-tab="notes">
+        <span>Progress Notes</span>
+      </button>
+      <button class="tab-btn" data-tab="pt">
+        <span>PT Coordination</span>
+      </button>
+    </nav>
+
+    <!-- Tab Content -->
+    <div class="tabs-content">
+      <!-- Initial Assessment Tab -->
+      <section class="tab-panel active" id="assessment-tab">
+        <div class="panel-header">
+          <h3 class="panel-title">Initial Assessment</h3>
+          <button class="btn-primary" id="saveAssessmentBtn">Save Assessment</button>
+        </div>
+
+        <form id="assessmentForm" class="assessment-form">
+          <div class="assessment-section">
+            <h4 class="section-title">Basic Metrics</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="proteusScore" class="form-label">Proteus Score</label>
+                <input type="number" id="proteusScore" class="form-input" step="0.1" />
+              </div>
+              <div class="form-group">
+                <label for="assessmentDate" class="form-label">Assessment Date</label>
+                <input type="date" id="assessmentDate" class="form-input" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="pedicsReview" class="form-label">PEDICS Review</label>
+              <textarea id="pedicsReview" class="form-textarea" rows="4" placeholder="Enter PEDICS review notes..."></textarea>
+            </div>
+          </div>
+
+          <div class="assessment-section">
+            <h4 class="section-title">Overhead Squat Assessment</h4>
+            <div class="form-row">
+              <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="kneeValgus" />
+                  <span>Knee Valgus</span>
+                </label>
+              </div>
+              <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="kneeVarus" />
+                  <span>Knee Varus</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hipShift" class="form-label">Hip Shift</label>
+                <select id="hipShift" class="form-input">
+                  <option value="none">None</option>
+                  <option value="right">Right</option>
+                  <option value="left">Left</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="squatOverallScore" class="form-label">Overall Score</label>
+                <input type="number" id="squatOverallScore" class="form-input" min="0" max="10" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="squatNotes" class="form-label">Squat Assessment Notes</label>
+              <textarea id="squatNotes" class="form-textarea" rows="3" placeholder="Additional notes on overhead squat..."></textarea>
+            </div>
+          </div>
+
+          <div class="assessment-section">
+            <h4 class="section-title">Shoulder Mobility</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="shoulderRightScore" class="form-label">Right Score (1-3)</label>
+                <input type="number" id="shoulderRightScore" class="form-input" min="1" max="3" />
+              </div>
+              <div class="form-group">
+                <label for="shoulderLeftScore" class="form-label">Left Score (1-3)</label>
+                <input type="number" id="shoulderLeftScore" class="form-input" min="1" max="3" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="shoulderNotes" class="form-label">Shoulder Mobility Notes</label>
+              <textarea id="shoulderNotes" class="form-textarea" rows="3" placeholder="Additional notes on shoulder mobility..."></textarea>
+            </div>
+          </div>
+
+          <div class="assessment-section">
+            <h4 class="section-title">Hamstring Mobility</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hamstringScore" class="form-label">Score</label>
+                <input type="number" id="hamstringScore" class="form-input" step="0.1" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="hamstringNotes" class="form-label">Hamstring Mobility Notes</label>
+              <textarea id="hamstringNotes" class="form-textarea" rows="3" placeholder="Additional notes on hamstring mobility..."></textarea>
+            </div>
+          </div>
+
+          <div class="assessment-section">
+            <h4 class="section-title">Push-up Assessment</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pushupScore" class="form-label">Score</label>
+                <input type="number" id="pushupScore" class="form-input" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="pushupNotes" class="form-label">Push-up Assessment Notes</label>
+              <textarea id="pushupNotes" class="form-textarea" rows="3" placeholder="Additional notes on push-up assessment..."></textarea>
+            </div>
+          </div>
+        </form>
+
+        <!-- Assessment History -->
+        <div class="assessment-history" id="assessmentHistory">
+          <h4 class="section-title">Previous Assessments</h4>
+          <div id="assessmentHistoryList"></div>
+        </div>
+      </section>
+
+      <!-- Program Builder Tab -->
+      <section class="tab-panel" id="program-tab">
+        <div class="panel-header">
+          <h3 class="panel-title">Program Builder</h3>
+          <div class="panel-actions">
+            <button class="btn-secondary" id="clearProgramBtn">Clear Program</button>
+            <button class="btn-secondary" id="saveProgramBtn">Save Program</button>
+            <button class="btn-primary" id="printProgramBtn">Print Program</button>
+          </div>
+        </div>
+
+        <div class="program-builder">
+          <div class="program-sidebar">
+            <h4 class="sidebar-title">Exercise Library</h4>
+            <input 
+              type="text" 
+              id="exerciseSearch" 
+              class="search-input" 
+              placeholder="Search exercises..."
+            />
+            <div class="exercise-library" id="exerciseLibrary">
+              <!-- Exercises will be populated here -->
+            </div>
+            <button class="btn-secondary btn-small" id="addCustomExerciseBtn">+ Add Custom Exercise</button>
+          </div>
+
+          <div class="program-main">
+            <div class="program-week-selector">
+              <label for="programWeek" class="form-label">Program Week:</label>
+              <select id="programWeek" class="form-input">
+                <option value="1">Week 1</option>
+                <option value="2">Week 2</option>
+                <option value="3">Week 3</option>
+                <option value="4">Week 4</option>
+                <option value="5">Week 5</option>
+                <option value="6">Week 6</option>
+              </select>
+            </div>
+
+            <div class="program-exercises" id="programExercises">
+              <!-- Program exercises will be added here -->
+              <div class="empty-program">
+                <p>No exercises added yet. Drag exercises from the library or click "Add Custom Exercise".</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saved Programs History -->
+        <div class="program-history">
+          <h4 class="section-title">Saved Programs</h4>
+          <div id="programHistoryList"></div>
+        </div>
+      </section>
+
+      <!-- Program Photos Tab -->
+      <section class="tab-panel" id="photos-tab">
+        <div class="panel-header">
+          <h3 class="panel-title">Program Photos</h3>
+          <button class="btn-primary" id="uploadPhotoBtn">
+            <span>+ Upload Program Photo</span>
+          </button>
+        </div>
+
+        <div class="photo-upload-area" id="photoUploadArea" style="display: none;">
+          <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" />
+          <div class="upload-zone">
+            <p>Drag & drop a photo here or click to select</p>
+            <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">Choose File</button>
+          </div>
+          <div class="upload-preview" id="uploadPreview" style="display: none;">
+            <img id="previewImage" src="" alt="Preview" />
+            <div class="upload-actions">
+              <button class="btn-secondary" id="cancelUploadBtn">Cancel</button>
+              <button class="btn-primary" id="processPhotoBtn">Process & Extract Text</button>
+            </div>
+          </div>
+          <div class="ocr-progress" id="ocrProgress" style="display: none;">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Processing image...</p>
+          </div>
+          <div class="ocr-results" id="ocrResults" style="display: none;">
+            <h4>Extracted Text</h4>
+            <textarea id="extractedText" class="form-textarea" rows="10"></textarea>
+            <div class="ocr-actions">
+              <button class="btn-secondary" id="editExtractedBtn">Edit Text</button>
+              <button class="btn-primary" id="savePhotoBtn">Save Photo & Text</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="photos-gallery" id="photosGallery">
+          <!-- Photos will be displayed here -->
+        </div>
+      </section>
+
+      <!-- Progress Notes Tab -->
+      <section class="tab-panel" id="notes-tab">
+        <div class="panel-header">
+          <h3 class="panel-title">Progress Notes</h3>
+          <button class="btn-primary" id="addNoteBtn">Add Note</button>
+        </div>
+
+        <div class="notes-add" id="notesAdd" style="display: none;">
+          <form id="noteForm" class="note-form">
+            <textarea id="noteContent" class="form-textarea" rows="6" placeholder="Enter progress note..."></textarea>
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" id="cancelNoteBtn">Cancel</button>
+              <button type="submit" class="btn-primary">Save Note</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="notes-timeline" id="notesTimeline">
+          <!-- Notes will be displayed here -->
+        </div>
+      </section>
+
+      <!-- PT Coordination Tab -->
+      <section class="tab-panel" id="pt-tab">
+        <div class="panel-header">
+          <h3 class="panel-title">PT Coordination</h3>
+          <button class="btn-primary" id="addPtNoteBtn">Add PT Note</button>
+        </div>
+
+        <div class="pt-add" id="ptAdd" style="display: none;">
+          <form id="ptNoteForm" class="note-form">
+            <textarea id="ptNoteContent" class="form-textarea" rows="6" placeholder="Enter PT coordination note..."></textarea>
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" id="cancelPtNoteBtn">Cancel</button>
+              <button type="submit" class="btn-primary">Save PT Note</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="pt-timeline" id="ptTimeline">
+          <!-- PT notes will be displayed here -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Move Client Modal -->
+  <div class="modal" id="moveClientModal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Move Client</h3>
+        <button class="modal-close" id="closeMoveModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Move this client to a different category?</p>
+        <select id="newCategory" class="form-input">
+          <option value="shared">Shared Client</option>
+          <option value="personal">Personal Client</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancelMoveBtn">Cancel</button>
+        <button type="button" class="btn-primary" id="confirmMoveBtn">Move Client</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>

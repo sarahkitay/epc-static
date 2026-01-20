@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EPC Client Management Dashboard" />
+  <title>EPC Client Management | Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="film-grain"></div>
+  
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <div class="nav-content">
+      <div class="nav-left">
+        <h1 class="nav-logo">EPC</h1>
+        <span class="nav-subtitle">Client Management</span>
+      </div>
+      <div class="nav-right">
+        <button class="nav-btn" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Header Section -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <h2 class="dashboard-title">Client Roster</h2>
+        <button class="btn-primary" id="addClientBtn">
+          <span>+ Add New Client</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Search and Filter Section -->
+    <section class="search-section">
+      <div class="search-filters">
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="clientSearch" 
+            class="search-input" 
+            placeholder="Search clients by name..."
+          />
+        </div>
+        
+        <div class="filter-group">
+          <select id="categoryFilter" class="filter-select">
+            <option value="all">All Clients</option>
+            <option value="shared">Shared Clients</option>
+            <option value="personal">Personal Clients</option>
+          </select>
+          
+          <select id="sortFilter" class="filter-select">
+            <option value="name-asc">Sort: A-Z</option>
+            <option value="name-desc">Sort: Z-A</option>
+            <option value="recent">Most Recent</option>
+            <option value="assessment-due">Assessment Due</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Client Cards Grid -->
+    <section class="clients-grid" id="clientsGrid">
+      <!-- Client cards will be dynamically inserted here -->
+    </section>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <p>No clients found. Click "Add New Client" to get started.</p>
+    </div>
+  </main>
+
+  <!-- Add Client Modal -->
+  <div class="modal" id="addClientModal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Client</h3>
+        <button class="modal-close" id="closeAddModal">&times;</button>
+      </div>
+      
+      <form id="addClientForm" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="clientName" class="form-label">Full Name *</label>
+            <input type="text" id="clientName" class="form-input" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="clientAge" class="form-label">Age</label>
+            <input type="number" id="clientAge" class="form-input" min="1" max="25" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="clientCategory" class="form-label">Category *</label>
+            <select id="clientCategory" class="form-input" required>
+              <option value="shared">Shared Client</option>
+              <option value="personal">Personal Client</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="primaryTrainer" class="form-label">Primary Trainer</label>
+            <input type="text" id="primaryTrainer" class="form-input" placeholder="Trainer name" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="parentContact" class="form-label">Parent Contact Info</label>
+          <input type="text" id="parentContact" class="form-input" placeholder="Name, Phone, Email" />
+        </div>
+
+        <div class="form-group">
+          <label for="emergencyContact" class="form-label">Emergency Contact</label>
+          <input type="text" id="emergencyContact" class="form-input" placeholder="Name, Phone, Relationship" />
+        </div>
+
+        <div class="form-group">
+          <label for="clientGoals" class="form-label">Goals</label>
+          <textarea id="clientGoals" class="form-textarea" rows="3" placeholder="Client goals and objectives..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="medicalHistory" class="form-label">Medical History</label>
+          <textarea id="medicalHistory" class="form-textarea" rows="3" placeholder="Previous injuries, conditions, medications..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelAddClient">Cancel</button>
+          <button type="submit" class="btn-primary">Create Client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
