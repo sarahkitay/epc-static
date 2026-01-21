@@ -112,38 +112,12 @@
         }
 
         /* ========================================
-           HEADER - EDITORIAL, MINIMAL
+           HEADER - EDITORIAL, MINIMAL (Using Unified Header)
            ======================================== */
         .services-hero {
-          padding: clamp(120px, 12vw, 140px) 0 clamp(60px, 6vw, 80px);
-          position: relative;
+          /* Header now uses .epc-page-header from styles.css */
           border-bottom: 1px solid rgba(201, 178, 127, .1);
           margin-bottom: clamp(60px, 8vw, 100px);
-        }
-
-        /* Minimal Page Label */
-        .services-page-label {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          font-size: 11px;
-          letter-spacing: .2em;
-          text-transform: uppercase;
-          color: rgba(201, 178, 127, .6);
-          font-weight: 400;
-          margin-bottom: 32px;
-          font-family: 'Montserrat', sans-serif;
-        }
-
-        .services-page-label::before {
-          content: '';
-          width: 24px;
-          height: 1px;
-          background: rgba(201, 178, 127, .4);
-        }
-
-        .services-hero .hero-subtitle {
-          display: none;
         }
 
         /* Minimal Search Bar - Top Right */
@@ -814,8 +788,14 @@
       <div class="services-container">
         
         <!-- Header - Minimal, Editorial -->
-        <div class="services-hero">
-          <div class="services-page-label">Services</div>
+        <div class="epc-page-header services-hero">
+          <nav class="epc-breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span class="epc-breadcrumbs-separator">/</span>
+            <span>Services</span>
+          </nav>
+          <h1 class="epc-page-title">Services</h1>
+          <p class="epc-page-subtitle">Recovery • Performance • Wellness</p>
           
           <div class="services-search">
             <input 

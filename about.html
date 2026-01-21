@@ -84,16 +84,12 @@
         }
         
         .about-content h1{
-          font-family:"Playfair Display",serif;
-          font-size:clamp(48px,8vw,72px);
-          font-weight:300;
-          letter-spacing:.08em;
-          line-height:1.2;
-          text-transform:uppercase;
-          color:var(--gold);
-          margin:0 0 32px;
-          text-shadow:0 0 40px var(--gold-glow);
-          animation:titleGlow 3s ease-in-out infinite;
+          /* Using unified header styles from styles.css */
+          display: none;
+        }
+        
+        .about-content .epc-page-header {
+          padding-top: 140px;
         }
         
         @keyframes titleGlow{
@@ -447,7 +443,15 @@
       </style>
 
       <div class="about-content">
-        <h1>Who We Are</h1>
+        <div class="epc-page-header">
+          <nav class="epc-breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span class="epc-breadcrumbs-separator">/</span>
+            <span>About</span>
+          </nav>
+          <h1 class="epc-page-title">Who We Are</h1>
+          <p class="epc-page-subtitle">Premier destination for health, wellness, and performance</p>
+        </div>
         
         <p class="about-intro">
           <strong>Elite Performance Clinic</strong> is your premier destination for health, wellness, and performance solutions-all in one place. Founded by a team of dedicated professionals with diverse expertise, EPC bridges the gap between recovery, rehabilitation, and peak athletic performance.
