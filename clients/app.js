@@ -72,19 +72,36 @@ function initLogin() {
   const loginForm = document.getElementById('loginForm');
   const errorMessage = document.getElementById('errorMessage');
 
-  if (!loginForm) return;
+  if (!loginForm) {
+    console.error('Login form not found');
+    return;
+  }
 
-  loginForm.addEventListener('submit', (e) => {
+  console.log('Initializing login form');
+
+  // Handle form submission
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    handleLogin();
+    e.stopPropagation();
+    console.log('Form submitted');
+    await handleLogin();
+    return false;
   });
 
-  // Also handle button click for mobile compatibility
+  // Also handle button click for mobile compatibility (but prevent double-firing)
   const loginBtn = loginForm.querySelector('button[type="submit"]');
   if (loginBtn) {
-    loginBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      handleLogin();
+    let isHandling = false;
+    loginBtn.addEventListener('click', async (e) => {
+      // Only handle if form submit didn't already fire
+      if (!isHandling && !e.isTrusted) {
+        e.preventDefault();
+        e.stopPropagation();
+        isHandling = true;
+        console.log('Button clicked');
+        await handleLogin();
+        setTimeout(() => { isHandling = false; }, 1000);
+      }
     });
   }
 }
