@@ -164,10 +164,8 @@ async function handleLogin() {
         console.log('Current location:', window.location.href);
         console.log('Session stored:', sessionStorage.getItem(SESSION_KEY));
         
-        // Small delay to ensure session is saved, then redirect
-        setTimeout(() => {
-          window.location.href = dashboardPath;
-        }, 100);
+        // Force immediate redirect
+        window.location.href = dashboardPath;
         return true;
       } catch (e) {
         console.error('Error setting session:', e);
@@ -271,7 +269,21 @@ function initLogout() {
 
 // Dashboard functionality
 async function initDashboard() {
-  checkAuth();
+  console.log('=== DASHBOARD INITIALIZATION START ===');
+  
+  // Check authentication (but don't redirect if we're already here)
+  const session = sessionStorage.getItem(SESSION_KEY);
+  const parentSession = sessionStorage.getItem('epc_parent_session');
+  console.log('Session check - Staff:', session, 'Parent:', parentSession);
+  
+  if (!session && !parentSession) {
+    console.log('No session found, redirecting to login...');
+    const loginPath = getPath('index.html');
+    console.log('Redirecting to:', loginPath);
+    window.location.href = loginPath;
+    return;
+  }
+  
   initLogout();
 
   const addClientBtn = document.getElementById('addClientBtn');
@@ -561,10 +573,73 @@ async function initDashboard() {
   }
 
   // Initial load
-  await loadClients();
+  await window.loadClients();
+  console.log('=== DASHBOARD INITIALIZATION COMPLETE ===');
 }
 
-// Handle session used today
+// Handle session used for a specific client (called from client card)
+async function handleClientSessionUsed(clientId, clientName) {
+  try {
+    const client = await getClient(clientId);
+    
+    if (!client) {
+      alert('Client not found.');
+      return;
+    }
+    
+    if (client.packageTotalSessions === null) {
+      alert('This client does not have a package set up. Please edit the client to add package information.');
+      return;
+    }
+    
+    const remainingSessions = client.packageRemainingSessions !== null ? client.packageRemainingSessions : (client.packageTotalSessions - (client.packageUsedSessions || 0));
+    
+    if (remainingSessions <= 0) {
+      if (!confirm(`${clientName} has no sessions remaining. Are you sure you want to mark a session as used?`)) {
+        return;
+      }
+    }
+    
+    const usedSessions = (client.packageUsedSessions || 0) + 1;
+    const newRemainingSessions = client.packageTotalSessions - usedSessions;
+    
+    // Update session history
+    const sessionHistory = client.sessionHistory || [];
+    sessionHistory.push({
+      date: new Date().toISOString(),
+      usedBy: 'Staff'
+    });
+    
+    await updateClient(clientId, {
+      packageUsedSessions: usedSessions,
+      packageRemainingSessions: newRemainingSessions,
+      sessionHistory: sessionHistory
+    });
+    
+    // Show notification
+    let message = `Session used for ${clientName}. ${newRemainingSessions} sessions remaining.`;
+    if (newRemainingSessions === 0) {
+      message += '\n\n⚠️ WARNING: Client is now OUT of sessions!';
+    } else if (newRemainingSessions <= 3) {
+      message += '\n\n⚠️ WARNING: Client is running LOW on sessions!';
+    }
+    
+    alert(message);
+    
+    // Reload clients to update display
+    if (typeof loadClients === 'function') {
+      await loadClients();
+    } else {
+      // Fallback: reload page
+      window.location.reload();
+    }
+  } catch (error) {
+    console.error('Error marking session as used:', error);
+    alert('Error marking session as used. Please try again.');
+  }
+}
+
+// Handle session used today (legacy function - kept for compatibility)
 async function handleSessionUsed() {
   try {
     const allClients = await getAllClients();
@@ -667,10 +742,102 @@ function addQuickNote(clientId) {
   }
 }
 
-// Make functions available globally for onclick handlers
-window.viewClient = viewClient;
-window.addQuickNote = addQuickNote;
-window.handleClientSessionUsed = handleClientSessionUsed;
+// Make functions available globally for onclick handlers (define early)
+if (typeof window !== 'undefined') {
+  // Define these early so they're available when HTML is rendered
+  window.viewClient = function(clientId) {
+    const pathname = window.location.pathname;
+    if (pathname.includes('/clients/')) {
+      const clientsIndex = pathname.indexOf('/clients/');
+      const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+      window.location.href = basePath + `client.html?id=${clientId}`;
+    } else {
+      window.location.href = `./client.html?id=${clientId}`;
+    }
+  };
+  
+  window.addQuickNote = function(clientId) {
+    const note = prompt('Enter a quick note:');
+    if (note && note.trim()) {
+      if (typeof saveProgressNote === 'function') {
+        saveProgressNote(clientId, note)
+          .then(() => {
+            alert('Note added successfully!');
+            if (typeof window.loadClients === 'function') {
+              window.loadClients();
+            }
+          })
+          .catch(error => {
+            console.error('Error adding note:', error);
+            alert('Error adding note. Please try again.');
+          });
+      } else {
+        console.error('saveProgressNote function not available');
+        alert('Note saving not available. Please use the client profile page.');
+      }
+    }
+  };
+  
+  window.handleClientSessionUsed = async function(clientId, clientName) {
+    try {
+      const client = await getClient(clientId);
+      
+      if (!client) {
+        alert('Client not found.');
+        return;
+      }
+      
+      if (client.packageTotalSessions === null) {
+        alert('This client does not have a package set up. Please edit the client to add package information.');
+        return;
+      }
+      
+      const remainingSessions = client.packageRemainingSessions !== null ? client.packageRemainingSessions : (client.packageTotalSessions - (client.packageUsedSessions || 0));
+      
+      if (remainingSessions <= 0) {
+        if (!confirm(`${clientName} has no sessions remaining. Are you sure you want to mark a session as used?`)) {
+          return;
+        }
+      }
+      
+      const usedSessions = (client.packageUsedSessions || 0) + 1;
+      const newRemainingSessions = client.packageTotalSessions - usedSessions;
+      
+      // Update session history
+      const sessionHistory = client.sessionHistory || [];
+      sessionHistory.push({
+        date: new Date().toISOString(),
+        usedBy: 'Staff'
+      });
+      
+      await updateClient(clientId, {
+        packageUsedSessions: usedSessions,
+        packageRemainingSessions: newRemainingSessions,
+        sessionHistory: sessionHistory
+      });
+      
+      // Show notification
+      let message = `Session used for ${clientName}. ${newRemainingSessions} sessions remaining.`;
+      if (newRemainingSessions === 0) {
+        message += '\n\n⚠️ WARNING: Client is now OUT of sessions!';
+      } else if (newRemainingSessions <= 3) {
+        message += '\n\n⚠️ WARNING: Client is running LOW on sessions!';
+      }
+      
+      alert(message);
+      
+      // Reload clients to update display
+      if (typeof window.loadClients === 'function') {
+        await window.loadClients();
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error marking session as used:', error);
+      alert('Error marking session as used. Please try again.');
+    }
+  };
+}
 
 // Utility functions
 function escapeHtml(text) {
