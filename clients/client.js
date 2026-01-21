@@ -195,21 +195,43 @@ async function loadClientData() {
 
 // Initialize tabs
 function initTabs() {
+  console.log('Initializing tabs...');
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabPanels = document.querySelectorAll('.tab-panel');
 
+  console.log('Found tab buttons:', tabButtons.length);
+  console.log('Found tab panels:', tabPanels.length);
+
   tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const targetTab = button.dataset.tab;
+      console.log('Tab clicked:', targetTab);
+
+      if (!targetTab) {
+        console.error('No data-tab attribute found on button');
+        return;
+      }
 
       // Update active states
       tabButtons.forEach(btn => btn.classList.remove('active'));
       tabPanels.forEach(panel => panel.classList.remove('active'));
 
       button.classList.add('active');
-      document.getElementById(`${targetTab}-tab`).classList.add('active');
+      
+      const targetPanel = document.getElementById(`${targetTab}-tab`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        console.log('Switched to tab:', targetTab);
+      } else {
+        console.error('Tab panel not found:', `${targetTab}-tab`);
+      }
     });
   });
+  
+  console.log('Tabs initialized');
 }
 
 // ===== ASSESSMENT =====
@@ -1150,6 +1172,7 @@ async function loadPTNotes() {
 
 // ===== CLIENT ACTIONS =====
 function initClientActions() {
+  console.log('Initializing client actions...');
   const moveClientBtn = document.getElementById('moveClientBtn');
   const editClientBtn = document.getElementById('editClientBtn');
   const moveClientModal = document.getElementById('moveClientModal');
@@ -1157,11 +1180,27 @@ function initClientActions() {
   const cancelMoveBtn = document.getElementById('cancelMoveBtn');
   const confirmMoveBtn = document.getElementById('confirmMoveBtn');
 
+  console.log('Move client button:', moveClientBtn ? 'found' : 'NOT FOUND');
+  console.log('Edit client button:', editClientBtn ? 'found' : 'NOT FOUND');
+  console.log('Move client modal:', moveClientModal ? 'found' : 'NOT FOUND');
+
   if (moveClientBtn) {
-    moveClientBtn.addEventListener('click', () => {
-      moveClientModal.style.display = 'flex';
-      document.getElementById('newCategory').value = currentClient.category;
+    moveClientBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Move client button clicked');
+      if (moveClientModal) {
+        moveClientModal.style.display = 'flex';
+        const newCategoryInput = document.getElementById('newCategory');
+        if (newCategoryInput && currentClient) {
+          newCategoryInput.value = currentClient.category;
+        }
+      } else {
+        console.error('Move client modal not found');
+      }
     });
+  } else {
+    console.error('Move client button not found!');
   }
 
   if (closeMoveModal) {
@@ -1199,22 +1238,46 @@ function initClientActions() {
   const editClientForm = document.getElementById('editClientForm');
 
   if (editClientBtn) {
-    editClientBtn.addEventListener('click', () => {
+    editClientBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Edit client button clicked');
+      const editClientModal = document.getElementById('editClientModal');
+      if (!editClientModal) {
+        console.error('Edit client modal not found!');
+        alert('Edit modal not found. Please refresh the page.');
+        return;
+      }
+      
       // Populate form with current client data
       if (currentClient) {
-        document.getElementById('editClientName').value = currentClient.name || '';
-        document.getElementById('editClientAge').value = currentClient.age || '';
-        document.getElementById('editClientCategory').value = currentClient.category || 'shared';
-        document.getElementById('editPrimaryTrainer').value = currentClient.primaryTrainer || '';
-        document.getElementById('editParentContact').value = currentClient.parentContact || '';
-        document.getElementById('editParentPasscode').value = currentClient.parentPasscode || '';
-        document.getElementById('editEmergencyContact').value = currentClient.emergencyContact || '';
-        document.getElementById('editClientGoals').value = currentClient.goals || '';
-        document.getElementById('editMedicalHistory').value = currentClient.medicalHistory || '';
+        const nameInput = document.getElementById('editClientName');
+        const ageInput = document.getElementById('editClientAge');
+        const categoryInput = document.getElementById('editClientCategory');
+        const trainerInput = document.getElementById('editPrimaryTrainer');
+        const parentContactInput = document.getElementById('editParentContact');
+        const parentPasscodeInput = document.getElementById('editParentPasscode');
+        const emergencyInput = document.getElementById('editEmergencyContact');
+        const goalsInput = document.getElementById('editClientGoals');
+        const medicalInput = document.getElementById('editMedicalHistory');
+        
+        if (nameInput) nameInput.value = currentClient.name || '';
+        if (ageInput) ageInput.value = currentClient.age || '';
+        if (categoryInput) categoryInput.value = currentClient.category || 'shared';
+        if (trainerInput) trainerInput.value = currentClient.primaryTrainer || '';
+        if (parentContactInput) parentContactInput.value = currentClient.parentContact || '';
+        if (parentPasscodeInput) parentPasscodeInput.value = currentClient.parentPasscode || '';
+        if (emergencyInput) emergencyInput.value = currentClient.emergencyContact || '';
+        if (goalsInput) goalsInput.value = currentClient.goals || '';
+        if (medicalInput) medicalInput.value = currentClient.medicalHistory || '';
       }
-      if (editClientModal) editClientModal.style.display = 'flex';
-      document.getElementById('editClientName').focus();
+      
+      editClientModal.style.display = 'flex';
+      const nameInput = document.getElementById('editClientName');
+      if (nameInput) nameInput.focus();
     });
+  } else {
+    console.error('Edit client button not found!');
   }
 
   if (closeEditModal) {
