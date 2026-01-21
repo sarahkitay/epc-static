@@ -41,20 +41,37 @@ function handleLogin() {
   const passwordInput = document.getElementById('password');
   const errorMessage = document.getElementById('errorMessage');
   
-  if (!passwordInput) return;
+  if (!passwordInput) {
+    console.error('Password input not found');
+    alert('Error: Password input not found. Please refresh the page.');
+    return;
+  }
   
   const password = passwordInput.value.trim();
+  console.log('Login attempt, password length:', password.length);
 
   if (password === PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, 'authenticated');
-    window.location.href = 'dashboard.html';
+    console.log('Password correct, redirecting...');
+    try {
+      sessionStorage.setItem(SESSION_KEY, 'authenticated');
+      window.location.href = 'dashboard.html';
+    } catch (e) {
+      console.error('Error setting session:', e);
+      // Fallback: try direct redirect
+      window.location.href = 'dashboard.html';
+    }
   } else {
+    console.log('Password incorrect');
     if (errorMessage) {
       errorMessage.textContent = 'Incorrect password. Please try again.';
       errorMessage.style.display = 'block';
+    } else {
+      alert('Incorrect password. Please try again.');
     }
     passwordInput.value = '';
-    passwordInput.focus();
+    setTimeout(() => {
+      passwordInput.focus();
+    }, 100);
     
     // Clear error after 3 seconds
     setTimeout(() => {

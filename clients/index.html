@@ -13,6 +13,110 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Critical inline styles for mobile - ensures login page works even if CSS doesn't load */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #F2EDE6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 480px;
+    }
+    .login-card {
+      background: rgba(10, 10, 10, 0.95);
+      border: 1px solid rgba(201, 178, 127, 0.22);
+      border-radius: 16px;
+      padding: 40px 30px;
+      box-shadow: 0 16px 64px rgba(0, 0, 0, 0.6);
+    }
+    .login-title {
+      font-size: 36px;
+      color: #C9B27F;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 0.3em;
+    }
+    .login-subtitle {
+      text-align: center;
+      color: #d8d2c7;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-label {
+      display: block;
+      color: rgba(201, 178, 127, 0.55);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(201, 178, 127, 0.04);
+      border: 1px solid rgba(201, 178, 127, 0.22);
+      border-radius: 12px;
+      color: #F2EDE6;
+      font-size: 16px;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #C9B27F;
+      background: rgba(201, 178, 127, 0.08);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: #C9B27F;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .login-btn:active {
+      background: #E1D3A8;
+    }
+    .error-message {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      border-radius: 12px;
+      color: #ff6b7a;
+      font-size: 14px;
+      text-align: center;
+    }
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+      .login-title {
+        font-size: 32px;
+      }
+    }
+  </style>
 </head>
 <body class="login-page">
   <div class="film-grain"></div>
@@ -47,6 +151,48 @@
     </div>
   </div>
 
+  <script>
+    // Ensure app.js loads and handles login
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded, initializing login...');
+      
+      // Double-check form is ready
+      setTimeout(function() {
+        const form = document.getElementById('loginForm');
+        const input = document.getElementById('password');
+        
+        if (form && input) {
+          console.log('Form and input found');
+          
+          // Add direct click handler as backup
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Submit button clicked');
+              
+              const password = input.value.trim();
+              if (password === '15125') {
+                sessionStorage.setItem('epc_session', 'authenticated');
+                window.location.href = 'dashboard.html';
+              } else {
+                const errorMsg = document.getElementById('errorMessage');
+                if (errorMsg) {
+                  errorMsg.textContent = 'Incorrect password. Please try again.';
+                  errorMsg.style.display = 'block';
+                }
+                input.value = '';
+                setTimeout(() => input.focus(), 100);
+              }
+            });
+          }
+        } else {
+          console.error('Form or input not found');
+        }
+      }, 100);
+    });
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
