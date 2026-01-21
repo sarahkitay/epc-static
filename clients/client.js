@@ -81,8 +81,7 @@ async function initClientPage() {
   // Initialize tabs
   initTabs();
 
-  // Check if parent session - make page read-only
-  const parentData = isParentSession();
+  // Check if parent session - make page read-only (reuse parentData from above)
   if (parentData) {
     makePageReadOnly();
   }
