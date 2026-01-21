@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Parent Portal | EPC Client Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .parent-view-header {
+      background: rgba(11, 11, 11, 0.98);
+      border-bottom: 1px solid var(--epc-line);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .parent-view-header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .parent-view-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--epc-gold);
+      letter-spacing: 0.1em;
+    }
+    .parent-view-subtitle {
+      font-size: 12px;
+      color: var(--epc-ink-dim);
+      margin-top: 4px;
+    }
+    .parent-view-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .parent-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: rgba(201, 178, 127, 0.15);
+      border: 1px solid var(--epc-gold);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--epc-gold);
+    }
+    .parent-view-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .parent-info-card {
+      background: rgba(11, 11, 11, 0.6);
+      border: 1px solid var(--epc-line);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .parent-info-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--epc-gold);
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .info-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--epc-ink-dim);
+    }
+    .info-value {
+      font-size: 14px;
+      color: var(--epc-ink);
+    }
+    .read-only-notice {
+      background: rgba(201, 178, 127, 0.1);
+      border-left: 3px solid var(--epc-gold);
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      border-radius: 4px;
+    }
+    .read-only-notice p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--epc-ink);
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .parent-view-header-content {
+        padding: 0 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .parent-view-content {
+        padding: 20px;
+      }
+      .parent-info-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="parent-view-header">
+    <div class="parent-view-header-content">
+      <div>
+        <h1 class="parent-view-title" id="clientNameTitle">Loading...</h1>
+        <p class="parent-view-subtitle">Parent Portal - Read Only Access</p>
+      </div>
+      <div class="parent-view-actions">
+        <span class="parent-badge">Parent View</span>
+        <button class="btn-secondary" onclick="window.location.href='parent-portal.html'">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="parent-view-content">
+      <!-- Read-Only Notice -->
+      <div class="read-only-notice">
+        <p><strong>Parent Portal:</strong> This is a read-only view of your child's progress. You can view assessments, programs, and notes, but cannot make changes. For questions or updates, please contact your trainer.</p>
+      </div>
+
+      <!-- Client Info Card -->
+      <div class="parent-info-card">
+        <h3>Client Information</h3>
+        <div class="info-grid" id="clientInfoGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Assessment History -->
+      <div class="parent-info-card">
+        <h3>Assessment History</h3>
+        <div id="parentAssessmentHistory">
+          <p style="color: var(--epc-ink-dim);">Loading assessments...</p>
+        </div>
+      </div>
+
+      <!-- Programs -->
+      <div class="parent-info-card">
+        <h3>Training Programs</h3>
+        <div id="parentPrograms">
+          <p style="color: var(--epc-ink-dim);">Loading programs...</p>
+        </div>
+      </div>
+
+      <!-- Progress Notes -->
+      <div class="parent-info-card">
+        <h3>Progress Notes</h3>
+        <div id="parentNotes">
+          <p style="color: var(--epc-ink-dim);">Loading notes...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="db.js"></script>
+  <script>
+    let currentClientId = null;
+    let currentClient = null;
+
+    // Check parent session
+    function checkParentSession() {
+      const parentSession = sessionStorage.getItem('parentSession');
+      if (!parentSession) {
+        window.location.href = 'parent-portal.html';
+        return null;
+      }
+
+      try {
+        const session = JSON.parse(parentSession);
+        // Check if session is still valid (24 hours)
+        if (Date.now() - session.timestamp > 24 * 60 * 60 * 1000) {
+          sessionStorage.removeItem('parentSession');
+          window.location.href = 'parent-portal.html';
+          return null;
+        }
+        return session;
+      } catch (e) {
+        sessionStorage.removeItem('parentSession');
+        window.location.href = 'parent-portal.html';
+        return null;
+      }
+    }
+
+    async function initParentView() {
+      const session = checkParentSession();
+      if (!session) return;
+
+      // Get client ID from URL or session
+      const urlParams = new URLSearchParams(window.location.search);
+      currentClientId = parseInt(urlParams.get('id')) || session.clientId;
+
+      if (!currentClientId) {
+        alert('No client ID found. Redirecting to login.');
+        window.location.href = 'parent-portal.html';
+        return;
+      }
+
+      await initDB();
+
+      // Load and display client data
+      await loadClientData();
+      await loadAssessments();
+      await loadPrograms();
+      await loadNotes();
+    }
+
+    async function loadClientData() {
+      try {
+        currentClient = await getClient(currentClientId);
+        if (!currentClient) {
+          alert('Client not found.');
+          window.location.href = 'parent-portal.html';
+          return;
+        }
+
+        document.getElementById('clientNameTitle').textContent = currentClient.name;
+
+        const infoGrid = document.getElementById('clientInfoGrid');
+        infoGrid.innerHTML = `
+          <div class="info-item">
+            <span class="info-label">Age</span>
+            <span class="info-value">${currentClient.age || 'N/A'}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Primary Trainer</span>
+            <span class="info-value">${currentClient.primaryTrainer || 'N/A'}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Parent Contact</span>
+            <span class="info-value">${currentClient.parentContact || 'N/A'}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Emergency Contact</span>
+            <span class="info-value">${currentClient.emergencyContact || 'N/A'}</span>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error loading client:', error);
+        alert('Error loading client data.');
+      }
+    }
+
+    async function loadAssessments() {
+      try {
+        const assessments = await getClientAssessments(currentClientId);
+        const container = document.getElementById('parentAssessmentHistory');
+
+        if (!assessments || assessments.length === 0) {
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No assessments recorded yet.</p>';
+          return;
+        }
+
+        container.innerHTML = assessments.map((assessment, idx) => {
+          const date = new Date(assessment.date).toLocaleDateString();
+          return `
+            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === assessments.length - 1 ? 'border-bottom: none;' : ''}">
+              <h4 style="color: var(--epc-gold); margin-bottom: 12px;">Assessment ${idx + 1} - ${date}</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
+                ${assessment.proteusScore ? `<div><strong>Proteus Score:</strong> ${assessment.proteusScore}</div>` : ''}
+                ${assessment.powerOutput ? `<div><strong>Power Output:</strong> ${assessment.powerOutput}</div>` : ''}
+                ${assessment.speed ? `<div><strong>Speed:</strong> ${assessment.speed}</div>` : ''}
+                ${assessment.overheadSquat ? `<div><strong>Overhead Squat:</strong> ${assessment.overheadSquat}</div>` : ''}
+                ${assessment.shoulderMobility ? `<div><strong>Shoulder Mobility:</strong> ${assessment.shoulderMobility}</div>` : ''}
+                ${assessment.hamstringMobility ? `<div><strong>Hamstring Mobility:</strong> ${assessment.hamstringMobility}</div>` : ''}
+                ${assessment.pushupAssessment ? `<div><strong>Push-up Assessment:</strong> ${assessment.pushupAssessment}</div>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading assessments:', error);
+        document.getElementById('parentAssessmentHistory').innerHTML = '<p style="color: #d32f2f;">Error loading assessments.</p>';
+      }
+    }
+
+    async function loadPrograms() {
+      try {
+        const programs = await getClientPrograms(currentClientId);
+        const container = document.getElementById('parentPrograms');
+
+        if (!programs || programs.length === 0) {
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No programs created yet.</p>';
+          return;
+        }
+
+        container.innerHTML = programs.map((program, idx) => {
+          const date = new Date(program.createdAt).toLocaleDateString();
+          const exercises = program.exercises || [];
+          return `
+            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === programs.length - 1 ? 'border-bottom: none;' : ''}">
+              <h4 style="color: var(--epc-gold); margin-bottom: 12px;">Week ${program.week} - ${date}</h4>
+              ${exercises.length > 0 ? `
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  ${exercises.map(ex => `<li style="padding: 8px 0; border-bottom: 1px solid rgba(201, 178, 127, 0.1);">
+                    <strong>${ex.name}</strong>${ex.sets ? ` - ${ex.sets} sets x ${ex.reps || 'N/A'} reps` : ''}${ex.notes ? `<br><small style="color: var(--epc-ink-dim);">${ex.notes}</small>` : ''}
+                  </li>`).join('')}
+                </ul>
+              ` : '<p style="color: var(--epc-ink-dim);">No exercises in this program.</p>'}
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading programs:', error);
+        document.getElementById('parentPrograms').innerHTML = '<p style="color: #d32f2f;">Error loading programs.</p>';
+      }
+    }
+
+    async function loadNotes() {
+      try {
+        const notes = await getClientNotes(currentClientId);
+        const container = document.getElementById('parentNotes');
+
+        if (!notes || notes.length === 0) {
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No progress notes recorded yet.</p>';
+          return;
+        }
+
+        container.innerHTML = notes.map((note, idx) => {
+          const date = new Date(note.date).toLocaleDateString();
+          return `
+            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === notes.length - 1 ? 'border-bottom: none;' : ''}">
+              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                <strong style="color: var(--epc-gold);">${date}</strong>
+              </div>
+              <p style="color: var(--epc-ink); line-height: 1.6; margin: 0;">${note.note}</p>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading notes:', error);
+        document.getElementById('parentNotes').innerHTML = '<p style="color: #d32f2f;">Error loading notes.</p>';
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initParentView);
+    } else {
+      initParentView();
+    }
+  </script>
+</body>
+</html>

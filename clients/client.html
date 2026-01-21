@@ -45,6 +45,7 @@
         </div>
       </div>
       <div class="client-actions">
+        <button class="btn-secondary" id="downloadClientDataBtn">📥 Download All Data</button>
         <button class="btn-secondary" id="moveClientBtn">Move Client</button>
         <button class="btn-secondary" id="editClientBtn">Edit Info</button>
       </div>
@@ -415,6 +416,12 @@
         <div class="form-group">
           <label for="editParentContact" class="form-label">Parent Contact Info</label>
           <input type="text" id="editParentContact" class="form-input" placeholder="Name, Phone, Email" />
+        </div>
+
+        <div class="form-group">
+          <label for="editParentPasscode" class="form-label">Parent Portal Passcode</label>
+          <input type="text" id="editParentPasscode" class="form-input" placeholder="Create a passcode for parent access" />
+          <small style="color: var(--epc-ink-dim); font-size: 11px; margin-top: 4px;">Parents will use this passcode with their child's name to access the portal</small>
         </div>
 
         <div class="form-group">

@@ -55,6 +55,7 @@ async function initClientPage() {
   initNotes();
   initPTNotes();
   initClientActions();
+  initClientDataExport();
 
   // Load exercise library
   exerciseLibrary = [...DEFAULT_EXERCISES];
@@ -772,10 +773,14 @@ function initPhotos() {
           }
         });
 
-        // Set OCR parameters for better accuracy
+        // Set OCR parameters for better accuracy on full pages/documents
         await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO,
-          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,;:!?-()[]/'
+          tessedit_pageseg_mode: Tesseract.PSM.AUTO_OSD, // Auto page segmentation with orientation detection
+          tessedit_ocr_engine_mode: Tesseract.OEM.LSTM_ONLY, // Use LSTM neural network for better accuracy
+          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,;:!?-()[]/\\\n\t',
+          preserve_interword_spaces: '1', // Preserve spacing for better readability
+          tessedit_create_hocr: '0', // Don't create hOCR (faster)
+          tessedit_create_tsv: '0' // Don't create TSV (faster)
         });
         
         const { data: { text } } = await worker.recognize(currentPhotoData);
@@ -1101,6 +1106,7 @@ function initClientActions() {
         document.getElementById('editClientCategory').value = currentClient.category || 'shared';
         document.getElementById('editPrimaryTrainer').value = currentClient.primaryTrainer || '';
         document.getElementById('editParentContact').value = currentClient.parentContact || '';
+        document.getElementById('editParentPasscode').value = currentClient.parentPasscode || '';
         document.getElementById('editEmergencyContact').value = currentClient.emergencyContact || '';
         document.getElementById('editClientGoals').value = currentClient.goals || '';
         document.getElementById('editMedicalHistory').value = currentClient.medicalHistory || '';
@@ -1134,6 +1140,7 @@ function initClientActions() {
         category: document.getElementById('editClientCategory').value,
         primaryTrainer: document.getElementById('editPrimaryTrainer').value.trim() || null,
         parentContact: document.getElementById('editParentContact').value.trim() || null,
+        parentPasscode: document.getElementById('editParentPasscode').value.trim() || null,
         emergencyContact: document.getElementById('editEmergencyContact').value.trim() || null,
         goals: document.getElementById('editClientGoals').value.trim() || null,
         medicalHistory: document.getElementById('editMedicalHistory').value.trim() || null
@@ -1151,6 +1158,140 @@ function initClientActions() {
       }
     });
   }
+}
+
+// Initialize client data export functionality
+function initClientDataExport() {
+  const downloadBtn = document.getElementById('downloadClientDataBtn');
+  if (!downloadBtn) return;
+
+  downloadBtn.addEventListener('click', async () => {
+    if (!currentClientId || !currentClient) {
+      alert('No client data available to download.');
+      return;
+    }
+
+    try {
+      // Show loading state
+      downloadBtn.disabled = true;
+      downloadBtn.textContent = '⏳ Preparing...';
+
+      // Gather all client data
+      const [assessments, programs, photos, notes, ptNotes] = await Promise.all([
+        getClientAssessments(currentClientId),
+        getClientPrograms(currentClientId),
+        getClientPhotos(currentClientId),
+        getClientNotes(currentClientId),
+        getClientPTNotes(currentClientId)
+      ]);
+
+      // Create comprehensive data object
+      const clientData = {
+        client: currentClient,
+        exportDate: new Date().toISOString(),
+        assessments: assessments || [],
+        programs: programs || [],
+        photos: photos || [],
+        progressNotes: notes || [],
+        ptNotes: ptNotes || []
+      };
+
+      // Create JSON file
+      const jsonData = JSON.stringify(clientData, null, 2);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentClient.name.replace(/\s+/g, '_')}_Complete_Data_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // Also create a readable text summary
+      const textSummary = generateTextSummary(clientData);
+      const textBlob = new Blob([textSummary], { type: 'text/plain' });
+      const textUrl = URL.createObjectURL(textBlob);
+      const textA = document.createElement('a');
+      textA.href = textUrl;
+      textA.download = `${currentClient.name.replace(/\s+/g, '_')}_Summary_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(textA);
+      textA.click();
+      document.body.removeChild(textA);
+      URL.revokeObjectURL(textUrl);
+
+      alert('Client data downloaded successfully!');
+    } catch (error) {
+      console.error('Error exporting client data:', error);
+      alert('Error exporting client data. Please try again.');
+    } finally {
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = '📥 Download All Data';
+    }
+  });
+}
+
+// Generate human-readable text summary
+function generateTextSummary(data) {
+  const client = data.client;
+  let summary = `ELITE PERFORMANCE CLINIC - CLIENT DATA SUMMARY\n`;
+  summary += `==========================================\n\n`;
+  summary += `Client Name: ${client.name}\n`;
+  summary += `Age: ${client.age || 'N/A'}\n`;
+  summary += `Category: ${client.category === 'shared' ? 'Shared Client' : 'Personal Client'}\n`;
+  summary += `Primary Trainer: ${client.primaryTrainer || 'N/A'}\n`;
+  summary += `Parent Contact: ${client.parentContact || 'N/A'}\n`;
+  summary += `Emergency Contact: ${client.emergencyContact || 'N/A'}\n`;
+  summary += `Export Date: ${new Date(data.exportDate).toLocaleString()}\n\n`;
+
+  summary += `ASSESSMENTS (${data.assessments.length})\n`;
+  summary += `----------------------------------------\n`;
+  data.assessments.forEach((assessment, idx) => {
+    summary += `\nAssessment ${idx + 1} - ${new Date(assessment.date).toLocaleDateString()}\n`;
+    if (assessment.proteusScore) summary += `  Proteus Score: ${assessment.proteusScore}\n`;
+    if (assessment.powerOutput) summary += `  Power Output: ${assessment.powerOutput}\n`;
+    if (assessment.speed) summary += `  Speed: ${assessment.speed}\n`;
+    if (assessment.overheadSquat) summary += `  Overhead Squat: ${assessment.overheadSquat}\n`;
+    if (assessment.shoulderMobility) summary += `  Shoulder Mobility: ${assessment.shoulderMobility}\n`;
+    if (assessment.hamstringMobility) summary += `  Hamstring Mobility: ${assessment.hamstringMobility}\n`;
+    if (assessment.pushupAssessment) summary += `  Push-up Assessment: ${assessment.pushupAssessment}\n`;
+  });
+
+  summary += `\n\nPROGRAMS (${data.programs.length})\n`;
+  summary += `----------------------------------------\n`;
+  data.programs.forEach((program, idx) => {
+    summary += `\nProgram ${idx + 1} - Week ${program.week} (${new Date(program.createdAt).toLocaleDateString()})\n`;
+    if (program.exercises && program.exercises.length > 0) {
+      program.exercises.forEach(ex => {
+        summary += `  - ${ex.name}${ex.sets ? ` (${ex.sets} sets x ${ex.reps || 'N/A'} reps)` : ''}\n`;
+      });
+    }
+  });
+
+  summary += `\n\nPROGRAM PHOTOS (${data.photos.length})\n`;
+  summary += `----------------------------------------\n`;
+  data.photos.forEach((photo, idx) => {
+    summary += `\nPhoto ${idx + 1} - ${new Date(photo.uploadedAt).toLocaleDateString()}\n`;
+    if (photo.extractedText) {
+      summary += `  Extracted Text:\n  ${photo.extractedText.substring(0, 200)}${photo.extractedText.length > 200 ? '...' : ''}\n`;
+    }
+  });
+
+  summary += `\n\nPROGRESS NOTES (${data.progressNotes.length})\n`;
+  summary += `----------------------------------------\n`;
+  data.progressNotes.forEach((note, idx) => {
+    summary += `\nNote ${idx + 1} - ${new Date(note.date).toLocaleDateString()}\n`;
+    summary += `  ${note.note}\n`;
+  });
+
+  summary += `\n\nPT COORDINATION NOTES (${data.ptNotes.length})\n`;
+  summary += `----------------------------------------\n`;
+  data.ptNotes.forEach((note, idx) => {
+    summary += `\nPT Note ${idx + 1} - ${new Date(note.date).toLocaleDateString()}\n`;
+    summary += `  ${note.note}\n`;
+  });
+
+  return summary;
 }
 
 // Utility functions

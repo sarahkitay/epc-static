@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Parent Portal | EPC Client Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .parent-portal-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: var(--epc-bg);
+    }
+    .parent-portal-card {
+      max-width: 480px;
+      width: 100%;
+      background: rgba(11, 11, 11, 0.95);
+      border: 1px solid var(--epc-line);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .parent-portal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--epc-gold);
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+    .parent-portal-subtitle {
+      font-size: 13px;
+      color: var(--epc-ink-dim);
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .parent-portal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--epc-ink-dim);
+    }
+    .form-input {
+      padding: 14px 16px;
+      background: rgba(201, 178, 127, 0.08);
+      border: 1px solid var(--epc-line);
+      border-radius: 6px;
+      color: var(--epc-ink);
+      font-size: 16px; /* Prevent iOS zoom */
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--epc-gold);
+      background: rgba(201, 178, 127, 0.12);
+    }
+    .form-input::placeholder {
+      color: rgba(242, 237, 230, 0.3);
+    }
+    .error-message {
+      color: #d32f2f;
+      font-size: 12px;
+      margin-top: -16px;
+      display: none;
+    }
+    .error-message.show {
+      display: block;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: var(--epc-gold);
+      color: var(--epc-black);
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+    .btn-primary:hover {
+      background: var(--epc-gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 178, 127, 0.3);
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      color: var(--epc-ink-dim);
+      text-decoration: none;
+      font-size: 12px;
+      transition: color 0.2s ease;
+    }
+    .back-link:hover {
+      color: var(--epc-gold);
+    }
+    @media (max-width: 768px) {
+      .parent-portal-card {
+        padding: 32px 24px;
+      }
+      .parent-portal-title {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="parent-portal-container">
+    <div class="parent-portal-card">
+      <h1 class="parent-portal-title">Parent Portal</h1>
+      <p class="parent-portal-subtitle">Access Your Child's Progress</p>
+      
+      <form id="parentLoginForm" class="parent-portal-form">
+        <div class="form-group">
+          <label for="childName" class="form-label">Child's Full Name</label>
+          <input 
+            type="text" 
+            id="childName" 
+            class="form-input" 
+            placeholder="Enter child's name"
+            required
+            autocomplete="name"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="parentPasscode" class="form-label">Access Passcode</label>
+          <input 
+            type="password" 
+            id="parentPasscode" 
+            class="form-input" 
+            placeholder="Enter passcode"
+            required
+            autocomplete="current-password"
+          />
+          <span class="error-message" id="errorMessage">Invalid name or passcode. Please try again.</span>
+        </div>
+        
+        <button type="submit" class="btn-primary" id="loginBtn">
+          Access Portal
+        </button>
+      </form>
+      
+      <a href="index.html" class="back-link">← Back to Staff Login</a>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script>
+    // Parent Portal Login
+    async function initParentPortal() {
+      await initDB();
+      
+      const form = document.getElementById('parentLoginForm');
+      const errorMessage = document.getElementById('errorMessage');
+      const loginBtn = document.getElementById('loginBtn');
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const childName = document.getElementById('childName').value.trim();
+        const passcode = document.getElementById('parentPasscode').value.trim();
+        
+        if (!childName || !passcode) {
+          errorMessage.classList.add('show');
+          return;
+        }
+        
+        try {
+          loginBtn.disabled = true;
+          loginBtn.textContent = 'Verifying...';
+          errorMessage.classList.remove('show');
+          
+          // Search for client by name (case-insensitive)
+          const allClients = await getAllClients();
+          const client = allClients.find(c => 
+            c.name.toLowerCase() === childName.toLowerCase() && 
+            c.parentPasscode === passcode
+          );
+          
+          if (client) {
+            // Store parent session
+            sessionStorage.setItem('parentSession', JSON.stringify({
+              clientId: client.id,
+              clientName: client.name,
+              timestamp: Date.now()
+            }));
+            
+            // Redirect to parent view
+            window.location.href = `parent-view.html?id=${client.id}`;
+          } else {
+            errorMessage.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Access Portal';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorMessage.classList.add('show');
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Access Portal';
+        }
+      });
+    }
+    
+    // Check if already logged in
+    const parentSession = sessionStorage.getItem('parentSession');
+    if (parentSession) {
+      try {
+        const session = JSON.parse(parentSession);
+        // Check if session is still valid (24 hours)
+        if (Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
+          window.location.href = `parent-view.html?id=${session.clientId}`;
+        } else {
+          sessionStorage.removeItem('parentSession');
+        }
+      } catch (e) {
+        sessionStorage.removeItem('parentSession');
+      }
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initParentPortal);
+    } else {
+      initParentPortal();
+    }
+  </script>
+</body>
+</html>
