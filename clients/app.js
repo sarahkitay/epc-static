@@ -314,6 +314,9 @@ async function initDashboard() {
       alert('Error loading clients. Please refresh the page.');
     }
   }
+  
+  // Make it globally accessible for onclick handlers
+  window.loadClients = loadClients;
 
   // Render clients
   function renderClients(clients) {
@@ -573,20 +576,7 @@ async function initDashboard() {
   }
 
   // Initial load
-  if (typeof window.loadClients === 'function') {
-    await window.loadClients();
-  } else {
-    // Fallback if loadClients wasn't set yet
-    try {
-      console.log('Loading clients from database...');
-      allClients = await getAllClients();
-      console.log('Clients loaded:', allClients.length);
-      renderClients(allClients);
-    } catch (error) {
-      console.error('Error loading clients:', error);
-      alert('Error loading clients. Please refresh the page.');
-    }
-  }
+  await loadClients();
   console.log('=== DASHBOARD INITIALIZATION COMPLETE ===');
 }
 
