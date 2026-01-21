@@ -1465,3 +1465,123 @@ body {
     gap: 8px;
   }
 }
+
+/* Package/Sessions Tracking */
+.package-info-section {
+  margin: 24px 0;
+  padding: 0 20px;
+}
+
+.package-card {
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid var(--epc-gold-dim2);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.package-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--epc-gold);
+  letter-spacing: 0.05em;
+}
+
+.package-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.package-status-badge.status-ok {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.package-status-badge.status-low {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.package-status-badge.status-out {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.package-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.package-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.package-label {
+  font-size: 12px;
+  color: var(--epc-ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.package-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--epc-ink);
+}
+
+.package-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.package-indicator.status-out {
+  animation: pulse 2s infinite;
+}
+
+.package-indicator.status-low {
+  animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .package-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-actions button {
+    width: 100%;
+  }
+}
