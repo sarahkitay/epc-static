@@ -206,7 +206,10 @@
 
         <!-- Assessment History -->
         <div class="assessment-history" id="assessmentHistory">
-          <h4 class="section-title">Previous Assessments</h4>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h4 class="section-title" style="margin: 0;">Previous Assessments</h4>
+            <button class="btn-secondary" id="viewAllAssessmentsBtn">View All Assessment Data</button>
+          </div>
           <div id="assessmentHistoryList"></div>
         </div>
       </section>
@@ -429,6 +432,23 @@
     </div>
   </div>
 
+  <!-- View All Assessments Modal -->
+  <div class="modal" id="viewAllAssessmentsModal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h3 class="modal-title">All Assessment History</h3>
+        <button class="modal-close" id="closeViewAssessmentsModal">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <div id="allAssessmentsList"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="closeViewAssessmentsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Move Client Modal -->
   <div class="modal" id="moveClientModal" style="display: none;">
     <div class="modal-overlay"></div>
@@ -451,7 +471,13 @@
     </div>
   </div>
 
+  <!-- Firebase SDK (only needed if using cloud sync) -->
+  <!-- Uncomment and add your Firebase config to firebase-config.js to enable cloud sync -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script> -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script> -->
+  
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script src="firebase-config.js"></script>
   <script src="db.js"></script>
   <script src="app.js"></script>
   <script src="client.js"></script>

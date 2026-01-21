@@ -121,6 +121,100 @@ function initAssessment() {
 
   // Load assessment history
   loadAssessmentHistory();
+
+  // View all assessments modal
+  const viewAllAssessmentsBtn = document.getElementById('viewAllAssessmentsBtn');
+  const viewAllAssessmentsModal = document.getElementById('viewAllAssessmentsModal');
+  const closeViewAssessmentsModal = document.getElementById('closeViewAssessmentsModal');
+  const closeViewAssessmentsBtn = document.getElementById('closeViewAssessmentsBtn');
+
+  if (viewAllAssessmentsBtn) {
+    viewAllAssessmentsBtn.addEventListener('click', async () => {
+      await loadAllAssessmentsModal();
+      if (viewAllAssessmentsModal) viewAllAssessmentsModal.style.display = 'flex';
+    });
+  }
+
+  if (closeViewAssessmentsModal) {
+    closeViewAssessmentsModal.addEventListener('click', () => {
+      if (viewAllAssessmentsModal) viewAllAssessmentsModal.style.display = 'none';
+    });
+  }
+
+  if (closeViewAssessmentsBtn) {
+    closeViewAssessmentsBtn.addEventListener('click', () => {
+      if (viewAllAssessmentsModal) viewAllAssessmentsModal.style.display = 'none';
+    });
+  }
+}
+
+async function loadAllAssessmentsModal() {
+  try {
+    const assessments = await getClientAssessments(currentClientId);
+    const allAssessmentsList = document.getElementById('allAssessmentsList');
+    
+    if (assessments.length === 0) {
+      allAssessmentsList.innerHTML = '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No assessments found.</p>';
+      return;
+    }
+
+    allAssessmentsList.innerHTML = assessments.map((assessment, index) => `
+      <div class="assessment-history-item" style="margin-bottom: 24px;">
+        <div class="assessment-history-date" style="font-size: 14px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--epc-line);">
+          Assessment #${assessments.length - index} - ${formatDate(assessment.date)}
+        </div>
+        <div class="assessment-content" style="display: grid; gap: 12px;">
+          ${assessment.proteusScore ? `
+            <div><strong>Proteus Score:</strong> ${escapeHtml(assessment.proteusScore)}</div>
+          ` : ''}
+          ${assessment.powerOutput ? `
+            <div><strong>Power Output:</strong> ${escapeHtml(assessment.powerOutput)}</div>
+            ${assessment.powerOutputNotes ? `<div style="margin-left: 16px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.powerOutputNotes)}</div>` : ''}
+          ` : ''}
+          ${assessment.speed ? `
+            <div><strong>Speed:</strong> ${escapeHtml(assessment.speed)}</div>
+            ${assessment.speedNotes ? `<div style="margin-left: 16px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.speedNotes)}</div>` : ''}
+          ` : ''}
+          ${assessment.pedicsReview ? `
+            <div><strong>PEDICS Review:</strong><div style="margin-top: 4px; color: var(--epc-ink-dim);">${escapeHtml(assessment.pedicsReview)}</div></div>
+          ` : ''}
+          ${assessment.kneeValgus || assessment.kneeVarus || assessment.hipShift !== 'none' ? `
+            <div><strong>Overhead Squat Assessment:</strong>
+              <div style="margin-left: 16px; margin-top: 4px;">
+                ${assessment.kneeValgus ? '<div>• Knee Valgus</div>' : ''}
+                ${assessment.kneeVarus ? '<div>• Knee Varus</div>' : ''}
+                ${assessment.hipShift !== 'none' ? `<div>• Hip Shift: ${assessment.hipShift}</div>` : ''}
+                ${assessment.squatOverallScore ? `<div>• Overall Score: ${assessment.squatOverallScore}</div>` : ''}
+                ${assessment.squatNotes ? `<div style="margin-top: 4px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.squatNotes)}</div>` : ''}
+              </div>
+            </div>
+          ` : ''}
+          ${assessment.shoulderRightScore || assessment.shoulderLeftScore ? `
+            <div><strong>Shoulder Mobility:</strong>
+              <div style="margin-left: 16px; margin-top: 4px;">
+                ${assessment.shoulderRightScore ? `<div>Right: ${assessment.shoulderRightScore}/3</div>` : ''}
+                ${assessment.shoulderLeftScore ? `<div>Left: ${assessment.shoulderLeftScore}/3</div>` : ''}
+                ${assessment.shoulderNotes ? `<div style="margin-top: 4px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.shoulderNotes)}</div>` : ''}
+              </div>
+            </div>
+          ` : ''}
+          ${assessment.hamstringScore ? `
+            <div><strong>Hamstring Mobility:</strong> ${assessment.hamstringScore}
+              ${assessment.hamstringNotes ? `<div style="margin-top: 4px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.hamstringNotes)}</div>` : ''}
+            </div>
+          ` : ''}
+          ${assessment.pushupScore ? `
+            <div><strong>Push-up Assessment:</strong> ${assessment.pushupScore}
+              ${assessment.pushupNotes ? `<div style="margin-top: 4px; color: var(--epc-ink-dim); font-size: 13px;">${escapeHtml(assessment.pushupNotes)}</div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error loading all assessments:', error);
+    document.getElementById('allAssessmentsList').innerHTML = '<p style="color: #dc3545;">Error loading assessments.</p>';
+  }
 }
 
 async function handleSaveAssessment() {

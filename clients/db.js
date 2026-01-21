@@ -1,9 +1,22 @@
 // IndexedDB Database Management for EPC Client System
+// Also includes Firebase cloud sync support
 
 const DB_NAME = 'EPC_Client_DB';
 const DB_VERSION = 1;
 
 let db = null;
+let firebaseEnabled = false;
+
+// Check if Firebase is available and enabled
+async function checkFirebase() {
+  try {
+    if (typeof window !== 'undefined' && window.firebaseInitialized) {
+      firebaseEnabled = true;
+    }
+  } catch (e) {
+    firebaseEnabled = false;
+  }
+}
 
 // Database initialization
 async function initDB() {
@@ -72,19 +85,37 @@ async function getDB() {
   return await initDB();
 }
 
+// Helper function to sync to Firebase after IndexedDB operations
+async function syncToCloud(collection, docId, data) {
+  await checkFirebase();
+  if (firebaseEnabled && typeof window !== 'undefined' && window.syncToFirebase) {
+    try {
+      await window.syncToFirebase(collection, docId, data);
+    } catch (error) {
+      console.error('Cloud sync error:', error);
+    }
+  }
+}
+
 // ===== CLIENTS =====
 async function addClient(clientData) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['clients'], 'readwrite');
     const store = transaction.objectStore('clients');
-    const request = store.add({
+    const clientWithMeta = {
       ...clientData,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(clientWithMeta);
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = async () => {
+      const clientId = request.result;
+      // Sync to cloud if available
+      await syncToCloud('clients', `client_${clientId}`, { id: clientId, ...clientWithMeta });
+      resolve(clientId);
+    };
     request.onerror = () => reject(request.error);
   });
 }
