@@ -300,10 +300,18 @@ async function initDashboard() {
   let allClients = [];
 
   // Initialize database
-  await initDB();
+  console.log('Initializing database...');
+  try {
+    await initDB();
+    console.log('Database initialized successfully');
+  } catch (error) {
+    console.error('Database initialization error:', error);
+    alert('Error initializing database. Please refresh the page.');
+    return;
+  }
 
-  // Load clients function (needs to be accessible globally for session tracking)
-  window.loadClients = async function loadClients() {
+  // Load clients function
+  async function loadClients() {
     try {
       console.log('Loading clients from database...');
       allClients = await getAllClients();
@@ -313,7 +321,10 @@ async function initDashboard() {
       console.error('Error loading clients:', error);
       alert('Error loading clients. Please refresh the page.');
     }
-  };
+  }
+  
+  // Make it globally accessible for onclick handlers
+  window.loadClients = loadClients;
 
   // Render clients
   function renderClients(clients) {
@@ -548,7 +559,12 @@ async function initDashboard() {
         console.log('Client added successfully with ID:', clientId);
         addClientModal.style.display = 'none';
         addClientForm.reset();
-        await window.loadClients();
+        if (typeof window.loadClients === 'function') {
+          await window.loadClients();
+        } else {
+          // Fallback: reload page
+          window.location.reload();
+        }
         console.log('Clients reloaded');
       } catch (error) {
         console.error('Error adding client:', error);
@@ -573,20 +589,7 @@ async function initDashboard() {
   }
 
   // Initial load
-  if (typeof window.loadClients === 'function') {
-    await window.loadClients();
-  } else {
-    // Fallback if loadClients wasn't set yet
-    try {
-      console.log('Loading clients from database...');
-      allClients = await getAllClients();
-      console.log('Clients loaded:', allClients.length);
-      renderClients(allClients);
-    } catch (error) {
-      console.error('Error loading clients:', error);
-      alert('Error loading clients. Please refresh the page.');
-    }
-  }
+  await loadClients();
   console.log('=== DASHBOARD INITIALIZATION COMPLETE ===');
 }
 
