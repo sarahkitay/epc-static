@@ -187,6 +187,11 @@ async function loadClientData() {
     if (currentClient.primaryTrainer) {
       document.getElementById('clientTrainerMeta').textContent = `Trainer: ${currentClient.primaryTrainer}`;
     }
+    
+    // Load package info after client data is loaded
+    setTimeout(() => {
+      loadPackageInfo();
+    }, 100);
   } catch (error) {
     console.error('Error loading client:', error);
     alert('Error loading client data.');

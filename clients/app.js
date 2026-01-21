@@ -273,14 +273,6 @@ async function initDashboard() {
 
   // Initialize database
   await initDB();
-  
-  // Session tracking button
-  const useSessionBtn = document.getElementById('useSessionBtn');
-  if (useSessionBtn) {
-    useSessionBtn.addEventListener('click', async () => {
-      await handleSessionUsed();
-    });
-  }
 
   // Load clients
   async function loadClients() {
@@ -352,19 +344,31 @@ async function initDashboard() {
         <div class="client-card-actions">
           <button class="client-card-btn" onclick="viewClient(${client.id})">View Profile</button>
           <button class="client-card-btn" onclick="addQuickNote(${client.id})">Quick Note</button>
+          ${totalSessions !== null ? `
+            <button class="client-card-btn btn-session-used" onclick="handleClientSessionUsed(${client.id}, '${escapeHtml(client.name)}')" title="Mark session as used today">
+              ✓ Session Used
+            </button>
+          ` : ''}
         </div>
       </div>
     `;
     }).join('');
 
-    // Add click handlers to cards
-    document.querySelectorAll('.client-card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('client-card-btn')) {
-          const clientId = card.dataset.clientId;
+    // Add click handlers to cards (use event delegation for better performance)
+    clientsGrid.addEventListener('click', (e) => {
+      // Check if click is on a button - if so, don't navigate
+      if (e.target.classList.contains('client-card-btn')) {
+        return; // Let the button's onclick handle it
+      }
+      
+      // Find the closest client card
+      const card = e.target.closest('.client-card');
+      if (card) {
+        const clientId = card.dataset.clientId;
+        if (clientId) {
           viewClient(clientId);
         }
-      });
+      }
     });
   }
 
