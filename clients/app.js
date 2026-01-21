@@ -44,23 +44,34 @@ function getPath(filename) {
 
 // Check if user is logged in
 function checkAuth() {
-  if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/clients/') || window.location.pathname.endsWith('/clients')) {
+  const pathname = window.location.pathname;
+  
+  // Don't check auth on login page
+  if (pathname.includes('index.html') || pathname.endsWith('/clients/') || pathname.endsWith('/clients')) {
     return;
   }
 
   const session = sessionStorage.getItem(SESSION_KEY);
   const parentSession = sessionStorage.getItem('epc_parent_session');
   
+  console.log('Auth check - Path:', pathname, 'Session:', session, 'Parent:', parentSession);
+  
   // Allow access if either staff or parent is logged in
   if (!session && !parentSession) {
-    window.location.href = getPath('index.html');
+    console.log('No session found, redirecting to login...');
+    const loginPath = getPath('index.html');
+    console.log('Redirecting to:', loginPath);
+    window.location.href = loginPath;
+    return;
   }
   
   // If parent is logged in and on dashboard, redirect to their child's page
-  if (parentSession && window.location.pathname.includes('dashboard.html')) {
+  if (parentSession && pathname.includes('dashboard.html')) {
     try {
       const parentData = JSON.parse(parentSession);
-      window.location.href = getPath(`client.html?id=${parentData.clientId}`);
+      const clientPath = getPath(`client.html?id=${parentData.clientId}`);
+      console.log('Parent session detected, redirecting to child page:', clientPath);
+      window.location.href = clientPath;
     } catch (e) {
       console.error('Error parsing parent session:', e);
     }
