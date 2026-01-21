@@ -937,6 +937,22 @@ body {
   margin-top: 24px;
 }
 
+.manual-text-entry {
+  margin-top: 24px;
+  padding: 24px;
+  background: rgba(201, 178, 127, 0.04);
+  border: 1px solid var(--epc-gold-dim2);
+  border-radius: var(--radius);
+}
+
+.manual-text-entry h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--epc-gold);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
 .photos-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

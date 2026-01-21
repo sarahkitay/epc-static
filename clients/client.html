@@ -82,11 +82,37 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="proteusScore" class="form-label">Proteus Score</label>
-                <input type="number" id="proteusScore" class="form-input" step="0.1" />
+                <input type="text" id="proteusScore" class="form-input" placeholder="Enter score (text or number)" />
               </div>
               <div class="form-group">
                 <label for="assessmentDate" class="form-label">Assessment Date</label>
                 <input type="date" id="assessmentDate" class="form-input" />
+              </div>
+            </div>
+            <div class="assessment-section">
+              <h4 class="section-title">Power Output</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="powerOutput" class="form-label">Power Output</label>
+                  <input type="text" id="powerOutput" class="form-input" placeholder="Enter power output data" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="powerOutputNotes" class="form-label">Power Output Notes</label>
+                <textarea id="powerOutputNotes" class="form-textarea" rows="3" placeholder="Additional notes on power output..."></textarea>
+              </div>
+            </div>
+            <div class="assessment-section">
+              <h4 class="section-title">Speed</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="speed" class="form-label">Speed</label>
+                  <input type="text" id="speed" class="form-input" placeholder="Enter speed data" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="speedNotes" class="form-label">Speed Notes</label>
+                <textarea id="speedNotes" class="form-textarea" rows="3" placeholder="Additional notes on speed..."></textarea>
               </div>
             </div>
             <div class="form-group">
@@ -259,7 +285,16 @@
             <img id="previewImage" src="" alt="Preview" />
             <div class="upload-actions">
               <button class="btn-secondary" id="cancelUploadBtn">Cancel</button>
-              <button class="btn-primary" id="processPhotoBtn">Process & Extract Text</button>
+              <button class="btn-secondary" id="skipOcrBtn">Skip OCR - Enter Text Manually</button>
+              <button class="btn-primary" id="processPhotoBtn">Process & Extract Text (OCR)</button>
+            </div>
+          </div>
+          <div class="manual-text-entry" id="manualTextEntry" style="display: none;">
+            <h4>Enter Text Manually</h4>
+            <textarea id="manualText" class="form-textarea" rows="10" placeholder="Type or paste the text from the program here..."></textarea>
+            <div class="ocr-actions">
+              <button class="btn-secondary" id="backToOcrBtn">Back to OCR</button>
+              <button class="btn-primary" id="saveWithManualTextBtn">Save Photo & Text</button>
             </div>
           </div>
           <div class="ocr-progress" id="ocrProgress" style="display: none;">
@@ -328,6 +363,71 @@
       </section>
     </div>
   </main>
+
+  <!-- Edit Client Modal -->
+  <div class="modal" id="editClientModal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Client Information</h3>
+        <button class="modal-close" id="closeEditModal">&times;</button>
+      </div>
+      
+      <form id="editClientForm" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editClientName" class="form-label">Full Name *</label>
+            <input type="text" id="editClientName" class="form-input" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="editClientAge" class="form-label">Age</label>
+            <input type="number" id="editClientAge" class="form-input" min="1" max="25" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editClientCategory" class="form-label">Category *</label>
+            <select id="editClientCategory" class="form-input" required>
+              <option value="shared">Shared Client</option>
+              <option value="personal">Personal Client</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="editPrimaryTrainer" class="form-label">Primary Trainer</label>
+            <input type="text" id="editPrimaryTrainer" class="form-input" placeholder="Trainer name" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editParentContact" class="form-label">Parent Contact Info</label>
+          <input type="text" id="editParentContact" class="form-input" placeholder="Name, Phone, Email" />
+        </div>
+
+        <div class="form-group">
+          <label for="editEmergencyContact" class="form-label">Emergency Contact</label>
+          <input type="text" id="editEmergencyContact" class="form-input" placeholder="Name, Phone, Relationship" />
+        </div>
+
+        <div class="form-group">
+          <label for="editClientGoals" class="form-label">Goals</label>
+          <textarea id="editClientGoals" class="form-textarea" rows="3" placeholder="Client goals and objectives..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="editMedicalHistory" class="form-label">Medical History</label>
+          <textarea id="editMedicalHistory" class="form-textarea" rows="3" placeholder="Previous injuries, conditions, medications..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelEditClient">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Move Client Modal -->
   <div class="modal" id="moveClientModal" style="display: none;">

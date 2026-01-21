@@ -124,8 +124,13 @@ function initAssessment() {
 }
 
 async function handleSaveAssessment() {
+  const proteusScoreValue = document.getElementById('proteusScore').value.trim();
   const assessmentData = {
-    proteusScore: document.getElementById('proteusScore').value ? parseFloat(document.getElementById('proteusScore').value) : null,
+    proteusScore: proteusScoreValue || null,
+    powerOutput: document.getElementById('powerOutput').value.trim() || null,
+    powerOutputNotes: document.getElementById('powerOutputNotes').value.trim() || null,
+    speed: document.getElementById('speed').value.trim() || null,
+    speedNotes: document.getElementById('speedNotes').value.trim() || null,
     pedicsReview: document.getElementById('pedicsReview').value.trim() || null,
     kneeValgus: document.getElementById('kneeValgus').checked,
     kneeVarus: document.getElementById('kneeVarus').checked,
@@ -168,11 +173,13 @@ async function loadAssessmentHistory() {
       return;
     }
 
-    historyList.innerHTML = assessments.map(assessment => `
+      historyList.innerHTML = assessments.map(assessment => `
       <div class="assessment-history-item">
         <div class="assessment-history-date">${formatDate(assessment.date)}</div>
         <div class="assessment-content">
-          ${assessment.proteusScore ? `<p><strong>Proteus Score:</strong> ${assessment.proteusScore}</p>` : ''}
+          ${assessment.proteusScore ? `<p><strong>Proteus Score:</strong> ${escapeHtml(assessment.proteusScore)}</p>` : ''}
+          ${assessment.powerOutput ? `<p><strong>Power Output:</strong> ${escapeHtml(assessment.powerOutput)}</p>` : ''}
+          ${assessment.speed ? `<p><strong>Speed:</strong> ${escapeHtml(assessment.speed)}</p>` : ''}
           ${assessment.squatOverallScore ? `<p><strong>Overhead Squat Score:</strong> ${assessment.squatOverallScore}</p>` : ''}
           ${assessment.shoulderRightScore || assessment.shoulderLeftScore ? 
             `<p><strong>Shoulder Mobility:</strong> R: ${assessment.shoulderRightScore || 'N/A'}, L: ${assessment.shoulderLeftScore || 'N/A'}</p>` : ''}
@@ -533,6 +540,12 @@ function initPhotos() {
     });
   }
 
+  // Manual text entry elements
+  const skipOcrBtn = document.getElementById('skipOcrBtn');
+  const manualTextEntry = document.getElementById('manualTextEntry');
+  const backToOcrBtn = document.getElementById('backToOcrBtn');
+  const saveWithManualTextBtn = document.getElementById('saveWithManualTextBtn');
+
   if (cancelUploadBtn) {
     cancelUploadBtn.addEventListener('click', () => {
       photoUploadArea.style.display = 'none';
@@ -540,8 +553,65 @@ function initPhotos() {
       document.getElementById('uploadPreview').style.display = 'none';
       document.getElementById('ocrProgress').style.display = 'none';
       document.getElementById('ocrResults').style.display = 'none';
+      if (manualTextEntry) manualTextEntry.style.display = 'none';
       currentPhotoData = null;
       extractedText = '';
+    });
+  }
+
+  // Skip OCR and enter text manually
+  if (skipOcrBtn) {
+    skipOcrBtn.addEventListener('click', () => {
+      document.getElementById('uploadPreview').style.display = 'none';
+      if (manualTextEntry) {
+        manualTextEntry.style.display = 'block';
+        document.getElementById('manualText').focus();
+      }
+    });
+  }
+
+  // Back to OCR option
+  if (backToOcrBtn) {
+    backToOcrBtn.addEventListener('click', () => {
+      if (manualTextEntry) manualTextEntry.style.display = 'none';
+      document.getElementById('uploadPreview').style.display = 'block';
+    });
+  }
+
+  // Save with manual text
+  if (saveWithManualTextBtn) {
+    saveWithManualTextBtn.addEventListener('click', async () => {
+      if (!currentPhotoData) {
+        alert('No photo to save.');
+        return;
+      }
+
+      const text = document.getElementById('manualText').value.trim();
+
+      try {
+        await saveProgramPhoto(currentClientId, {
+          photoData: currentPhotoData,
+          extractedText: text,
+          week: document.getElementById('programWeek')?.value || null
+        });
+
+        alert('Photo saved successfully!');
+        
+        // Reset
+        photoUploadArea.style.display = 'none';
+        document.getElementById('photoInput').value = '';
+        document.getElementById('uploadPreview').style.display = 'none';
+        if (manualTextEntry) manualTextEntry.style.display = 'none';
+        document.getElementById('manualText').value = '';
+        currentPhotoData = null;
+        extractedText = '';
+
+        // Reload gallery
+        loadPhotos();
+      } catch (error) {
+        console.error('Error saving photo:', error);
+        alert('Error saving photo. Please try again.');
+      }
     });
   }
 
@@ -561,18 +631,28 @@ function initPhotos() {
       progressText.textContent = 'Processing image...';
 
       try {
-        // Use Tesseract.js for OCR
-        const worker = await Tesseract.createWorker('eng');
-        
-        const { data: { text } } = await worker.recognize(currentPhotoData, {
+        // Use Tesseract.js for OCR with better settings
+        const worker = await Tesseract.createWorker('eng', 1, {
           logger: (m) => {
             if (m.status === 'recognizing text') {
               const progress = Math.round(m.progress * 100);
               progressFill.style.width = `${progress}%`;
               progressText.textContent = `Processing: ${progress}%`;
+            } else if (m.status === 'loading tesseract core') {
+              progressText.textContent = 'Loading OCR engine...';
+            } else if (m.status === 'loading language traineddata') {
+              progressText.textContent = 'Loading language data...';
             }
           }
         });
+
+        // Set OCR parameters for better accuracy
+        await worker.setParameters({
+          tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,;:!?-()[]/'
+        });
+        
+        const { data: { text } } = await worker.recognize(currentPhotoData);
 
         await worker.terminate();
 
@@ -580,10 +660,24 @@ function initPhotos() {
         document.getElementById('extractedText').value = text;
         document.getElementById('ocrResults').style.display = 'block';
         progressBar.style.display = 'none';
+        
+        // Show message if text extraction is minimal
+        if (!text || text.trim().length < 3) {
+          alert('OCR extracted very little text. You may want to use "Skip OCR - Enter Text Manually" option for better results.');
+        }
       } catch (error) {
         console.error('OCR Error:', error);
-        alert('Error processing image. Please try again.');
+        alert('Error processing image with OCR. You can use "Skip OCR - Enter Text Manually" option instead.');
         progressBar.style.display = 'none';
+        
+        // Offer to switch to manual entry
+        if (confirm('OCR failed. Would you like to enter text manually instead?')) {
+          document.getElementById('uploadPreview').style.display = 'none';
+          if (manualTextEntry) {
+            manualTextEntry.style.display = 'block';
+            document.getElementById('manualText').focus();
+          }
+        }
       }
     });
   }
@@ -866,10 +960,69 @@ function initClientActions() {
     });
   }
 
+  // Edit Client Modal
+  const editClientModal = document.getElementById('editClientModal');
+  const closeEditModal = document.getElementById('closeEditModal');
+  const cancelEditClient = document.getElementById('cancelEditClient');
+  const editClientForm = document.getElementById('editClientForm');
+
   if (editClientBtn) {
     editClientBtn.addEventListener('click', () => {
-      alert('Edit client info - implement edit modal');
-      // TODO: Implement edit client modal
+      // Populate form with current client data
+      if (currentClient) {
+        document.getElementById('editClientName').value = currentClient.name || '';
+        document.getElementById('editClientAge').value = currentClient.age || '';
+        document.getElementById('editClientCategory').value = currentClient.category || 'shared';
+        document.getElementById('editPrimaryTrainer').value = currentClient.primaryTrainer || '';
+        document.getElementById('editParentContact').value = currentClient.parentContact || '';
+        document.getElementById('editEmergencyContact').value = currentClient.emergencyContact || '';
+        document.getElementById('editClientGoals').value = currentClient.goals || '';
+        document.getElementById('editMedicalHistory').value = currentClient.medicalHistory || '';
+      }
+      if (editClientModal) editClientModal.style.display = 'flex';
+      document.getElementById('editClientName').focus();
+    });
+  }
+
+  if (closeEditModal) {
+    closeEditModal.addEventListener('click', () => {
+      if (editClientModal) editClientModal.style.display = 'none';
+      if (editClientForm) editClientForm.reset();
+    });
+  }
+
+  if (cancelEditClient) {
+    cancelEditClient.addEventListener('click', () => {
+      if (editClientModal) editClientModal.style.display = 'none';
+      if (editClientForm) editClientForm.reset();
+    });
+  }
+
+  if (editClientForm) {
+    editClientForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const clientData = {
+        name: document.getElementById('editClientName').value.trim(),
+        age: document.getElementById('editClientAge').value ? parseInt(document.getElementById('editClientAge').value) : null,
+        category: document.getElementById('editClientCategory').value,
+        primaryTrainer: document.getElementById('editPrimaryTrainer').value.trim() || null,
+        parentContact: document.getElementById('editParentContact').value.trim() || null,
+        emergencyContact: document.getElementById('editEmergencyContact').value.trim() || null,
+        goals: document.getElementById('editClientGoals').value.trim() || null,
+        medicalHistory: document.getElementById('editMedicalHistory').value.trim() || null
+      };
+
+      try {
+        await updateClient(currentClientId, clientData);
+        alert('Client information updated successfully!');
+        if (editClientModal) editClientModal.style.display = 'none';
+        if (editClientForm) editClientForm.reset();
+        await loadClientData(); // Reload client data to refresh UI
+      } catch (error) {
+        console.error('Error updating client:', error);
+        alert('Error updating client information. Please try again.');
+      }
     });
   }
 }
