@@ -1179,23 +1179,118 @@ function initClientDataExport() {
       return;
     }
 
-    try {
-      // Show loading state
-      downloadBtn.disabled = true;
-      downloadBtn.textContent = '⏳ Preparing...';
+    // Show export options modal
+    showExportOptionsModal();
+  });
+}
 
-      // Gather all client data
-      const [assessments, programs, photos, notes, ptNotes] = await Promise.all([
-        getClientAssessments(currentClientId),
-        getClientPrograms(currentClientId),
-        getClientPhotos(currentClientId),
-        getClientNotes(currentClientId),
-        getClientPTNotes(currentClientId)
-      ]);
+// Show export options modal
+function showExportOptionsModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div class="modal-overlay"></div>
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Client Data</h3>
+        <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
+      </div>
+      <div class="modal-form" style="padding: 24px;">
+        <p style="color: var(--epc-ink-dim); margin-bottom: 24px;">Select what to include in the export:</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportClientInfo" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Client Information</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportAssessments" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Assessment History</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportPrograms" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Training Programs</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportPhotos" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Program Photos & OCR Text</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportNotes" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Progress Notes</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="exportPTNotes" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>PT Coordination Notes</span>
+          </label>
+        </div>
+        
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--epc-line);">
+          <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <input type="radio" name="exportFormat" value="pdf" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <span>PDF Document (Styled)</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px;">
+            <input type="radio" name="exportFormat" value="json" style="width: 18px; height: 18px; cursor: pointer;">
+            <span>JSON Data File</span>
+          </label>
+        </div>
+        
+        <div class="modal-actions" style="margin-top: 32px;">
+          <button type="button" class="btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+          <button type="button" class="btn-primary" id="confirmExportBtn">Export</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Handle export confirmation
+  const confirmBtn = modal.querySelector('#confirmExportBtn');
+  confirmBtn.addEventListener('click', async () => {
+    const format = modal.querySelector('input[name="exportFormat"]:checked').value;
+    const options = {
+      clientInfo: modal.querySelector('#exportClientInfo').checked,
+      assessments: modal.querySelector('#exportAssessments').checked,
+      programs: modal.querySelector('#exportPrograms').checked,
+      photos: modal.querySelector('#exportPhotos').checked,
+      notes: modal.querySelector('#exportNotes').checked,
+      ptNotes: modal.querySelector('#exportPTNotes').checked
+    };
+    
+    modal.remove();
+    await exportClientData(format, options);
+  });
+  
+  // Close on overlay click
+  modal.querySelector('.modal-overlay').addEventListener('click', () => modal.remove());
+}
 
-      // Create comprehensive data object
+// Export client data
+async function exportClientData(format, options) {
+  const downloadBtn = document.getElementById('downloadClientDataBtn');
+  
+  try {
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = '⏳ Preparing...';
+
+    // Gather all client data
+    const [assessments, programs, photos, notes, ptNotes] = await Promise.all([
+      options.assessments ? getClientAssessments(currentClientId) : Promise.resolve([]),
+      options.programs ? getClientPrograms(currentClientId) : Promise.resolve([]),
+      options.photos ? getClientPhotos(currentClientId) : Promise.resolve([]),
+      options.notes ? getClientNotes(currentClientId) : Promise.resolve([]),
+      options.ptNotes ? getClientPTNotes(currentClientId) : Promise.resolve([])
+    ]);
+
+    if (format === 'pdf') {
+      await generatePDF(currentClient, { assessments, programs, photos, notes, ptNotes }, options);
+    } else {
+      // JSON export
       const clientData = {
-        client: currentClient,
+        client: options.clientInfo ? currentClient : null,
         exportDate: new Date().toISOString(),
         assessments: assessments || [],
         programs: programs || [],
@@ -1204,39 +1299,293 @@ function initClientDataExport() {
         ptNotes: ptNotes || []
       };
 
-      // Create JSON file
       const jsonData = JSON.stringify(clientData, null, 2);
       const blob = new Blob([jsonData], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${currentClient.name.replace(/\s+/g, '_')}_Complete_Data_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `${currentClient.name.replace(/\s+/g, '_')}_Data_${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-
-      // Also create a readable text summary
-      const textSummary = generateTextSummary(clientData);
-      const textBlob = new Blob([textSummary], { type: 'text/plain' });
-      const textUrl = URL.createObjectURL(textBlob);
-      const textA = document.createElement('a');
-      textA.href = textUrl;
-      textA.download = `${currentClient.name.replace(/\s+/g, '_')}_Summary_${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(textA);
-      textA.click();
-      document.body.removeChild(textA);
-      URL.revokeObjectURL(textUrl);
-
-      alert('Client data downloaded successfully!');
-    } catch (error) {
-      console.error('Error exporting client data:', error);
-      alert('Error exporting client data. Please try again.');
-    } finally {
-      downloadBtn.disabled = false;
-      downloadBtn.textContent = '📥 Download All Data';
     }
-  });
+
+    alert('Client data exported successfully!');
+  } catch (error) {
+    console.error('Error exporting client data:', error);
+    alert('Error exporting client data. Please try again.');
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = '📥 Download All Data';
+  }
+}
+
+// Generate styled PDF
+async function generatePDF(client, data, options) {
+  if (typeof window.jspdf === 'undefined') {
+    alert('PDF library not loaded. Please refresh the page.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let yPos = 20;
+  const margin = 20;
+  const lineHeight = 7;
+
+  // Helper function to add new page if needed
+  function checkNewPage(spaceNeeded = 20) {
+    if (yPos + spaceNeeded > pageHeight - margin) {
+      doc.addPage();
+      yPos = margin;
+      return true;
+    }
+    return false;
+  }
+
+  // Title
+  doc.setFontSize(24);
+  doc.setTextColor(201, 178, 127);
+  doc.setFont('helvetica', 'bold');
+  doc.text('ELITE PERFORMANCE CLINIC', margin, yPos);
+  yPos += 10;
+
+  doc.setFontSize(18);
+  doc.text('Client Data Report', margin, yPos);
+  yPos += 12;
+
+  // Client Info
+  if (options.clientInfo) {
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CLIENT INFORMATION', margin, yPos);
+    yPos += 8;
+
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    
+    doc.text(`Name: ${client.name}`, margin, yPos);
+    yPos += lineHeight;
+    if (client.age) {
+      doc.text(`Age: ${client.age}`, margin, yPos);
+      yPos += lineHeight;
+    }
+    if (client.primaryTrainer) {
+      doc.text(`Primary Trainer: ${client.primaryTrainer}`, margin, yPos);
+      yPos += lineHeight;
+    }
+    if (client.parentContact) {
+      doc.text(`Parent Contact: ${client.parentContact}`, margin, yPos);
+      yPos += lineHeight;
+    }
+    if (client.emergencyContact) {
+      doc.text(`Emergency Contact: ${client.emergencyContact}`, margin, yPos);
+      yPos += lineHeight;
+    }
+    
+    yPos += 5;
+    doc.setDrawColor(201, 178, 127);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+  }
+
+  // Assessments
+  if (options.assessments && data.assessments.length > 0) {
+    checkNewPage(30);
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`ASSESSMENT HISTORY (${data.assessments.length})`, margin, yPos);
+    yPos += 8;
+
+    data.assessments.forEach((assessment, idx) => {
+      checkNewPage(40);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      const date = new Date(assessment.date).toLocaleDateString();
+      doc.text(`Assessment ${idx + 1} - ${date}`, margin, yPos);
+      yPos += lineHeight;
+
+      doc.setFont('helvetica', 'normal');
+      if (assessment.proteusScore) {
+        doc.text(`  Proteus Score: ${assessment.proteusScore}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.powerOutput) {
+        doc.text(`  Power Output: ${assessment.powerOutput}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.speed) {
+        doc.text(`  Speed: ${assessment.speed}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.overheadSquat) {
+        doc.text(`  Overhead Squat: ${assessment.overheadSquat}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.shoulderMobility) {
+        doc.text(`  Shoulder Mobility: ${assessment.shoulderMobility}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.hamstringMobility) {
+        doc.text(`  Hamstring Mobility: ${assessment.hamstringMobility}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      if (assessment.pushupAssessment) {
+        doc.text(`  Push-up Assessment: ${assessment.pushupAssessment}`, margin + 5, yPos);
+        yPos += lineHeight;
+      }
+      yPos += 3;
+    });
+    yPos += 5;
+    doc.setDrawColor(201, 178, 127);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+  }
+
+  // Programs
+  if (options.programs && data.programs.length > 0) {
+    checkNewPage(30);
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`TRAINING PROGRAMS (${data.programs.length})`, margin, yPos);
+    yPos += 8;
+
+    data.programs.forEach((program, idx) => {
+      checkNewPage(30);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      const date = new Date(program.createdAt).toLocaleDateString();
+      doc.text(`Week ${program.week} - ${date}`, margin, yPos);
+      yPos += lineHeight;
+
+      if (program.exercises && program.exercises.length > 0) {
+        doc.setFont('helvetica', 'normal');
+        program.exercises.forEach(ex => {
+          checkNewPage(10);
+          const exText = `  • ${ex.name}${ex.sets ? ` (${ex.sets} sets x ${ex.reps || 'N/A'} reps)` : ''}`;
+          const lines = doc.splitTextToSize(exText, pageWidth - margin * 2 - 10);
+          doc.text(lines, margin + 5, yPos);
+          yPos += lineHeight * lines.length;
+        });
+      }
+      yPos += 3;
+    });
+    yPos += 5;
+    doc.setDrawColor(201, 178, 127);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+  }
+
+  // Photos
+  if (options.photos && data.photos.length > 0) {
+    checkNewPage(30);
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`PROGRAM PHOTOS (${data.photos.length})`, margin, yPos);
+    yPos += 8;
+
+    data.photos.forEach((photo, idx) => {
+      checkNewPage(40);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      const date = new Date(photo.uploadedAt).toLocaleDateString();
+      doc.text(`Photo ${idx + 1} - ${date}`, margin, yPos);
+      yPos += lineHeight;
+
+      if (photo.extractedText) {
+        doc.setFont('helvetica', 'normal');
+        const text = photo.extractedText.substring(0, 500);
+        const lines = doc.splitTextToSize(`  ${text}${photo.extractedText.length > 500 ? '...' : ''}`, pageWidth - margin * 2 - 10);
+        doc.text(lines, margin + 5, yPos);
+        yPos += lineHeight * lines.length;
+      }
+      yPos += 3;
+    });
+    yPos += 5;
+    doc.setDrawColor(201, 178, 127);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+  }
+
+  // Notes
+  if (options.notes && data.notes.length > 0) {
+    checkNewPage(30);
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`PROGRESS NOTES (${data.notes.length})`, margin, yPos);
+    yPos += 8;
+
+    data.notes.forEach((note, idx) => {
+      checkNewPage(30);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      const date = new Date(note.date).toLocaleDateString();
+      doc.text(`${date}`, margin, yPos);
+      yPos += lineHeight;
+
+      doc.setFont('helvetica', 'normal');
+      const lines = doc.splitTextToSize(`  ${note.note}`, pageWidth - margin * 2 - 10);
+      doc.text(lines, margin + 5, yPos);
+      yPos += lineHeight * lines.length + 3;
+    });
+    yPos += 5;
+    doc.setDrawColor(201, 178, 127);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+  }
+
+  // PT Notes
+  if (options.ptNotes && data.ptNotes.length > 0) {
+    checkNewPage(30);
+    doc.setFontSize(14);
+    doc.setTextColor(201, 178, 127);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`PT COORDINATION NOTES (${data.ptNotes.length})`, margin, yPos);
+    yPos += 8;
+
+    data.ptNotes.forEach((note, idx) => {
+      checkNewPage(30);
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      const date = new Date(note.date).toLocaleDateString();
+      doc.text(`${date}`, margin, yPos);
+      yPos += lineHeight;
+
+      doc.setFont('helvetica', 'normal');
+      const lines = doc.splitTextToSize(`  ${note.content}`, pageWidth - margin * 2 - 10);
+      doc.text(lines, margin + 5, yPos);
+      yPos += lineHeight * lines.length + 3;
+    });
+  }
+
+  // Footer
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(128, 128, 128);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 10);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, margin, pageHeight - 10);
+  }
+
+  // Save PDF
+  const fileName = `${client.name.replace(/\s+/g, '_')}_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+  doc.save(fileName);
 }
 
 // Generate human-readable text summary
