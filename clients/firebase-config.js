@@ -38,7 +38,9 @@ function initFirebase() {
     firestoreDb = firebase.firestore(app);
     firebaseInitialized = true;
     window.firebaseInitialized = true;
+    window.firestoreDb = firestoreDb;
     window.syncToFirebase = syncToFirebase;
+    window.loadFromFirebase = loadFromFirebase;
     console.log('Firebase initialized successfully');
     return true;
   } catch (error) {

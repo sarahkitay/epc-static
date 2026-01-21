@@ -146,12 +146,12 @@ async function getClient(clientId) {
 
 async function updateClient(clientId, clientData) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['clients'], 'readwrite');
     const store = transaction.objectStore('clients');
     const getRequest = store.get(clientId);
 
-    getRequest.onsuccess = () => {
+    getRequest.onsuccess = async () => {
       const client = getRequest.result;
       if (!client) {
         reject(new Error('Client not found'));
@@ -165,7 +165,11 @@ async function updateClient(clientId, clientData) {
       };
 
       const putRequest = store.put(updated);
-      putRequest.onsuccess = () => resolve(putRequest.result);
+      putRequest.onsuccess = async () => {
+        // Sync to cloud
+        await syncToCloud('clients', `client_${clientId}`, updated);
+        resolve(putRequest.result);
+      };
       putRequest.onerror = () => reject(putRequest.error);
     };
 
@@ -229,20 +233,23 @@ async function getClientAssessments(clientId) {
 // ===== PROGRAMS =====
 async function saveProgram(clientId, programData) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['programs'], 'readwrite');
     const store = transaction.objectStore('programs');
-    const request = store.add({
+    const programWithMeta = {
       clientId: clientId,
       ...programData,
       createdAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(programWithMeta);
 
-    request.onsuccess = () => {
+    request.onsuccess = async () => {
+      const programId = request.result;
+      // Sync to cloud
+      await syncToCloud('programs', `program_${programId}`, { id: programId, ...programWithMeta });
       // Update client's last program date
-      updateClient(clientId, { lastProgramDate: new Date().toISOString() })
-        .then(() => resolve(request.result))
-        .catch(reject);
+      await updateClient(clientId, { lastProgramDate: new Date().toISOString() });
+      resolve(programId);
     };
     request.onerror = () => reject(request.error);
   });
@@ -269,16 +276,22 @@ async function getClientPrograms(clientId) {
 // ===== PROGRAM PHOTOS =====
 async function saveProgramPhoto(clientId, photoData) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['programPhotos'], 'readwrite');
     const store = transaction.objectStore('programPhotos');
-    const request = store.add({
+    const photoWithMeta = {
       clientId: clientId,
       ...photoData,
       uploadedAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(photoWithMeta);
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = async () => {
+      const photoId = request.result;
+      // Sync to cloud
+      await syncToCloud('programPhotos', `photo_${photoId}`, { id: photoId, ...photoWithMeta });
+      resolve(photoId);
+    };
     request.onerror = () => reject(request.error);
   });
 }
@@ -304,17 +317,23 @@ async function getClientPhotos(clientId) {
 // ===== PROGRESS NOTES =====
 async function saveProgressNote(clientId, noteContent) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['progressNotes'], 'readwrite');
     const store = transaction.objectStore('progressNotes');
-    const request = store.add({
+    const noteWithMeta = {
       clientId: clientId,
       content: noteContent,
       date: new Date().toISOString(),
       createdAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(noteWithMeta);
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = async () => {
+      const noteId = request.result;
+      // Sync to cloud
+      await syncToCloud('progressNotes', `note_${noteId}`, { id: noteId, ...noteWithMeta });
+      resolve(noteId);
+    };
     request.onerror = () => reject(request.error);
   });
 }
@@ -340,17 +359,23 @@ async function getClientNotes(clientId) {
 // ===== PT NOTES =====
 async function savePTNote(clientId, noteContent) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['ptNotes'], 'readwrite');
     const store = transaction.objectStore('ptNotes');
-    const request = store.add({
+    const noteWithMeta = {
       clientId: clientId,
       content: noteContent,
       date: new Date().toISOString(),
       createdAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(noteWithMeta);
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = async () => {
+      const noteId = request.result;
+      // Sync to cloud
+      await syncToCloud('ptNotes', `ptnote_${noteId}`, { id: noteId, ...noteWithMeta });
+      resolve(noteId);
+    };
     request.onerror = () => reject(request.error);
   });
 }

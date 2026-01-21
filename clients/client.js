@@ -121,6 +121,7 @@ function initTabs() {
 // ===== ASSESSMENT =====
 function initAssessment() {
   const saveAssessmentBtn = document.getElementById('saveAssessmentBtn');
+  const saveAssessmentBtnBottom = document.getElementById('saveAssessmentBtnBottom');
   const assessmentForm = document.getElementById('assessmentForm');
 
   // Set default date to today
@@ -129,8 +130,23 @@ function initAssessment() {
     dateInput.value = new Date().toISOString().split('T')[0];
   }
 
+  // Handle save button clicks (both top and bottom)
+  const handleSaveClick = async () => {
+    await handleSaveAssessment();
+  };
+
   if (saveAssessmentBtn) {
-    saveAssessmentBtn.addEventListener('click', async () => {
+    saveAssessmentBtn.addEventListener('click', handleSaveClick);
+  }
+
+  if (saveAssessmentBtnBottom) {
+    saveAssessmentBtnBottom.addEventListener('click', handleSaveClick);
+  }
+
+  // Also handle form submit
+  if (assessmentForm) {
+    assessmentForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
       await handleSaveAssessment();
     });
   }

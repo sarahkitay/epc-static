@@ -75,7 +75,6 @@
       <section class="tab-panel active" id="assessment-tab">
         <div class="panel-header">
           <h3 class="panel-title">Initial Assessment</h3>
-          <button class="btn-primary" id="saveAssessmentBtn">Save Assessment</button>
         </div>
 
         <form id="assessmentForm" class="assessment-form">
@@ -204,6 +203,13 @@
               <textarea id="pushupNotes" class="form-textarea" rows="3" placeholder="Additional notes on push-up assessment..."></textarea>
             </div>
           </div>
+          
+          <!-- Save Assessment Button at Bottom -->
+          <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--epc-line);">
+            <button type="button" class="btn-primary" id="saveAssessmentBtnBottom" style="width: 100%;">
+              <span>Save Assessment</span>
+            </button>
+          </div>
         </form>
 
         <!-- Assessment History -->
@@ -281,7 +287,7 @@
         </div>
 
         <div class="photo-upload-area" id="photoUploadArea" style="display: none;">
-          <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" />
+          <input type="file" id="photoInput" accept="image/*" style="display: none;" />
           <div class="upload-zone">
             <p>Drag & drop a photo here or click to select</p>
             <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">Choose File</button>
