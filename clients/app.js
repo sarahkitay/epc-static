@@ -409,43 +409,70 @@ async function initDashboard() {
 
   // Add client form
   if (addClientForm) {
+    console.log('Add client form found, attaching submit handler');
     addClientForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      console.log('Form submitted');
+
+      // Validate required fields
+      const clientName = document.getElementById('clientName');
+      if (!clientName || !clientName.value.trim()) {
+        alert('Please enter a client name.');
+        if (clientName) clientName.focus();
+        return;
+      }
 
       // Generate unique parent code if not provided
-      let parentPasscode = document.getElementById('parentPasscode').value.trim();
+      const parentPasscodeInput = document.getElementById('parentPasscode');
+      let parentPasscode = parentPasscodeInput ? parentPasscodeInput.value.trim() : '';
       if (!parentPasscode) {
         // Generate a 6-digit code
         parentPasscode = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log('Generated parent passcode:', parentPasscode);
       }
       
       const clientData = {
-        name: document.getElementById('clientName').value.trim(),
-        age: document.getElementById('clientAge').value ? parseInt(document.getElementById('clientAge').value) : null,
-        category: document.getElementById('clientCategory').value,
-        primaryTrainer: document.getElementById('primaryTrainer').value.trim() || null,
-        parentContact: document.getElementById('parentContact').value.trim() || null,
+        name: clientName.value.trim(),
+        age: document.getElementById('clientAge')?.value ? parseInt(document.getElementById('clientAge').value) : null,
+        category: document.getElementById('clientCategory')?.value || 'shared',
+        primaryTrainer: document.getElementById('primaryTrainer')?.value.trim() || null,
+        parentContact: document.getElementById('parentContact')?.value.trim() || null,
         parentPasscode: parentPasscode, // Auto-generated if not provided
-        emergencyContact: document.getElementById('emergencyContact').value.trim() || null,
-        goals: document.getElementById('clientGoals').value.trim() || null,
-        medicalHistory: document.getElementById('medicalHistory').value.trim() || null
+        emergencyContact: document.getElementById('emergencyContact')?.value.trim() || null,
+        goals: document.getElementById('clientGoals')?.value.trim() || null,
+        medicalHistory: document.getElementById('medicalHistory')?.value.trim() || null
       };
       
+      console.log('Client data prepared:', clientData);
+      
       // Show the generated code to staff
-      if (!document.getElementById('parentPasscode').value.trim()) {
+      if (parentPasscodeInput && !parentPasscodeInput.value.trim()) {
         alert(`Parent access code generated: ${parentPasscode}\n\nShare this code with ${clientData.name}'s parents for portal access.`);
       }
 
+      // Check if addClient function is available
+      if (typeof addClient !== 'function') {
+        console.error('addClient function not found!');
+        alert('Error: Database functions not loaded. Please refresh the page.');
+        return;
+      }
+
       try {
-        await addClient(clientData);
+        console.log('Calling addClient...');
+        const clientId = await addClient(clientData);
+        console.log('Client added successfully with ID:', clientId);
         addClientModal.style.display = 'none';
         addClientForm.reset();
         await loadClients();
+        console.log('Clients reloaded');
       } catch (error) {
         console.error('Error adding client:', error);
-        alert('Error adding client. Please try again.');
+        alert(`Error adding client: ${error.message || 'Unknown error'}. Please check the console for details.`);
       }
     });
+  } else {
+    console.error('Add client form not found!');
   }
 
   // Search and filter handlers
