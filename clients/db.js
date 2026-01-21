@@ -192,21 +192,24 @@ async function deleteClient(clientId) {
 // ===== ASSESSMENTS =====
 async function saveAssessment(clientId, assessmentData) {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['assessments'], 'readwrite');
     const store = transaction.objectStore('assessments');
-    const request = store.add({
+    const assessmentWithMeta = {
       clientId: clientId,
       ...assessmentData,
       date: assessmentData.date || new Date().toISOString(),
       createdAt: new Date().toISOString()
-    });
+    };
+    const request = store.add(assessmentWithMeta);
 
-    request.onsuccess = () => {
+    request.onsuccess = async () => {
+      const assessmentId = request.result;
+      // Sync to cloud
+      await syncToCloud('assessments', `assessment_${assessmentId}`, { id: assessmentId, ...assessmentWithMeta });
       // Update client's last assessment date
-      updateClient(clientId, { lastAssessmentDate: new Date().toISOString() })
-        .then(() => resolve(request.result))
-        .catch(reject);
+      await updateClient(clientId, { lastAssessmentDate: new Date().toISOString() });
+      resolve(assessmentId);
     };
     request.onerror = () => reject(request.error);
   });
