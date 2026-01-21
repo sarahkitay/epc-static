@@ -16,6 +16,24 @@ const DEFAULT_EXERCISES = [
   'A-Skip', 'B-Skip', 'High Knees', 'Butt Kicks', 'Lateral Shuffle'
 ];
 
+// Check if current session is parent session
+function isParentSession() {
+  const parentSession = sessionStorage.getItem('epc_parent_session');
+  if (!parentSession) return false;
+  
+  try {
+    const parentData = JSON.parse(parentSession);
+    // Check if session is still valid (24 hours)
+    if (Date.now() - parentData.timestamp > 24 * 60 * 60 * 1000) {
+      sessionStorage.removeItem('epc_parent_session');
+      return false;
+    }
+    return parentData;
+  } catch (e) {
+    return false;
+  }
+}
+
 // Initialize client page
 async function initClientPage() {
   checkAuth();
@@ -26,16 +44,31 @@ async function initClientPage() {
   currentClientId = parseInt(urlParams.get('id'));
 
   if (!currentClientId) {
-    alert('No client ID provided. Redirecting to dashboard.');
-    // Ensure we stay in /clients/ directory
-    const pathname = window.location.pathname;
-    if (pathname.includes('/clients/')) {
-      const clientsIndex = pathname.indexOf('/clients/');
-      const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
-      window.location.href = basePath + 'dashboard.html';
+    // Check if parent session exists
+    const parentData = isParentSession();
+    if (parentData) {
+      currentClientId = parentData.clientId;
+      // Update URL without reload
+      window.history.replaceState({}, '', `?id=${currentClientId}`);
     } else {
-      window.location.href = './dashboard.html';
+      alert('No client ID provided. Redirecting to dashboard.');
+      const pathname = window.location.pathname;
+      if (pathname.includes('/clients/')) {
+        const clientsIndex = pathname.indexOf('/clients/');
+        const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+        window.location.href = basePath + 'dashboard.html';
+      } else {
+        window.location.href = './dashboard.html';
+      }
+      return;
     }
+  }
+  
+  // Check if parent is accessing - verify they can only see their child
+  const parentData = isParentSession();
+  if (parentData && parentData.clientId !== currentClientId) {
+    alert('You can only access your child\'s information.');
+    window.location.href = getPath(`client.html?id=${parentData.clientId}`);
     return;
   }
 
@@ -48,6 +81,12 @@ async function initClientPage() {
   // Initialize tabs
   initTabs();
 
+  // Check if parent session - make page read-only
+  const parentData = isParentSession();
+  if (parentData) {
+    makePageReadOnly();
+  }
+  
   // Initialize all sections
   initAssessment();
   initProgramBuilder();
@@ -1669,6 +1708,46 @@ function formatDate(dateString) {
     hour: '2-digit',
     minute: '2-digit'
   });
+}
+
+// Make page read-only for parents
+function makePageReadOnly() {
+  // Hide edit buttons
+  const editBtn = document.getElementById('editClientBtn');
+  const moveBtn = document.getElementById('moveClientBtn');
+  const downloadBtn = document.getElementById('downloadClientDataBtn');
+  
+  if (editBtn) editBtn.style.display = 'none';
+  if (moveBtn) moveBtn.style.display = 'none';
+  if (downloadBtn) downloadBtn.style.display = 'none';
+  
+  // Disable all form inputs
+  const inputs = document.querySelectorAll('input, textarea, select, button[type="submit"]');
+  inputs.forEach(input => {
+    if (input.id !== 'logoutBtn' && !input.closest('.parent-allowed')) {
+      input.disabled = true;
+      input.style.opacity = '0.6';
+      input.style.cursor = 'not-allowed';
+    }
+  });
+  
+  // Hide action buttons
+  const actionButtons = document.querySelectorAll('#addClientBtn, #saveAssessmentBtnBottom, #uploadPhotoBtn, #addNoteBtn, #addPtNoteBtn, #saveProgramBtn, #printProgramBtn, #clearProgramBtn');
+  actionButtons.forEach(btn => {
+    if (btn) btn.style.display = 'none';
+  });
+  
+  // Add parent notice
+  const header = document.querySelector('.client-header-content');
+  if (header) {
+    const notice = document.createElement('div');
+    notice.style.cssText = 'background: rgba(201, 178, 127, 0.1); border: 1px solid var(--epc-gold); border-radius: 6px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--epc-gold);';
+    notice.innerHTML = '👁️ <strong>Parent View:</strong> This is a read-only view. Contact your trainer to make changes.';
+    header.appendChild(notice);
+  }
+  
+  // Update page title
+  document.title = `Parent Portal - ${document.title}`;
 }
 
 // Initialize on page load

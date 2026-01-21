@@ -130,16 +130,52 @@
       
       <form id="loginForm" class="login-form">
         <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            class="form-input"
-            placeholder="Enter access password"
-            required
-            autofocus
-          />
+          <label for="loginType" class="form-label">Login As</label>
+          <select id="loginType" class="form-input" style="margin-bottom: 16px;">
+            <option value="staff">Staff Member</option>
+            <option value="parent">Parent / Guardian</option>
+          </select>
+        </div>
+        
+        <!-- Staff Login -->
+        <div id="staffLogin" class="login-section">
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input"
+              placeholder="Enter staff password"
+            />
+          </div>
+        </div>
+        
+        <!-- Parent Login -->
+        <div id="parentLogin" class="login-section" style="display: none;">
+          <div class="form-group">
+            <label for="childName" class="form-label">Child's Full Name</label>
+            <input 
+              type="text" 
+              id="childName" 
+              name="childName" 
+              class="form-input"
+              placeholder="Enter child's name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="parentCode" class="form-label">Access Code</label>
+            <input 
+              type="text" 
+              id="parentCode" 
+              name="parentCode" 
+              class="form-input"
+              placeholder="Enter unique access code"
+            />
+            <small style="color: rgba(201, 178, 127, 0.5); font-size: 11px; margin-top: 4px; display: block;">
+              This code is provided by your trainer
+            </small>
+          </div>
         </div>
         
         <button type="submit" class="login-btn">
@@ -152,65 +188,32 @@
   </div>
 
   <script>
-    // Ensure app.js loads and handles login
-    window.addEventListener('DOMContentLoaded', function() {
-      console.log('Page loaded, initializing login...');
+    // Toggle login type
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginType = document.getElementById('loginType');
+      const staffLogin = document.getElementById('staffLogin');
+      const parentLogin = document.getElementById('parentLogin');
       
-      // Double-check form is ready
-      setTimeout(function() {
-        const form = document.getElementById('loginForm');
-        const input = document.getElementById('password');
-        
-        if (form && input) {
-          console.log('Form and input found');
-          
-          // Add direct click handler as backup
-          const submitBtn = form.querySelector('button[type="submit"]');
-          if (submitBtn) {
-            submitBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('Submit button clicked');
-              
-              const password = input.value.trim();
-              if (password === '15125') {
-                sessionStorage.setItem('epc_session', 'authenticated');
-                // Determine correct path - ensure we stay in /clients/ directory
-                const pathname = window.location.pathname;
-                let dashboardPath;
-                
-                if (pathname.includes('/clients/')) {
-                  // We're in /clients/ directory, get base path
-                  const clientsIndex = pathname.indexOf('/clients/');
-                  const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
-                  dashboardPath = basePath + 'dashboard.html';
-                } else if (pathname.endsWith('/clients') || pathname.endsWith('/clients/')) {
-                  dashboardPath = pathname + (pathname.endsWith('/') ? '' : '/') + 'dashboard.html';
-                } else {
-                  // Fallback: assume we're in clients directory
-                  const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-                  dashboardPath = basePath + 'dashboard.html';
-                }
-                
-                console.log('Redirecting to:', dashboardPath);
-                window.location.href = dashboardPath;
-              } else {
-                const errorMsg = document.getElementById('errorMessage');
-                if (errorMsg) {
-                  errorMsg.textContent = 'Incorrect password. Please try again.';
-                  errorMsg.style.display = 'block';
-                }
-                input.value = '';
-                setTimeout(() => input.focus(), 100);
-              }
-            });
+      if (loginType) {
+        loginType.addEventListener('change', function() {
+          if (this.value === 'staff') {
+            staffLogin.style.display = 'block';
+            parentLogin.style.display = 'none';
+            document.getElementById('password').required = true;
+            document.getElementById('childName').required = false;
+            document.getElementById('parentCode').required = false;
+          } else {
+            staffLogin.style.display = 'none';
+            parentLogin.style.display = 'block';
+            document.getElementById('password').required = false;
+            document.getElementById('childName').required = true;
+            document.getElementById('parentCode').required = true;
           }
-        } else {
-          console.error('Form or input not found');
-        }
-      }, 100);
+        });
+      }
     });
   </script>
+  <script src="db.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -32,8 +32,21 @@ function checkAuth() {
   }
 
   const session = sessionStorage.getItem(SESSION_KEY);
-  if (!session || session !== 'authenticated') {
+  const parentSession = sessionStorage.getItem('epc_parent_session');
+  
+  // Allow access if either staff or parent is logged in
+  if (!session && !parentSession) {
     window.location.href = getPath('index.html');
+  }
+  
+  // If parent is logged in and on dashboard, redirect to their child's page
+  if (parentSession && window.location.pathname.includes('dashboard.html')) {
+    try {
+      const parentData = JSON.parse(parentSession);
+      window.location.href = getPath(`client.html?id=${parentData.clientId}`);
+    } catch (e) {
+      console.error('Error parsing parent session:', e);
+    }
   }
 }
 
@@ -59,45 +72,107 @@ function initLogin() {
   }
 }
 
-function handleLogin() {
-  const passwordInput = document.getElementById('password');
+async function handleLogin() {
+  const loginType = document.getElementById('loginType');
   const errorMessage = document.getElementById('errorMessage');
   
-  if (!passwordInput) {
-    console.error('Password input not found');
-    alert('Error: Password input not found. Please refresh the page.');
+  if (!loginType) {
+    console.error('Login type selector not found');
     return;
   }
   
-  const password = passwordInput.value.trim();
-  console.log('Login attempt, password length:', password.length);
-
-  if (password === PASSWORD) {
-    console.log('Password correct, redirecting...');
-    try {
-      sessionStorage.setItem(SESSION_KEY, 'authenticated');
-      const dashboardPath = getPath('dashboard.html');
-      console.log('Redirecting to:', dashboardPath);
-      window.location.href = dashboardPath;
-    } catch (e) {
-      console.error('Error setting session:', e);
-      // Fallback: try direct redirect
-      window.location.href = getPath('dashboard.html');
+  const loginAs = loginType.value;
+  
+  if (loginAs === 'staff') {
+    // Staff login
+    const passwordInput = document.getElementById('password');
+    if (!passwordInput) {
+      console.error('Password input not found');
+      return;
+    }
+    
+    const password = passwordInput.value.trim();
+    
+    if (password === PASSWORD) {
+      try {
+        sessionStorage.setItem(SESSION_KEY, 'authenticated');
+        sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
+        const dashboardPath = getPath('dashboard.html');
+        window.location.href = dashboardPath;
+      } catch (e) {
+        console.error('Error setting session:', e);
+        window.location.href = getPath('dashboard.html');
+      }
+    } else {
+      if (errorMessage) {
+        errorMessage.textContent = 'Incorrect password. Please try again.';
+        errorMessage.style.display = 'block';
+      }
+      passwordInput.value = '';
+      setTimeout(() => passwordInput.focus(), 100);
     }
   } else {
-    console.log('Password incorrect');
-    if (errorMessage) {
-      errorMessage.textContent = 'Incorrect password. Please try again.';
-      errorMessage.style.display = 'block';
-    } else {
-      alert('Incorrect password. Please try again.');
-    }
-    passwordInput.value = '';
-    setTimeout(() => {
-      passwordInput.focus();
-    }, 100);
+    // Parent login
+    const childNameInput = document.getElementById('childName');
+    const parentCodeInput = document.getElementById('parentCode');
     
-    // Clear error after 3 seconds
+    if (!childNameInput || !parentCodeInput) {
+      console.error('Parent login inputs not found');
+      return;
+    }
+    
+    const childName = childNameInput.value.trim();
+    const parentCode = parentCodeInput.value.trim();
+    
+    if (!childName || !parentCode) {
+      if (errorMessage) {
+        errorMessage.textContent = 'Please enter both child\'s name and access code.';
+        errorMessage.style.display = 'block';
+      }
+      return;
+    }
+    
+    try {
+      // Initialize database to search for client
+      await initDB();
+      const allClients = await getAllClients();
+      
+      // Find client by name (case-insensitive) and parent code
+      const client = allClients.find(c => 
+        c.name.toLowerCase() === childName.toLowerCase() && 
+        c.parentPasscode && 
+        c.parentPasscode.toLowerCase() === parentCode.toLowerCase()
+      );
+      
+      if (client) {
+        // Store parent session
+        sessionStorage.setItem('epc_parent_session', JSON.stringify({
+          clientId: client.id,
+          clientName: client.name,
+          timestamp: Date.now()
+        }));
+        sessionStorage.removeItem(SESSION_KEY); // Clear staff session
+        
+        // Redirect directly to child's client page
+        window.location.href = getPath(`client.html?id=${client.id}`);
+      } else {
+        if (errorMessage) {
+          errorMessage.textContent = 'No client found with that name and code. Please check and try again.';
+          errorMessage.style.display = 'block';
+        }
+        childNameInput.value = '';
+        parentCodeInput.value = '';
+        setTimeout(() => childNameInput.focus(), 100);
+      }
+    } catch (error) {
+      console.error('Error during parent login:', error);
+      if (errorMessage) {
+        errorMessage.textContent = 'Error connecting to database. Please try again.';
+        errorMessage.style.display = 'block';
+      }
+    }
+    
+    // Clear error after 5 seconds
     setTimeout(() => {
       if (errorMessage) {
         errorMessage.style.display = 'none';
