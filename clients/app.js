@@ -79,7 +79,7 @@ function initLogin() {
 
   console.log('Initializing login form');
 
-  // Handle form submission
+  // Handle form submission - this is the primary handler
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -88,19 +88,16 @@ function initLogin() {
     return false;
   });
 
-  // Also handle button click for mobile compatibility (but prevent double-firing)
+  // Also handle button click for mobile compatibility
   const loginBtn = loginForm.querySelector('button[type="submit"]');
   if (loginBtn) {
-    let isHandling = false;
     loginBtn.addEventListener('click', async (e) => {
-      // Only handle if form submit didn't already fire
-      if (!isHandling && !e.isTrusted) {
-        e.preventDefault();
-        e.stopPropagation();
-        isHandling = true;
-        console.log('Button clicked');
-        await handleLogin();
-        setTimeout(() => { isHandling = false; }, 1000);
+      // Prevent default to let form submit handle it, but ensure it fires
+      // This is a backup for mobile browsers that might not fire submit properly
+      const form = e.target.closest('form');
+      if (form && !form.checkValidity()) {
+        form.reportValidity();
+        return;
       }
     });
   }
@@ -112,43 +109,67 @@ async function handleLogin() {
   
   if (!loginType) {
     console.error('Login type selector not found');
-    return;
+    if (errorMessage) {
+      errorMessage.textContent = 'Login form error. Please refresh the page.';
+      errorMessage.style.display = 'block';
+    }
+    return false;
   }
   
   const loginAs = loginType.value;
+  console.log('Login attempt as:', loginAs);
   
   if (loginAs === 'staff') {
     // Staff login
     const passwordInput = document.getElementById('password');
     if (!passwordInput) {
       console.error('Password input not found');
-      return;
+      if (errorMessage) {
+        errorMessage.textContent = 'Password field not found. Please refresh the page.';
+        errorMessage.style.display = 'block';
+      }
+      return false;
     }
     
     const password = passwordInput.value.trim();
     
-    console.log('Password entered:', password, 'Expected:', PASSWORD, 'Match:', password === PASSWORD);
+    console.log('Password entered:', password ? '***' : '(empty)', 'Expected:', PASSWORD, 'Match:', password === PASSWORD);
+    
+    if (!password) {
+      if (errorMessage) {
+        errorMessage.textContent = 'Please enter a password.';
+        errorMessage.style.display = 'block';
+      }
+      passwordInput.focus();
+      return false;
+    }
     
     if (password === PASSWORD) {
       try {
         sessionStorage.setItem(SESSION_KEY, 'authenticated');
         sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
         const dashboardPath = getPath('dashboard.html');
-        console.log('Redirecting to:', dashboardPath);
-        // Force redirect
+        console.log('Login successful! Redirecting to:', dashboardPath);
+        // Use replace to prevent back button issues
         window.location.replace(dashboardPath);
+        return true;
       } catch (e) {
         console.error('Error setting session:', e);
-        const dashboardPath = getPath('dashboard.html');
-        window.location.replace(dashboardPath);
+        if (errorMessage) {
+          errorMessage.textContent = 'Error saving session. Please try again.';
+          errorMessage.style.display = 'block';
+        }
+        return false;
       }
     } else {
+      console.log('Password mismatch');
       if (errorMessage) {
         errorMessage.textContent = 'Incorrect password. Please try again.';
         errorMessage.style.display = 'block';
       }
       passwordInput.value = '';
       setTimeout(() => passwordInput.focus(), 100);
+      return false;
     }
   } else {
     // Parent login
