@@ -1326,10 +1326,16 @@ function initClientActions() {
 
 // Initialize client data export functionality
 function initClientDataExport() {
+  console.log('Initializing client data export...');
   const downloadBtn = document.getElementById('downloadClientDataBtn');
+  console.log('Download button:', downloadBtn ? 'found' : 'NOT FOUND');
   if (!downloadBtn) return;
 
-  downloadBtn.addEventListener('click', async () => {
+  downloadBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Download button clicked');
+    
     if (!currentClientId || !currentClient) {
       alert('No client data available to download.');
       return;
