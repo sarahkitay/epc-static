@@ -27,7 +27,8 @@ async function initClientPage() {
 
   if (!currentClientId) {
     alert('No client ID provided. Redirecting to dashboard.');
-    window.location.href = 'dashboard.html';
+    // Use relative path - should work from same directory
+    window.location.href = './dashboard.html';
     return;
   }
 
@@ -59,7 +60,7 @@ async function loadClientData() {
     currentClient = await getClient(currentClientId);
     if (!currentClient) {
       alert('Client not found. Redirecting to dashboard.');
-      window.location.href = 'dashboard.html';
+      window.location.href = './dashboard.html';
       return;
     }
 

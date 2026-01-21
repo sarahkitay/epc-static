@@ -175,7 +175,18 @@
               const password = input.value.trim();
               if (password === '15125') {
                 sessionStorage.setItem('epc_session', 'authenticated');
-                window.location.href = 'dashboard.html';
+                // Determine correct path
+                const pathname = window.location.pathname;
+                let dashboardPath = 'dashboard.html';
+                if (pathname.includes('/clients/') || pathname.endsWith('/clients')) {
+                  dashboardPath = 'dashboard.html';
+                } else if (pathname.endsWith('/') || pathname.endsWith('/clients/')) {
+                  dashboardPath = 'clients/dashboard.html';
+                } else {
+                  const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+                  dashboardPath = basePath + 'dashboard.html';
+                }
+                window.location.href = dashboardPath;
               } else {
                 const errorMsg = document.getElementById('errorMessage');
                 if (errorMsg) {

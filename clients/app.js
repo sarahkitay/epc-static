@@ -3,6 +3,22 @@
 const PASSWORD = '15125';
 const SESSION_KEY = 'epc_session';
 
+// Helper function to get correct path for navigation
+function getPath(filename) {
+  const pathname = window.location.pathname;
+  // If we're at root or in clients directory
+  if (pathname.endsWith('/') || pathname.endsWith('/clients/') || pathname.endsWith('/clients')) {
+    return `clients/${filename}`;
+  }
+  // If we're in clients directory with a file
+  if (pathname.includes('/clients/')) {
+    return filename; // Same directory
+  }
+  // Fallback: try to determine from current path
+  const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+  return basePath + filename;
+}
+
 // Check if user is logged in
 function checkAuth() {
   if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/clients/') || window.location.pathname.endsWith('/clients')) {
@@ -11,7 +27,7 @@ function checkAuth() {
 
   const session = sessionStorage.getItem(SESSION_KEY);
   if (!session || session !== 'authenticated') {
-    window.location.href = 'index.html';
+    window.location.href = getPath('index.html');
   }
 }
 
@@ -54,11 +70,13 @@ function handleLogin() {
     console.log('Password correct, redirecting...');
     try {
       sessionStorage.setItem(SESSION_KEY, 'authenticated');
-      window.location.href = 'dashboard.html';
+      const dashboardPath = getPath('dashboard.html');
+      console.log('Redirecting to:', dashboardPath);
+      window.location.href = dashboardPath;
     } catch (e) {
       console.error('Error setting session:', e);
       // Fallback: try direct redirect
-      window.location.href = 'dashboard.html';
+      window.location.href = getPath('dashboard.html');
     }
   } else {
     console.log('Password incorrect');
@@ -294,7 +312,7 @@ async function initDashboard() {
 
 // View client profile
 function viewClient(clientId) {
-  window.location.href = `client.html?id=${clientId}`;
+  window.location.href = `${getPath('client.html')}?id=${clientId}`;
 }
 
 // Add quick note (placeholder for future implementation)
