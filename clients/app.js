@@ -419,13 +419,6 @@ async function initDashboard() {
         parentPasscode = Math.floor(100000 + Math.random() * 900000).toString();
       }
       
-      // Generate unique parent code if not provided
-      let parentPasscode = document.getElementById('parentPasscode').value.trim();
-      if (!parentPasscode) {
-        // Generate a 6-digit code
-        parentPasscode = Math.floor(100000 + Math.random() * 900000).toString();
-      }
-      
       const clientData = {
         name: document.getElementById('clientName').value.trim(),
         age: document.getElementById('clientAge').value ? parseInt(document.getElementById('clientAge').value) : null,
