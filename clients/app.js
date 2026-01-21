@@ -302,8 +302,8 @@ async function initDashboard() {
   // Initialize database
   await initDB();
 
-  // Load clients
-  async function loadClients() {
+  // Load clients function (needs to be accessible globally for session tracking)
+  window.loadClients = async function loadClients() {
     try {
       console.log('Loading clients from database...');
       allClients = await getAllClients();
@@ -313,7 +313,7 @@ async function initDashboard() {
       console.error('Error loading clients:', error);
       alert('Error loading clients. Please refresh the page.');
     }
-  }
+  };
 
   // Render clients
   function renderClients(clients) {
