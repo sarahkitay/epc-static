@@ -640,8 +640,8 @@ async function handleClientSessionUsed(clientId, clientName) {
     alert(message);
     
     // Reload clients to update display
-    if (typeof loadClients === 'function') {
-      await loadClients();
+    if (typeof window.loadClients === 'function') {
+      await window.loadClients();
     } else {
       // Fallback: reload page
       window.location.reload();
@@ -714,7 +714,11 @@ async function handleSessionUsed() {
     alert(message);
     
     // Reload clients to update display
-    await loadClients();
+    if (typeof window.loadClients === 'function') {
+      await window.loadClients();
+    } else {
+      window.location.reload();
+    }
   } catch (error) {
     console.error('Error marking session as used:', error);
     alert('Error marking session as used. Please try again.');
@@ -742,7 +746,11 @@ function addQuickNote(clientId) {
       saveProgressNote(clientId, note)
         .then(() => {
           alert('Note added successfully!');
-          loadClients();
+          if (typeof window.loadClients === 'function') {
+            await window.loadClients();
+          } else {
+            window.location.reload();
+          }
         })
         .catch(error => {
           console.error('Error adding note:', error);
