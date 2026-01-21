@@ -2560,7 +2560,7 @@ img {
 .epc-page-header {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 140px 40px 40px;
+  padding: 120px 40px 40px;
   position: relative;
   z-index: 1;
 }
@@ -2679,7 +2679,7 @@ img {
 
 @media (max-width: 768px) {
   .epc-page-header {
-    padding: 120px 20px 32px;
+    padding: 100px 20px 32px;
   }
   
   .epc-page-title {

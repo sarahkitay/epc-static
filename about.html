@@ -67,7 +67,7 @@
         
         /* Left Content */
         .about-content{
-          padding:clamp(60px,10vw,120px) clamp(20px,5vw,80px);
+          padding:0 clamp(20px,5vw,80px);
           display:flex;
           flex-direction:column;
           justify-content:center;
@@ -80,6 +80,17 @@
           .about-content{
             background:transparent;
             padding-right:80px;
+          }
+        }
+        
+        /* About page header uses unified header */
+        .about-content .epc-page-header {
+          padding-top: 120px;
+        }
+        
+        @media (max-width: 768px) {
+          .about-content .epc-page-header {
+            padding-top: 100px;
           }
         }
         
