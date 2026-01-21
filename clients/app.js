@@ -300,17 +300,9 @@ async function initDashboard() {
   let allClients = [];
 
   // Initialize database
-  console.log('Initializing database...');
-  try {
-    await initDB();
-    console.log('Database initialized successfully');
-  } catch (error) {
-    console.error('Database initialization error:', error);
-    alert('Error initializing database. Please refresh the page.');
-    return;
-  }
+  await initDB();
 
-  // Load clients function
+  // Load clients
   async function loadClients() {
     try {
       console.log('Loading clients from database...');
@@ -322,9 +314,6 @@ async function initDashboard() {
       alert('Error loading clients. Please refresh the page.');
     }
   }
-  
-  // Make it globally accessible for onclick handlers
-  window.loadClients = loadClients;
 
   // Render clients
   function renderClients(clients) {
@@ -559,12 +548,7 @@ async function initDashboard() {
         console.log('Client added successfully with ID:', clientId);
         addClientModal.style.display = 'none';
         addClientForm.reset();
-        if (typeof window.loadClients === 'function') {
-          await window.loadClients();
-        } else {
-          // Fallback: reload page
-          window.location.reload();
-        }
+        await window.loadClients();
         console.log('Clients reloaded');
       } catch (error) {
         console.error('Error adding client:', error);
@@ -589,7 +573,20 @@ async function initDashboard() {
   }
 
   // Initial load
-  await loadClients();
+  if (typeof window.loadClients === 'function') {
+    await window.loadClients();
+  } else {
+    // Fallback if loadClients wasn't set yet
+    try {
+      console.log('Loading clients from database...');
+      allClients = await getAllClients();
+      console.log('Clients loaded:', allClients.length);
+      renderClients(allClients);
+    } catch (error) {
+      console.error('Error loading clients:', error);
+      alert('Error loading clients. Please refresh the page.');
+    }
+  }
   console.log('=== DASHBOARD INITIALIZATION COMPLETE ===');
 }
 
@@ -643,8 +640,8 @@ async function handleClientSessionUsed(clientId, clientName) {
     alert(message);
     
     // Reload clients to update display
-    if (typeof window.loadClients === 'function') {
-      await window.loadClients();
+    if (typeof loadClients === 'function') {
+      await loadClients();
     } else {
       // Fallback: reload page
       window.location.reload();
@@ -717,11 +714,7 @@ async function handleSessionUsed() {
     alert(message);
     
     // Reload clients to update display
-    if (typeof window.loadClients === 'function') {
-      await window.loadClients();
-    } else {
-      window.location.reload();
-    }
+    await loadClients();
   } catch (error) {
     console.error('Error marking session as used:', error);
     alert('Error marking session as used. Please try again.');
@@ -749,11 +742,7 @@ function addQuickNote(clientId) {
       saveProgressNote(clientId, note)
         .then(() => {
           alert('Note added successfully!');
-          if (typeof window.loadClients === 'function') {
-            await window.loadClients();
-          } else {
-            window.location.reload();
-          }
+          loadClients();
         })
         .catch(error => {
           console.error('Error adding note:', error);
