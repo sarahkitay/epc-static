@@ -153,10 +153,6 @@ async function initClientPage() {
 
 // Load client data
 async function loadClientData() {
-  // Load package info after client data is loaded
-  setTimeout(() => {
-    loadPackageInfo();
-  }, 100);
   try {
     currentClient = await getClient(currentClientId);
     if (!currentClient) {
