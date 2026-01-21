@@ -149,6 +149,8 @@ img {
   }
   .nav-container { 
     padding: 0 20px; 
+    gap: 12px;
+    flex-wrap: nowrap;
   }
   .nav-menu {
     position: fixed;
@@ -181,6 +183,44 @@ img {
   }
   .epc-nav {
     padding: 16px 0;
+  }
+  .nav-actions {
+    margin-left: 8px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .nav-phone {
+    padding: 8px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .nav-book {
+    padding: 8px 12px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .nav-actions {
+    margin-left: 4px;
+    gap: 6px;
+  }
+  .nav-phone {
+    padding: 8px 8px;
+    font-size: 10px;
+  }
+  .nav-book {
+    padding: 8px 10px;
+    font-size: 9px;
+    letter-spacing: .1em;
+  }
+  .logo-text {
+    font-size: 20px;
   }
 }
 
