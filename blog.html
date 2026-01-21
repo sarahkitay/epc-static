@@ -52,6 +52,7 @@
       </div>
       
       <!-- Blog Grid -->
+      <div class="epc-blog-content">
       <div class="epc-blog-grid">
         
         <!-- FEATURED - The 2026 Challenge -->
@@ -311,6 +312,7 @@
         </article>
         
       </div>
+      </div>
       
       <!-- CTA Section -->
       <div class="epc-blog-cta">
@@ -386,6 +388,17 @@
       padding: 0;
       background: #000;
       color: #fff;
+    }
+    
+    /* Blog content wrapper - adds padding after header */
+    .epc-blog-content {
+      padding: 0 40px 80px;
+    }
+    
+    @media (max-width: 768px) {
+      .epc-blog-content {
+        padding: 0 20px 40px;
+      }
     }
       letter-spacing: 4px;
       text-transform: uppercase;
