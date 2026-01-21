@@ -758,7 +758,12 @@ function initPhotos() {
       progressText.textContent = 'Processing image...';
 
       try {
-        // Use Tesseract.js for OCR with better settings
+        // Check if Tesseract is loaded
+        if (typeof Tesseract === 'undefined') {
+          throw new Error('Tesseract.js not loaded. Please refresh the page.');
+        }
+
+        // Use Tesseract.js for OCR with compatible settings
         const worker = await Tesseract.createWorker('eng', 1, {
           logger: (m) => {
             if (m.status === 'recognizing text') {
@@ -769,20 +774,23 @@ function initPhotos() {
               progressText.textContent = 'Loading OCR engine...';
             } else if (m.status === 'loading language traineddata') {
               progressText.textContent = 'Loading language data...';
+            } else if (m.status === 'initializing tesseract') {
+              progressText.textContent = 'Initializing...';
             }
           }
         });
 
-        // Set OCR parameters for better accuracy on full pages/documents
-        await worker.setParameters({
-          tessedit_pageseg_mode: Tesseract.PSM.AUTO_OSD, // Auto page segmentation with orientation detection
-          tessedit_ocr_engine_mode: Tesseract.OEM.LSTM_ONLY, // Use LSTM neural network for better accuracy
-          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,;:!?-()[]/\\\n\t',
-          preserve_interword_spaces: '1', // Preserve spacing for better readability
-          tessedit_create_hocr: '0', // Don't create hOCR (faster)
-          tessedit_create_tsv: '0' // Don't create TSV (faster)
-        });
+        // Set OCR parameters for better accuracy (using compatible modes)
+        try {
+          await worker.setParameters({
+            tessedit_pageseg_mode: '6', // Uniform block of text (PSM 6)
+            preserve_interword_spaces: '1'
+          });
+        } catch (paramError) {
+          console.warn('Could not set all OCR parameters, using defaults:', paramError);
+        }
         
+        // Recognize text from image
         const { data: { text } } = await worker.recognize(currentPhotoData);
 
         await worker.terminate();
