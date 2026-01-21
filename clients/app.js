@@ -6,23 +6,40 @@ const SESSION_KEY = 'epc_session';
 // Helper function to get correct path for navigation
 function getPath(filename) {
   const pathname = window.location.pathname;
+  const origin = window.location.origin;
+  
+  console.log('getPath called with filename:', filename, 'pathname:', pathname);
   
   // If we're in the /clients/ directory (most common case)
   if (pathname.includes('/clients/')) {
     // Extract the base path up to and including /clients/
     const clientsIndex = pathname.indexOf('/clients/');
     const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
-    return basePath + filename;
+    const fullPath = basePath + filename;
+    console.log('Returning path (clients/):', fullPath);
+    return fullPath;
   }
   
   // If pathname ends with /clients or /clients/
   if (pathname.endsWith('/clients') || pathname.endsWith('/clients/')) {
-    return pathname + (pathname.endsWith('/') ? '' : '/') + filename;
+    const fullPath = pathname + (pathname.endsWith('/') ? '' : '/') + filename;
+    console.log('Returning path (ends with clients):', fullPath);
+    return fullPath;
+  }
+  
+  // If we're on index.html in clients directory
+  if (pathname.includes('index.html') && pathname.includes('/clients')) {
+    const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    const fullPath = basePath + filename;
+    console.log('Returning path (index.html):', fullPath);
+    return fullPath;
   }
   
   // Fallback: try to determine from current path
   const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-  return basePath + filename;
+  const fullPath = basePath + filename;
+  console.log('Returning path (fallback):', fullPath);
+  return fullPath;
 }
 
 // Check if user is logged in
@@ -93,15 +110,20 @@ async function handleLogin() {
     
     const password = passwordInput.value.trim();
     
+    console.log('Password entered:', password, 'Expected:', PASSWORD, 'Match:', password === PASSWORD);
+    
     if (password === PASSWORD) {
       try {
         sessionStorage.setItem(SESSION_KEY, 'authenticated');
         sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
         const dashboardPath = getPath('dashboard.html');
-        window.location.href = dashboardPath;
+        console.log('Redirecting to:', dashboardPath);
+        // Force redirect
+        window.location.replace(dashboardPath);
       } catch (e) {
         console.error('Error setting session:', e);
-        window.location.href = getPath('dashboard.html');
+        const dashboardPath = getPath('dashboard.html');
+        window.location.replace(dashboardPath);
       }
     } else {
       if (errorMessage) {
