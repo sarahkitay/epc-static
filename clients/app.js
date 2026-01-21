@@ -150,8 +150,13 @@ async function handleLogin() {
         sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
         const dashboardPath = getPath('dashboard.html');
         console.log('Login successful! Redirecting to:', dashboardPath);
-        // Use replace to prevent back button issues
-        window.location.replace(dashboardPath);
+        console.log('Current location:', window.location.href);
+        console.log('Session stored:', sessionStorage.getItem(SESSION_KEY));
+        
+        // Small delay to ensure session is saved, then redirect
+        setTimeout(() => {
+          window.location.href = dashboardPath;
+        }, 100);
         return true;
       } catch (e) {
         console.error('Error setting session:', e);
@@ -277,10 +282,13 @@ async function initDashboard() {
   // Load clients
   async function loadClients() {
     try {
+      console.log('Loading clients from database...');
       allClients = await getAllClients();
+      console.log('Clients loaded:', allClients.length);
       renderClients(allClients);
     } catch (error) {
       console.error('Error loading clients:', error);
+      alert('Error loading clients. Please refresh the page.');
     }
   }
 
@@ -420,10 +428,24 @@ async function initDashboard() {
 
   // Modal handlers
   if (addClientBtn) {
-    addClientBtn.addEventListener('click', () => {
-      addClientModal.style.display = 'flex';
-      document.getElementById('clientName').focus();
+    console.log('Add client button found, attaching click handler');
+    addClientBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Add client button clicked');
+      if (addClientModal) {
+        addClientModal.style.display = 'flex';
+        const nameInput = document.getElementById('clientName');
+        if (nameInput) {
+          setTimeout(() => nameInput.focus(), 100);
+        }
+      } else {
+        console.error('Add client modal not found!');
+        alert('Add client modal not found. Please refresh the page.');
+      }
     });
+  } else {
+    console.error('Add client button not found!');
   }
 
   if (closeAddModal) {

@@ -122,12 +122,56 @@ async function addClient(clientData) {
 
 async function getAllClients() {
   const database = await getDB();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const transaction = database.transaction(['clients'], 'readonly');
     const store = transaction.objectStore('clients');
     const request = store.getAll();
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = async () => {
+      let clients = request.result || [];
+      
+      // Try to load from Firebase/cloud if available
+      await checkFirebase();
+      if (firebaseEnabled && typeof window !== 'undefined' && window.loadFromFirebase) {
+        try {
+          console.log('Attempting to load clients from Firebase...');
+          // Load all clients from Firebase
+          const firestoreDb = window.firestoreDb;
+          if (firestoreDb) {
+            const snapshot = await firestoreDb.collection('clients').get();
+            const cloudClients = [];
+            snapshot.forEach(doc => {
+              const data = doc.data();
+              if (data.id) {
+                cloudClients.push(data);
+              }
+            });
+            
+            // Merge cloud data with local data (cloud takes precedence)
+            if (cloudClients.length > 0) {
+              console.log(`Loaded ${cloudClients.length} clients from Firebase`);
+              // Update local IndexedDB with cloud data
+              const writeTransaction = database.transaction(['clients'], 'readwrite');
+              const writeStore = writeTransaction.objectStore('clients');
+              
+              for (const cloudClient of cloudClients) {
+                await new Promise((resolve, reject) => {
+                  const putRequest = writeStore.put(cloudClient);
+                  putRequest.onsuccess = () => resolve();
+                  putRequest.onerror = () => reject(putRequest.error);
+                });
+              }
+              
+              clients = cloudClients;
+            }
+          }
+        } catch (error) {
+          console.error('Error loading from Firebase, using local data:', error);
+        }
+      }
+      
+      resolve(clients);
+    };
     request.onerror = () => reject(request.error);
   });
 }
