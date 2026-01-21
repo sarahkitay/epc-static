@@ -1,0 +1,171 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/services",
+      "destination": "/services.html"
+    },
+    {
+      "source": "/team",
+      "destination": "/team.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/journal",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/booking",
+      "destination": "/booking.html"
+    },
+    {
+      "source": "/book",
+      "destination": "/booking.html"
+    },
+    {
+      "source": "/training",
+      "destination": "/training.html"
+    },
+    {
+      "source": "/assessment",
+      "destination": "/assessment.html"
+    },
+    {
+      "source": "/careers",
+      "destination": "/careers.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/football",
+      "destination": "/football.html"
+    },
+    {
+      "source": "/winter-ball",
+      "destination": "/winter-ball.html"
+    },
+    {
+      "source": "/spa",
+      "destination": "/spa-page.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug.html"
+    },
+    {
+      "source": "/blog/acl-prevention",
+      "destination": "/blog/acl-prevention.html"
+    },
+    {
+      "source": "/blog/contrast-therapy",
+      "destination": "/blog/contrast-therapy.html"
+    },
+    {
+      "source": "/blog/custom-insoles",
+      "destination": "/blog/custom-insoles.html"
+    },
+    {
+      "source": "/blog/emsculpt",
+      "destination": "/blog/emsculpt.html"
+    },
+    {
+      "source": "/blog/movement-patterns",
+      "destination": "/blog/movement-patterns.html"
+    },
+    {
+      "source": "/blog/newyear",
+      "destination": "/blog/newyear.html"
+    },
+    {
+      "source": "/blog/performance-clinic-vs-pt",
+      "destination": "/blog/performance-clinic-vs-pt.html"
+    },
+    {
+      "source": "/blog/performance-pyramid",
+      "destination": "/blog/performance-pyramid.html"
+    },
+    {
+      "source": "/blog/performance-testing",
+      "destination": "/blog/performance-testing.html"
+    },
+    {
+      "source": "/blog/preventative-care",
+      "destination": "/blog/preventative-care.html"
+    },
+    {
+      "source": "/blog/proteus",
+      "destination": "/blog/proteus.html"
+    },
+    {
+      "source": "/blog/pt-after-surgery",
+      "destination": "/blog/pt-after-surgery.html"
+    },
+    {
+      "source": "/blog/pt-before-surgery",
+      "destination": "/blog/pt-before-surgery.html"
+    },
+    {
+      "source": "/blog/return-to-play",
+      "destination": "/blog/return-to-play.html"
+    },
+    {
+      "source": "/blog/shockwave-therapy",
+      "destination": "/blog/shockwave-therapy.html"
+    },
+    {
+      "source": "/blog/squat-for-life",
+      "destination": "/blog/squat-for-life.html"
+    },
+    {
+      "source": "/clients",
+      "destination": "/clients/index.html"
+    },
+    {
+      "source": "/clients/dashboard",
+      "destination": "/clients/dashboard.html"
+    },
+    {
+      "source": "/clients/client",
+      "destination": "/clients/client.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

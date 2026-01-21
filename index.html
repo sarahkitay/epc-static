@@ -4,6 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Elite Performance Clinic - Recovery, Performance Training, and Wellness in Sherman Oaks, CA. Trusted by professional athletes." />
+  <meta name="keywords" content="performance training, physical therapy, recovery, wellness, Sherman Oaks, Los Angeles, athletic performance, sports medicine" />
+  <meta name="author" content="Elite Performance Clinic" />
+  <meta property="og:title" content="Elite Performance Clinic | Recovery • Performance • Wellness" />
+  <meta property="og:description" content="Elite Performance Clinic - Recovery, Performance Training, and Wellness in Sherman Oaks, CA. Trusted by professional athletes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.epcla.com/" />
+  <meta property="og:site_name" content="Elite Performance Clinic" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Elite Performance Clinic | Recovery • Performance • Wellness" />
+  <meta name="twitter:description" content="Elite Performance Clinic - Recovery, Performance Training, and Wellness in Sherman Oaks, CA." />
+  <link rel="canonical" href="https://www.epcla.com/" />
   <title>Elite Performance Clinic | Recovery • Performance • Wellness</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,7 +49,7 @@
 
       <div class="nav-actions" aria-label="Quick actions">
         <a class="nav-phone" href="tel:+18186460040" data-track="nav_call">(818) 646-0040</a>
-        <a class="nav-book" href="booking.html" data-track="nav_book">Book Now</a>
+        <a class="nav-book" href="/booking" data-track="nav_book">Book Now</a>
       </div>
     </div>
   </nav>
@@ -297,11 +308,11 @@
         <h2>Services built for outcomes.</h2>
         <p>Clinical rehab, performance training, and recovery under one roof. Clear next steps, no guessing.</p>
       </div>
-      <a class="svc-link" href="services.html" data-track="services_view_all">View all services →</a>
+      <a class="svc-link" href="/services" data-track="services_view_all">View all services →</a>
     </div>
 
     <div class="svc-grid" aria-label="Featured services">
-      <a class="svc-card" href="services.html" data-track="svc_pt_learn">
+      <a class="svc-card" href="/services" data-track="svc_pt_learn">
         <img src="img/IMG_8081.jpg" alt="" aria-hidden="true" loading="lazy">
         <div class="svc-content">
           <div class="svc-badge">RECOVERY &amp; REHABILITATION</div>
@@ -313,7 +324,7 @@
         </div>
       </a>
 
-      <a class="svc-card" href="assessment.html" data-track="svc_assess_learn">
+      <a class="svc-card" href="/assessment" data-track="svc_assess_learn">
         <img src="img/7_22EPC-21.jpg" alt="" aria-hidden="true" loading="lazy">
         <div class="svc-content">
           <div class="svc-badge">PERFORMANCE OPTIMIZATION</div>
@@ -325,7 +336,7 @@
         </div>
       </a>
 
-      <a class="svc-card" href="training.html" data-track="svc_training_learn">
+      <a class="svc-card" href="/training" data-track="svc_training_learn">
         <img src="img/IMG_8082.jpg" alt="" aria-hidden="true" loading="lazy">
         <div class="svc-content">
           <div class="svc-badge">TRAINING</div>
@@ -620,7 +631,7 @@
       <h2 class="mission-title">We didn’t start this clinic to play it safe. We started it to raise the bar.</h2>
       <p class="mission-lede">EPC exists to bring clinical rigor into a performance environment. Every plan is built to be specific, measurable, and aligned with how you actually train, compete, and recover.</p>
       <div class="mission-actions">
-        <a class="mission-cta" href="booking.html" data-track="mission_experience">Experience the Difference</a>
+        <a class="mission-cta" href="/booking" data-track="mission_experience">Experience the Difference</a>
       </div>
     </div>
   </div>
@@ -710,7 +721,7 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="services.html">Personal Training and Group Training</a></li>
+            <li><a class="acc-link" href="/services">Personal Training and Group Training</a></li>
             <li><a class="acc-link" href="assessment.html">Comprehensive Assessment (Pedics, Proteus, Movement Screening)</a></li>
             <li><a class="acc-link" href="services.html">Cold Plunge and Sauna Sessions</a></li>
             <li><a class="acc-link" href="services.html">Red Light and PEMF Therapy</a></li>
@@ -902,7 +913,7 @@
         <a class="epc-cta-btn" href="https://www.google.com/maps/place/Elite+Performance+Clinic/" target="_blank" rel="noopener">Location</a>
         <a class="epc-cta-btn" href="mailto:info@epcla.com">Email</a>
       </div>
-      <a class="epc-cta-btn epc-cta-btn--book" href="booking.html">Book Now</a>
+      <a class="epc-cta-btn epc-cta-btn--book" href="/booking">Book Now</a>
     </section>
   
 <!-- ===== ABOUT ===== -->
@@ -1480,7 +1491,7 @@
         if (submitButton) submitButton.textContent = 'Submitted';
 
         if (proceed === 'book_now') {
-          window.location.href = 'booking.html';
+          window.location.href = '/booking';
         } else if (proceed === 'ill_call') {
           const callout = document.getElementById('result-callout');
           if (callout) callout.hidden = false;
