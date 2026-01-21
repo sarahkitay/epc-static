@@ -602,23 +602,42 @@ async function handleSessionUsed() {
 
 // View client profile
 function viewClient(clientId) {
-  window.location.href = `${getPath('client.html')}?id=${clientId}`;
+  const pathname = window.location.pathname;
+  if (pathname.includes('/clients/')) {
+    const clientsIndex = pathname.indexOf('/clients/');
+    const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+    window.location.href = basePath + `client.html?id=${clientId}`;
+  } else {
+    window.location.href = `./client.html?id=${clientId}`;
+  }
 }
 
 // Add quick note (placeholder for future implementation)
 function addQuickNote(clientId) {
   const note = prompt('Enter a quick note:');
-  if (note) {
-    saveProgressNote(clientId, note)
-      .then(() => {
-        alert('Note added successfully!');
-      })
-      .catch(error => {
-        console.error('Error adding note:', error);
-        alert('Error adding note. Please try again.');
-      });
+  if (note && note.trim()) {
+    // Note: saveProgressNote function needs to be imported from db.js
+    if (typeof saveProgressNote === 'function') {
+      saveProgressNote(clientId, note)
+        .then(() => {
+          alert('Note added successfully!');
+          loadClients();
+        })
+        .catch(error => {
+          console.error('Error adding note:', error);
+          alert('Error adding note. Please try again.');
+        });
+    } else {
+      console.error('saveProgressNote function not available');
+      alert('Note saving not available. Please use the client profile page.');
+    }
   }
 }
+
+// Make functions available globally for onclick handlers
+window.viewClient = viewClient;
+window.addQuickNote = addQuickNote;
+window.handleClientSessionUsed = handleClientSessionUsed;
 
 // Utility functions
 function escapeHtml(text) {
