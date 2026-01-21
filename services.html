@@ -269,9 +269,23 @@
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: clamp(40px, 6vw, 80px);
-          align-items: start;
+          align-items: stretch; /* Make both columns same height */
           max-width: 1200px;
           margin: 0 auto;
+        }
+        
+        /* Ensure accordion container matches image height */
+        .category-accordion {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          min-height: 480px; /* Match category-media min-height */
+        }
+        
+        @media (max-width: 1024px) {
+          .category-accordion {
+            min-height: 320px; /* Match mobile category-media min-height */
+          }
         }
 
         @media (max-width: 1024px) {
@@ -795,7 +809,6 @@
             <span>Services</span>
           </nav>
           <h1 class="epc-page-title">Services</h1>
-          <p class="epc-page-subtitle">Recovery • Performance • Wellness</p>
           
           <div class="services-search">
             <input 
@@ -818,6 +831,11 @@
             <button class="chip" data-filter="recovery">Recovery</button>
             <button class="chip" data-filter="performance">Performance</button>
             <button class="chip" data-filter="wellness">Wellness</button>
+            <button class="chip" data-filter="back-pain">Back Pain</button>
+            <button class="chip" data-filter="sport-specific">Sport Specific</button>
+            <button class="chip" data-filter="biohacking">Biohacking</button>
+            <button class="chip" data-filter="injury-prevention">Injury Prevention</button>
+            <button class="chip" data-filter="rehabilitation">Rehabilitation</button>
           </div>
         </div>
 
@@ -832,7 +850,7 @@
             <div>
               <div class="category-accordion">
                 
-                <div class="acc-item" data-keywords="physical therapy pt rehab pain injury">
+                <div class="acc-item" data-keywords="physical therapy pt rehab pain injury back pain">
                   <button class="acc-trigger" aria-expanded="false">
                     Comprehensive Physical Therapy <span class="chev"></span>
                   </button>
@@ -857,7 +875,7 @@
                   </div>
                 </div>
 
-                <div class="acc-item" data-keywords="massage therapy bodywork recovery">
+                <div class="acc-item" data-keywords="massage therapy bodywork recovery back pain">
                   <button class="acc-trigger" aria-expanded="false">
                     Massage Therapy <span class="chev"></span>
                   </button>
@@ -923,7 +941,7 @@
             <div>
               <div class="category-accordion">
                 
-                <div class="acc-item" data-keywords="personal training strength conditioning">
+                <div class="acc-item" data-keywords="personal training strength conditioning sport specific training">
                   <button class="acc-trigger" aria-expanded="false">
                     Personal Training <span class="chev"></span>
                   </button>
@@ -935,7 +953,7 @@
                   </div>
                 </div>
 
-                <div class="acc-item" data-keywords="group training fitness class">
+                <div class="acc-item" data-keywords="group training fitness class sport specific training">
                   <button class="acc-trigger" aria-expanded="false">
                     Group Training <span class="chev"></span>
                   </button>
@@ -972,7 +990,7 @@
                   </div>
                 </div>
 
-                <div class="acc-item" data-keywords="football academy youth training">
+                <div class="acc-item" data-keywords="football academy youth training sport specific">
                   <button class="acc-trigger" aria-expanded="false">
                     Football Academy <span class="chev"></span>
                   </button>
@@ -1047,7 +1065,7 @@
                   </div>
                 </div>
 
-                <div class="acc-item" data-keywords="peptide therapy physician directed">
+                <div class="acc-item" data-keywords="peptide therapy physician directed biohacking peptides">
                   <button class="acc-trigger" aria-expanded="false">
                     Peptide Therapies: Physician-Directed <span class="chev"></span>
                   </button>
@@ -1081,7 +1099,7 @@
                   </div>
                 </div>
 
-                <div class="acc-item" data-keywords="emsculpt muscle building fat loss body sculpting">
+                <div class="acc-item" data-keywords="emsculpt muscle building fat loss body sculpting biohacking">
                   <button class="acc-trigger" aria-expanded="false">
                     EMSculpt Treatment <span class="chev"></span>
                   </button>
@@ -1187,6 +1205,15 @@
     // ========================================
     let currentFilter = 'all';
     
+    // Filter mapping for keyword-based filters
+    const filterKeywords = {
+      'back-pain': ['back pain', 'pt', 'physical therapy', 'massage'],
+      'sport-specific': ['sport specific', 'football academy', 'group training', 'training', 'personal training'],
+      'biohacking': ['biohacking', 'emsculpt', 'peptides', 'peptide'],
+      'injury-prevention': ['injury', 'prevention', 'assessment', 'screening', 'movement'],
+      'rehabilitation': ['rehab', 'rehabilitation', 'surgery', 'post-operative', 'pre-operative']
+    };
+    
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
         chips.forEach(c => c.classList.remove('active'));
@@ -1199,14 +1226,56 @@
           searchInput.value = '';
         }
         
-        // Apply category filter
-        categories.forEach(cat => {
-          if (currentFilter === 'all') {
+        // Apply filter logic
+        if (currentFilter === 'all') {
+          // Show all categories and items
+          categories.forEach(cat => {
             cat.style.display = '';
-          } else {
+            const items = cat.querySelectorAll('.acc-item');
+            items.forEach(item => item.style.display = '');
+          });
+        } else if (['recovery', 'performance', 'wellness'].includes(currentFilter)) {
+          // Category-based filter (existing logic)
+          categories.forEach(cat => {
             cat.style.display = cat.dataset.category === currentFilter ? '' : 'none';
+            if (cat.style.display !== 'none') {
+              const items = cat.querySelectorAll('.acc-item');
+              items.forEach(item => item.style.display = '');
+            }
+          });
+        } else {
+          // Keyword-based filter (new logic)
+          const keywords = filterKeywords[currentFilter] || [];
+          let hasVisibleItems = false;
+          
+          categories.forEach(cat => {
+            const items = cat.querySelectorAll('.acc-item');
+            let categoryHasVisible = false;
+            
+            items.forEach(item => {
+              const itemKeywords = item.dataset.keywords.toLowerCase();
+              const matches = keywords.some(keyword => itemKeywords.includes(keyword.toLowerCase()));
+              
+              if (matches) {
+                item.style.display = '';
+                categoryHasVisible = true;
+                hasVisibleItems = true;
+              } else {
+                item.style.display = 'none';
+              }
+            });
+            
+            // Show category if it has visible items, hide otherwise
+            cat.style.display = categoryHasVisible ? '' : 'none';
+          });
+          
+          // Show no results if nothing matches
+          if (!hasVisibleItems && noResults) {
+            noResults.classList.add('show');
+          } else if (noResults) {
+            noResults.classList.remove('show');
           }
-        });
+        }
         
         // Show/hide dividers based on filter
         const dividers = root.querySelectorAll('.category-divider');
@@ -1214,16 +1283,8 @@
           divider.style.display = currentFilter === 'all' ? '' : 'none';
         });
         
-        // Reset all accordion items to be visible when filtering
-        categories.forEach(category => {
-          if (category.style.display !== 'none') {
-            const items = category.querySelectorAll('.acc-item');
-            items.forEach(item => item.style.display = '');
-          }
-        });
-        
-        // Hide no results message
-        if (noResults) {
+        // Hide no results message for standard filters
+        if (['all', 'recovery', 'performance', 'wellness'].includes(currentFilter) && noResults) {
           noResults.classList.remove('show');
         }
       });
@@ -1237,7 +1298,20 @@
       
       categories.forEach(category => {
         // Respect category filter
-        const shouldShowCategory = currentFilter === 'all' || category.dataset.category === currentFilter;
+        let shouldShowCategory = false;
+        if (currentFilter === 'all') {
+          shouldShowCategory = true;
+        } else if (['recovery', 'performance', 'wellness'].includes(currentFilter)) {
+          shouldShowCategory = category.dataset.category === currentFilter;
+        } else if (filterKeywords[currentFilter]) {
+          // For keyword-based filters, check if category has matching items
+          const keywords = filterKeywords[currentFilter];
+          const items = category.querySelectorAll('.acc-item');
+          shouldShowCategory = Array.from(items).some(item => {
+            const itemKeywords = item.dataset.keywords.toLowerCase();
+            return keywords.some(keyword => itemKeywords.includes(keyword.toLowerCase()));
+          });
+        }
         
         if (!shouldShowCategory) {
           category.style.display = 'none';
