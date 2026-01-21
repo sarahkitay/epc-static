@@ -5,7 +5,7 @@ A password-protected internal client management system for Elite Performance Cli
 ## Access
 
 - **URL:** `/clients/` or `/clients/index.html`
-- **Password:** `15225`
+- **Password:** `15125`
 
 ## Features
 

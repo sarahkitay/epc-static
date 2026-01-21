@@ -1,6 +1,6 @@
 // EPC Client Management System - Main App Logic
 
-const PASSWORD = '15225';
+const PASSWORD = '15125';
 const SESSION_KEY = 'epc_session';
 
 // Check if user is logged in
@@ -24,24 +24,45 @@ function initLogin() {
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const passwordInput = document.getElementById('password');
-    const password = passwordInput.value;
+    handleLogin();
+  });
 
-    if (password === PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, 'authenticated');
-      window.location.href = 'dashboard.html';
-    } else {
+  // Also handle button click for mobile compatibility
+  const loginBtn = loginForm.querySelector('button[type="submit"]');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleLogin();
+    });
+  }
+}
+
+function handleLogin() {
+  const passwordInput = document.getElementById('password');
+  const errorMessage = document.getElementById('errorMessage');
+  
+  if (!passwordInput) return;
+  
+  const password = passwordInput.value.trim();
+
+  if (password === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, 'authenticated');
+    window.location.href = 'dashboard.html';
+  } else {
+    if (errorMessage) {
       errorMessage.textContent = 'Incorrect password. Please try again.';
       errorMessage.style.display = 'block';
-      passwordInput.value = '';
-      passwordInput.focus();
-      
-      // Clear error after 3 seconds
-      setTimeout(() => {
-        errorMessage.style.display = 'none';
-      }, 3000);
     }
-  });
+    passwordInput.value = '';
+    passwordInput.focus();
+    
+    // Clear error after 3 seconds
+    setTimeout(() => {
+      if (errorMessage) {
+        errorMessage.style.display = 'none';
+      }
+    }, 3000);
+  }
 }
 
 // Logout functionality

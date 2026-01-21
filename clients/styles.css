@@ -35,6 +35,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
+  /* Ensure mobile browsers render correctly */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 /* Film Grain Overlay */
@@ -140,6 +145,11 @@ body {
   font-size: 15px;
   font-family: inherit;
   transition: all 0.3s ease;
+  /* Prevent zoom on iOS */
+  font-size: 16px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .form-input:focus,
@@ -1131,8 +1141,19 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     font-size: 14px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  html {
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .dashboard-main,
