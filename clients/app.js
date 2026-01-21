@@ -548,7 +548,7 @@ async function initDashboard() {
         console.log('Client added successfully with ID:', clientId);
         addClientModal.style.display = 'none';
         addClientForm.reset();
-        await loadClients();
+        await window.loadClients();
         console.log('Clients reloaded');
       } catch (error) {
         console.error('Error adding client:', error);
@@ -573,7 +573,20 @@ async function initDashboard() {
   }
 
   // Initial load
-  await window.loadClients();
+  if (typeof window.loadClients === 'function') {
+    await window.loadClients();
+  } else {
+    // Fallback if loadClients wasn't set yet
+    try {
+      console.log('Loading clients from database...');
+      allClients = await getAllClients();
+      console.log('Clients loaded:', allClients.length);
+      renderClients(allClients);
+    } catch (error) {
+      console.error('Error loading clients:', error);
+      alert('Error loading clients. Please refresh the page.');
+    }
+  }
   console.log('=== DASHBOARD INITIALIZATION COMPLETE ===');
 }
 
