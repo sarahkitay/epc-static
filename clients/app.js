@@ -273,6 +273,14 @@ async function initDashboard() {
 
   // Initialize database
   await initDB();
+  
+  // Session tracking button
+  const useSessionBtn = document.getElementById('useSessionBtn');
+  if (useSessionBtn) {
+    useSessionBtn.addEventListener('click', async () => {
+      await handleSessionUsed();
+    });
+  }
 
   // Load clients
   async function loadClients() {
@@ -293,11 +301,26 @@ async function initDashboard() {
     }
 
     emptyState.style.display = 'none';
-    clientsGrid.innerHTML = clients.map(client => `
+    clientsGrid.innerHTML = clients.map(client => {
+      // Calculate package status
+      const totalSessions = client.packageTotalSessions || null;
+      const usedSessions = client.packageUsedSessions || 0;
+      const remainingSessions = client.packageRemainingSessions !== null ? client.packageRemainingSessions : (totalSessions ? totalSessions - usedSessions : null);
+      
+      let packageIndicator = '';
+      if (remainingSessions !== null) {
+        if (remainingSessions === 0) {
+          packageIndicator = '<span class="package-indicator status-out" title="Out of sessions">❌</span>';
+        } else if (remainingSessions <= 3) {
+          packageIndicator = '<span class="package-indicator status-low" title="Low sessions">⚠️</span>';
+        }
+      }
+      
+      return `
       <div class="client-card" data-client-id="${client.id}">
         <div class="client-card-header">
           <div>
-            <h3 class="client-card-name">${escapeHtml(client.name)}</h3>
+            <h3 class="client-card-name">${escapeHtml(client.name)} ${packageIndicator}</h3>
             <span class="client-card-category">${client.category === 'shared' ? 'Shared' : 'Personal'}</span>
           </div>
         </div>
@@ -320,13 +343,19 @@ async function initDashboard() {
               <span>Last Program: ${formatDate(client.lastProgramDate)}</span>
             </div>
           ` : ''}
+          ${remainingSessions !== null ? `
+            <div class="client-card-info-item">
+              <span>Sessions: ${remainingSessions} remaining</span>
+            </div>
+          ` : ''}
         </div>
         <div class="client-card-actions">
           <button class="client-card-btn" onclick="viewClient(${client.id})">View Profile</button>
           <button class="client-card-btn" onclick="addQuickNote(${client.id})">Quick Note</button>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     // Add click handlers to cards
     document.querySelectorAll('.client-card').forEach(card => {
@@ -441,7 +470,13 @@ async function initDashboard() {
         parentPasscode: parentPasscode, // Auto-generated if not provided
         emergencyContact: document.getElementById('emergencyContact')?.value.trim() || null,
         goals: document.getElementById('clientGoals')?.value.trim() || null,
-        medicalHistory: document.getElementById('medicalHistory')?.value.trim() || null
+        medicalHistory: document.getElementById('medicalHistory')?.value.trim() || null,
+        // Package/Sessions tracking
+        packageName: null,
+        packageTotalSessions: null,
+        packageRemainingSessions: null,
+        packageUsedSessions: 0,
+        sessionHistory: []
       };
       
       console.log('Client data prepared:', clientData);
@@ -490,6 +525,75 @@ async function initDashboard() {
 
   // Initial load
   await loadClients();
+}
+
+// Handle session used today
+async function handleSessionUsed() {
+  try {
+    const allClients = await getAllClients();
+    
+    // Show modal to select client
+    const clientList = allClients
+      .filter(c => c.packageTotalSessions !== null && (c.packageRemainingSessions === null || c.packageRemainingSessions > 0))
+      .map(c => {
+        const remaining = c.packageRemainingSessions !== null ? c.packageRemainingSessions : (c.packageTotalSessions - (c.packageUsedSessions || 0));
+        return { id: c.id, name: c.name, remaining };
+      });
+    
+    if (clientList.length === 0) {
+      alert('No clients with available sessions found.');
+      return;
+    }
+    
+    // Simple prompt for now - could be enhanced with a modal
+    const clientNames = clientList.map((c, i) => `${i + 1}. ${c.name} (${c.remaining} remaining)`).join('\n');
+    const selection = prompt(`Select a client to mark session as used:\n\n${clientNames}\n\nEnter number (1-${clientList.length}):`);
+    
+    const selectedIndex = parseInt(selection) - 1;
+    if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= clientList.length) {
+      return;
+    }
+    
+    const selectedClient = clientList[selectedIndex];
+    const client = allClients.find(c => c.id === selectedClient.id);
+    
+    if (!client) {
+      alert('Client not found.');
+      return;
+    }
+    
+    const usedSessions = (client.packageUsedSessions || 0) + 1;
+    const remainingSessions = client.packageTotalSessions - usedSessions;
+    
+    // Update session history
+    const sessionHistory = client.sessionHistory || [];
+    sessionHistory.push({
+      date: new Date().toISOString(),
+      usedBy: 'Staff'
+    });
+    
+    await updateClient(client.id, {
+      packageUsedSessions: usedSessions,
+      packageRemainingSessions: remainingSessions,
+      sessionHistory: sessionHistory
+    });
+    
+    // Show notification
+    let message = `Session used for ${client.name}. ${remainingSessions} sessions remaining.`;
+    if (remainingSessions === 0) {
+      message += '\n\n⚠️ WARNING: Client is now OUT of sessions!';
+    } else if (remainingSessions <= 3) {
+      message += '\n\n⚠️ WARNING: Client is running LOW on sessions!';
+    }
+    
+    alert(message);
+    
+    // Reload clients to update display
+    await loadClients();
+  } catch (error) {
+    console.error('Error marking session as used:', error);
+    alert('Error marking session as used. Please try again.');
+  }
 }
 
 // View client profile

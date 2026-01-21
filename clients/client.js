@@ -88,13 +88,63 @@ async function initClientPage() {
   }
   
   // Initialize all sections
-  initAssessment();
-  initProgramBuilder();
-  initPhotos();
-  initNotes();
-  initPTNotes();
-  initClientActions();
-  initClientDataExport();
+  console.log('Initializing client page sections...');
+  try {
+    initAssessment();
+    console.log('Assessment initialized');
+  } catch (e) {
+    console.error('Error initializing assessment:', e);
+  }
+  
+  try {
+    initProgramBuilder();
+    console.log('Program builder initialized');
+  } catch (e) {
+    console.error('Error initializing program builder:', e);
+  }
+  
+  try {
+    initPhotos();
+    console.log('Photos initialized');
+  } catch (e) {
+    console.error('Error initializing photos:', e);
+  }
+  
+  try {
+    initNotes();
+    console.log('Notes initialized');
+  } catch (e) {
+    console.error('Error initializing notes:', e);
+  }
+  
+  try {
+    initPTNotes();
+    console.log('PT notes initialized');
+  } catch (e) {
+    console.error('Error initializing PT notes:', e);
+  }
+  
+  try {
+    initClientActions();
+    console.log('Client actions initialized');
+  } catch (e) {
+    console.error('Error initializing client actions:', e);
+  }
+  
+  try {
+    initClientDataExport();
+    console.log('Client data export initialized');
+  } catch (e) {
+    console.error('Error initializing client data export:', e);
+  }
+  
+  // Initialize package/sessions tracking
+  try {
+    initPackageTracking();
+    console.log('Package tracking initialized');
+  } catch (e) {
+    console.error('Error initializing package tracking:', e);
+  }
 
   // Load exercise library
   exerciseLibrary = [...DEFAULT_EXERCISES];
@@ -103,6 +153,10 @@ async function initClientPage() {
 
 // Load client data
 async function loadClientData() {
+  // Load package info after client data is loaded
+  setTimeout(() => {
+    loadPackageInfo();
+  }, 100);
   try {
     currentClient = await getClient(currentClientId);
     if (!currentClient) {
@@ -1708,6 +1762,147 @@ function formatDate(dateString) {
     hour: '2-digit',
     minute: '2-digit'
   });
+}
+
+// ===== PACKAGE/SESSIONS TRACKING =====
+function initPackageTracking() {
+  const editPackageBtn = document.getElementById('editPackageBtn');
+  const packageInfoSection = document.getElementById('packageInfoSection');
+  
+  // Load and display package info
+  loadPackageInfo();
+  
+  if (editPackageBtn) {
+    editPackageBtn.addEventListener('click', () => {
+      showEditPackageModal();
+    });
+  }
+}
+
+function loadPackageInfo() {
+  if (!currentClient) return;
+  
+  const packageInfoSection = document.getElementById('packageInfoSection');
+  const packageNameEl = document.getElementById('packageName');
+  const packageTotalSessionsEl = document.getElementById('packageTotalSessions');
+  const packageRemainingSessionsEl = document.getElementById('packageRemainingSessions');
+  const packageUsedSessionsEl = document.getElementById('packageUsedSessions');
+  const packageStatusBadge = document.getElementById('packageStatusBadge');
+  
+  if (!packageInfoSection) return;
+  
+  const packageName = currentClient.packageName || null;
+  const totalSessions = currentClient.packageTotalSessions || null;
+  const usedSessions = currentClient.packageUsedSessions || 0;
+  const remainingSessions = currentClient.packageRemainingSessions !== null ? currentClient.packageRemainingSessions : (totalSessions ? totalSessions - usedSessions : null);
+  
+  if (packageName || totalSessions !== null) {
+    packageInfoSection.style.display = 'block';
+    
+    if (packageNameEl) packageNameEl.textContent = packageName || 'Not Set';
+    if (packageTotalSessionsEl) packageTotalSessionsEl.textContent = totalSessions !== null ? totalSessions : '--';
+    if (packageRemainingSessionsEl) packageRemainingSessionsEl.textContent = remainingSessions !== null ? remainingSessions : '--';
+    if (packageUsedSessionsEl) packageUsedSessionsEl.textContent = usedSessions;
+    
+    // Update status badge
+    if (packageStatusBadge && remainingSessions !== null) {
+      if (remainingSessions === 0) {
+        packageStatusBadge.textContent = '❌ OUT';
+        packageStatusBadge.className = 'package-status-badge status-out';
+      } else if (remainingSessions <= 3) {
+        packageStatusBadge.textContent = '⚠️ LOW';
+        packageStatusBadge.className = 'package-status-badge status-low';
+      } else {
+        packageStatusBadge.textContent = '✓ OK';
+        packageStatusBadge.className = 'package-status-badge status-ok';
+      }
+    }
+  } else {
+    packageInfoSection.style.display = 'none';
+  }
+}
+
+function showEditPackageModal() {
+  // Create or show edit package modal
+  let modal = document.getElementById('editPackageModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'editPackageModal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Edit Package & Sessions</h3>
+          <button class="modal-close" id="closeEditPackageModal">&times;</button>
+        </div>
+        <form id="editPackageForm" class="modal-form">
+          <div class="form-group">
+            <label for="editPackageName" class="form-label">Package Name</label>
+            <input type="text" id="editPackageName" class="form-input" placeholder="e.g., 10 Session Package" />
+          </div>
+          <div class="form-group">
+            <label for="editPackageTotalSessions" class="form-label">Total Sessions</label>
+            <input type="number" id="editPackageTotalSessions" class="form-input" min="0" placeholder="Enter total sessions" />
+          </div>
+          <div class="form-group">
+            <label for="editPackageUsedSessions" class="form-label">Sessions Used</label>
+            <input type="number" id="editPackageUsedSessions" class="form-input" min="0" placeholder="Enter sessions used" />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancelEditPackageBtn">Cancel</button>
+            <button type="submit" class="btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    document.getElementById('closeEditPackageModal').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    document.getElementById('cancelEditPackageBtn').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    document.getElementById('editPackageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await savePackageInfo();
+      modal.style.display = 'none';
+    });
+  }
+  
+  // Populate form
+  if (currentClient) {
+    document.getElementById('editPackageName').value = currentClient.packageName || '';
+    document.getElementById('editPackageTotalSessions').value = currentClient.packageTotalSessions || '';
+    document.getElementById('editPackageUsedSessions').value = currentClient.packageUsedSessions || 0;
+  }
+  
+  modal.style.display = 'flex';
+}
+
+async function savePackageInfo() {
+  const packageName = document.getElementById('editPackageName').value.trim() || null;
+  const totalSessions = document.getElementById('editPackageTotalSessions').value ? parseInt(document.getElementById('editPackageTotalSessions').value) : null;
+  const usedSessions = document.getElementById('editPackageUsedSessions').value ? parseInt(document.getElementById('editPackageUsedSessions').value) : 0;
+  const remainingSessions = totalSessions !== null ? totalSessions - usedSessions : null;
+  
+  try {
+    await updateClient(currentClientId, {
+      packageName,
+      packageTotalSessions: totalSessions,
+      packageRemainingSessions: remainingSessions,
+      packageUsedSessions: usedSessions
+    });
+    
+    await loadClientData();
+    loadPackageInfo();
+    alert('Package information updated successfully!');
+  } catch (error) {
+    console.error('Error saving package info:', error);
+    alert('Error saving package information. Please try again.');
+  }
 }
 
 // Make page read-only for parents

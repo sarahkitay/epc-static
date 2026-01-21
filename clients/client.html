@@ -51,6 +51,35 @@
       </div>
     </header>
 
+    <!-- Package/Sessions Info -->
+    <section class="package-info-section" id="packageInfoSection" style="display: none;">
+      <div class="package-card">
+        <div class="package-header">
+          <h3>Package & Sessions</h3>
+          <span class="package-status-badge" id="packageStatusBadge"></span>
+        </div>
+        <div class="package-details">
+          <div class="package-item">
+            <span class="package-label">Package:</span>
+            <span class="package-value" id="packageName">Not Set</span>
+          </div>
+          <div class="package-item">
+            <span class="package-label">Total Sessions:</span>
+            <span class="package-value" id="packageTotalSessions">--</span>
+          </div>
+          <div class="package-item">
+            <span class="package-label">Sessions Remaining:</span>
+            <span class="package-value" id="packageRemainingSessions">--</span>
+          </div>
+          <div class="package-item">
+            <span class="package-label">Sessions Used:</span>
+            <span class="package-value" id="packageUsedSessions">--</span>
+          </div>
+        </div>
+        <button class="btn-secondary" id="editPackageBtn" style="margin-top: 16px;">Edit Package</button>
+      </div>
+    </section>
+
     <!-- Tabs Navigation -->
     <nav class="tabs-nav">
       <button class="tab-btn active" data-tab="assessment">

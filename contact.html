@@ -274,21 +274,24 @@
     .epc-contact{
       background:var(--bg);
       color:var(--ink);
-      padding:120px 20px 80px;
+      padding:0;
       min-height:calc(100vh - 200px);
     }
 
     .epc-contact-inner{
-      max-width:1200px;
+      max-width:1400px;
       margin:0 auto;
     }
-
-    /* Title */
-    .epc-contact-header{
-      text-align:center;
-      margin-bottom:60px;
-      padding-bottom:40px;
-      border-bottom:1px solid var(--gold-dim);
+    
+    /* Contact page header uses unified header */
+    .epc-contact .epc-page-header {
+      padding-top: 120px;
+    }
+    
+    @media (max-width: 768px) {
+      .epc-contact .epc-page-header {
+        padding-top: 100px;
+      }
     }
 
     .epc-title{
