@@ -187,7 +187,8 @@ function initLogout() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       sessionStorage.removeItem(SESSION_KEY);
-      window.location.href = 'index.html';
+      sessionStorage.removeItem('epc_parent_session'); // Clear parent session too
+      window.location.href = getPath('index.html');
     });
   }
 }
@@ -351,12 +352,20 @@ async function initDashboard() {
     addClientForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      // Generate unique parent code if not provided
+      let parentPasscode = document.getElementById('parentPasscode').value.trim();
+      if (!parentPasscode) {
+        // Generate a 6-digit code
+        parentPasscode = Math.floor(100000 + Math.random() * 900000).toString();
+      }
+      
       const clientData = {
         name: document.getElementById('clientName').value.trim(),
         age: document.getElementById('clientAge').value ? parseInt(document.getElementById('clientAge').value) : null,
         category: document.getElementById('clientCategory').value,
         primaryTrainer: document.getElementById('primaryTrainer').value.trim() || null,
         parentContact: document.getElementById('parentContact').value.trim() || null,
+        parentPasscode: parentPasscode, // Auto-generated if not provided
         emergencyContact: document.getElementById('emergencyContact').value.trim() || null,
         goals: document.getElementById('clientGoals').value.trim() || null,
         medicalHistory: document.getElementById('medicalHistory').value.trim() || null
