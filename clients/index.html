@@ -175,17 +175,24 @@
               const password = input.value.trim();
               if (password === '15125') {
                 sessionStorage.setItem('epc_session', 'authenticated');
-                // Determine correct path
+                // Determine correct path - ensure we stay in /clients/ directory
                 const pathname = window.location.pathname;
-                let dashboardPath = 'dashboard.html';
-                if (pathname.includes('/clients/') || pathname.endsWith('/clients')) {
-                  dashboardPath = 'dashboard.html';
-                } else if (pathname.endsWith('/') || pathname.endsWith('/clients/')) {
-                  dashboardPath = 'clients/dashboard.html';
+                let dashboardPath;
+                
+                if (pathname.includes('/clients/')) {
+                  // We're in /clients/ directory, get base path
+                  const clientsIndex = pathname.indexOf('/clients/');
+                  const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+                  dashboardPath = basePath + 'dashboard.html';
+                } else if (pathname.endsWith('/clients') || pathname.endsWith('/clients/')) {
+                  dashboardPath = pathname + (pathname.endsWith('/') ? '' : '/') + 'dashboard.html';
                 } else {
+                  // Fallback: assume we're in clients directory
                   const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
                   dashboardPath = basePath + 'dashboard.html';
                 }
+                
+                console.log('Redirecting to:', dashboardPath);
                 window.location.href = dashboardPath;
               } else {
                 const errorMsg = document.getElementById('errorMessage');

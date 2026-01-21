@@ -27,8 +27,15 @@ async function initClientPage() {
 
   if (!currentClientId) {
     alert('No client ID provided. Redirecting to dashboard.');
-    // Use relative path - should work from same directory
-    window.location.href = './dashboard.html';
+    // Ensure we stay in /clients/ directory
+    const pathname = window.location.pathname;
+    if (pathname.includes('/clients/')) {
+      const clientsIndex = pathname.indexOf('/clients/');
+      const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+      window.location.href = basePath + 'dashboard.html';
+    } else {
+      window.location.href = './dashboard.html';
+    }
     return;
   }
 
@@ -60,7 +67,15 @@ async function loadClientData() {
     currentClient = await getClient(currentClientId);
     if (!currentClient) {
       alert('Client not found. Redirecting to dashboard.');
-      window.location.href = './dashboard.html';
+      // Ensure we stay in /clients/ directory
+      const pathname = window.location.pathname;
+      if (pathname.includes('/clients/')) {
+        const clientsIndex = pathname.indexOf('/clients/');
+        const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+        window.location.href = basePath + 'dashboard.html';
+      } else {
+        window.location.href = './dashboard.html';
+      }
       return;
     }
 

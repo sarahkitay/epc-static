@@ -6,14 +6,20 @@ const SESSION_KEY = 'epc_session';
 // Helper function to get correct path for navigation
 function getPath(filename) {
   const pathname = window.location.pathname;
-  // If we're at root or in clients directory
-  if (pathname.endsWith('/') || pathname.endsWith('/clients/') || pathname.endsWith('/clients')) {
-    return `clients/${filename}`;
-  }
-  // If we're in clients directory with a file
+  
+  // If we're in the /clients/ directory (most common case)
   if (pathname.includes('/clients/')) {
-    return filename; // Same directory
+    // Extract the base path up to and including /clients/
+    const clientsIndex = pathname.indexOf('/clients/');
+    const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+    return basePath + filename;
   }
+  
+  // If pathname ends with /clients or /clients/
+  if (pathname.endsWith('/clients') || pathname.endsWith('/clients/')) {
+    return pathname + (pathname.endsWith('/') ? '' : '/') + filename;
+  }
+  
   // Fallback: try to determine from current path
   const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
   return basePath + filename;
