@@ -1976,36 +1976,44 @@ async function savePackageInfo() {
 
 // Make page read-only for parents
 function makePageReadOnly() {
+  // Hide "Back to Dashboard" link for parents
+  const backLink = document.getElementById('backToDashboardLink');
+  if (backLink) {
+    backLink.style.display = 'none';
+  }
+  
   // Hide edit buttons
   const editBtn = document.getElementById('editClientBtn');
   const moveBtn = document.getElementById('moveClientBtn');
   const downloadBtn = document.getElementById('downloadClientDataBtn');
+  const editPackageBtn = document.getElementById('editPackageBtn');
   
   if (editBtn) editBtn.style.display = 'none';
   if (moveBtn) moveBtn.style.display = 'none';
   if (downloadBtn) downloadBtn.style.display = 'none';
+  if (editPackageBtn) editPackageBtn.style.display = 'none';
   
-  // Disable all form inputs
+  // Disable all form inputs (but allow session used button)
   const inputs = document.querySelectorAll('input, textarea, select, button[type="submit"]');
   inputs.forEach(input => {
-    if (input.id !== 'logoutBtn' && !input.closest('.parent-allowed')) {
+    if (input.id !== 'logoutBtn' && !input.closest('.parent-allowed') && !input.classList.contains('btn-session-used')) {
       input.disabled = true;
       input.style.opacity = '0.6';
       input.style.cursor = 'not-allowed';
     }
   });
   
-  // Hide action buttons
+  // Hide action buttons (but allow session used button)
   const actionButtons = document.querySelectorAll('#addClientBtn, #saveAssessmentBtnBottom, #uploadPhotoBtn, #addNoteBtn, #addPtNoteBtn, #saveProgramBtn, #printProgramBtn, #clearProgramBtn');
   actionButtons.forEach(btn => {
     if (btn) btn.style.display = 'none';
   });
   
   // Add parent notice
-  const header = document.querySelector('.client-header-content');
+  const header = document.querySelector('.client-header');
   if (header) {
     const notice = document.createElement('div');
-    notice.style.cssText = 'background: rgba(201, 178, 127, 0.1); border: 1px solid var(--epc-gold); border-radius: 6px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--epc-gold);';
+    notice.style.cssText = 'background: rgba(201, 178, 127, 0.1); border: 1px solid var(--epc-gold); border-radius: 6px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--epc-gold); width: 100%;';
     notice.innerHTML = '👁️ <strong>Parent View:</strong> This is a read-only view. Contact your trainer to make changes.';
     header.appendChild(notice);
   }

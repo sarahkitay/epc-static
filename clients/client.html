@@ -21,7 +21,7 @@
   <nav class="main-nav">
     <div class="nav-content">
       <div class="nav-left">
-        <a href="dashboard.html" class="nav-back">&larr; Back to Dashboard</a>
+        <a href="dashboard.html" class="nav-back" id="backToDashboardLink">&larr; Back to Dashboard</a>
       </div>
       <div class="nav-right">
         <h2 class="client-name" id="clientNameHeader">Client Name</h2>
@@ -76,7 +76,11 @@
             <span class="package-value" id="packageUsedSessions">--</span>
           </div>
         </div>
-        <button class="btn-secondary" id="editPackageBtn" style="margin-top: 16px;">Edit Package</button>
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <button class="btn-secondary" id="editPackageBtn">Edit Package</button>
+          <button class="btn-primary" id="addPackageBtn">+ Add New Package</button>
+          <button class="btn-primary btn-session-used parent-allowed" id="sessionUsedBtn" style="background: var(--epc-gold); color: #0a0a0a;">✓ Session Used Today</button>
+        </div>
       </div>
     </section>
 

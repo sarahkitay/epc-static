@@ -164,8 +164,8 @@ async function handleLogin() {
         console.log('Current location:', window.location.href);
         console.log('Session stored:', sessionStorage.getItem(SESSION_KEY));
         
-        // Force immediate redirect
-        window.location.href = dashboardPath;
+        // Force immediate redirect - use replace to prevent back button issues
+        window.location.replace(dashboardPath);
         return true;
       } catch (e) {
         console.error('Error setting session:', e);
