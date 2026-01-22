@@ -1836,6 +1836,8 @@ function formatDate(dateString) {
 // ===== PACKAGE/SESSIONS TRACKING =====
 function initPackageTracking() {
   const editPackageBtn = document.getElementById('editPackageBtn');
+  const addPackageBtn = document.getElementById('addPackageBtn');
+  const sessionUsedBtn = document.getElementById('sessionUsedBtn');
   const packageInfoSection = document.getElementById('packageInfoSection');
   
   // Load and display package info
@@ -1845,6 +1847,194 @@ function initPackageTracking() {
     editPackageBtn.addEventListener('click', () => {
       showEditPackageModal();
     });
+  }
+  
+  if (addPackageBtn) {
+    addPackageBtn.addEventListener('click', () => {
+      showAddPackageModal();
+    });
+  }
+  
+  if (sessionUsedBtn) {
+    sessionUsedBtn.addEventListener('click', async () => {
+      await handleSessionUsedForClient();
+    });
+  }
+}
+
+// Handle session used for current client (works for both staff and parents)
+async function handleSessionUsedForClient() {
+  if (!currentClient || !currentClientId) {
+    alert('Client not found.');
+    return;
+  }
+  
+  if (currentClient.packageTotalSessions === null) {
+    alert('This client does not have a package set up. Please add a package first.');
+    return;
+  }
+  
+  const remainingSessions = currentClient.packageRemainingSessions !== null ? currentClient.packageRemainingSessions : (currentClient.packageTotalSessions - (currentClient.packageUsedSessions || 0));
+  
+  if (remainingSessions <= 0) {
+    if (!confirm(`${currentClient.name} has no sessions remaining. Are you sure you want to mark a session as used?`)) {
+      return;
+    }
+  }
+  
+  const usedSessions = (currentClient.packageUsedSessions || 0) + 1;
+  const newRemainingSessions = currentClient.packageTotalSessions - usedSessions;
+  
+  // Update session history
+  const sessionHistory = currentClient.sessionHistory || [];
+  const isParent = isParentSession();
+  sessionHistory.push({
+    date: new Date().toISOString(),
+    usedBy: isParent ? 'Parent' : 'Staff'
+  });
+  
+  try {
+    await updateClient(currentClientId, {
+      packageUsedSessions: usedSessions,
+      packageRemainingSessions: newRemainingSessions,
+      sessionHistory: sessionHistory
+    });
+    
+    // Show notification
+    let message = `Session used for ${currentClient.name}. ${newRemainingSessions} sessions remaining.`;
+    if (newRemainingSessions === 0) {
+      message += '\n\n⚠️ WARNING: Client is now OUT of sessions!';
+    } else if (newRemainingSessions <= 3) {
+      message += '\n\n⚠️ WARNING: Client is running LOW on sessions!';
+    }
+    
+    alert(message);
+    
+    // Reload client data
+    await loadClientData();
+  } catch (error) {
+    console.error('Error marking session as used:', error);
+    alert('Error marking session as used. Please try again.');
+  }
+}
+
+// Show add package modal (for when client pays for a new package)
+function showAddPackageModal() {
+  // Create or show add package modal
+  let modal = document.getElementById('addPackageModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'addPackageModal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Add New Package</h3>
+          <button class="modal-close" id="closeAddPackageModal">&times;</button>
+        </div>
+        <form id="addPackageForm" class="modal-form">
+          <div class="form-group">
+            <label for="addPackageName" class="form-label">Package Name</label>
+            <input type="text" id="addPackageName" class="form-input" placeholder="e.g., 10 Session Package" required />
+          </div>
+          <div class="form-group">
+            <label for="addPackageTotalSessions" class="form-label">Total Sessions</label>
+            <input type="number" id="addPackageTotalSessions" class="form-input" min="1" placeholder="Enter total sessions" required />
+          </div>
+          <div class="form-group">
+            <label for="addPackageDate" class="form-label">Purchase Date</label>
+            <input type="date" id="addPackageDate" class="form-input" value="${new Date().toISOString().split('T')[0]}" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancelAddPackage">Cancel</button>
+            <button type="submit" class="btn-primary">Add Package</button>
+          </div>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Close handlers
+    document.getElementById('closeAddPackageModal').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.getElementById('cancelAddPackage').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    // Form submit handler
+    document.getElementById('addPackageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await handleAddPackage();
+    });
+  }
+  
+  // Reset form
+  document.getElementById('addPackageName').value = '';
+  document.getElementById('addPackageTotalSessions').value = '';
+  document.getElementById('addPackageDate').value = new Date().toISOString().split('T')[0];
+  
+  modal.style.display = 'flex';
+}
+
+async function handleAddPackage() {
+  const packageName = document.getElementById('addPackageName').value.trim();
+  const totalSessions = parseInt(document.getElementById('addPackageTotalSessions').value);
+  const purchaseDate = document.getElementById('addPackageDate').value;
+  
+  if (!packageName || !totalSessions || totalSessions < 1) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+  
+  try {
+    // Get current client data
+    const client = await getClient(currentClientId);
+    if (!client) {
+      alert('Client not found.');
+      return;
+    }
+    
+    // If client already has a package, add to existing sessions
+    const currentTotal = client.packageTotalSessions || 0;
+    const currentUsed = client.packageUsedSessions || 0;
+    const currentRemaining = client.packageRemainingSessions !== null ? client.packageRemainingSessions : (currentTotal - currentUsed);
+    
+    // Add new package sessions to existing
+    const newTotalSessions = currentTotal + totalSessions;
+    const newRemainingSessions = currentRemaining + totalSessions;
+    
+    // Update session history
+    const sessionHistory = client.sessionHistory || [];
+    sessionHistory.push({
+      date: purchaseDate,
+      action: 'package_purchased',
+      packageName: packageName,
+      sessionsAdded: totalSessions,
+      usedBy: 'Staff'
+    });
+    
+    // Update client with new package info
+    await updateClient(currentClientId, {
+      packageName: packageName,
+      packageTotalSessions: newTotalSessions,
+      packageRemainingSessions: newRemainingSessions,
+      packageUsedSessions: currentUsed, // Keep existing used sessions
+      sessionHistory: sessionHistory
+    });
+    
+    // Close modal
+    document.getElementById('addPackageModal').style.display = 'none';
+    
+    // Reload client data
+    await loadClientData();
+    
+    alert(`Package "${packageName}" added successfully! ${totalSessions} sessions added. Total sessions: ${newTotalSessions}, Remaining: ${newRemainingSessions}`);
+  } catch (error) {
+    console.error('Error adding package:', error);
+    alert('Error adding package. Please try again.');
   }
 }
 
