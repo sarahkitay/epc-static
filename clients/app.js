@@ -54,8 +54,9 @@ function checkAuth() {
   if (!session && !parentSession) {
     console.log('No session found, redirecting to login...');
     const loginPath = getPath('index.html');
-    console.log('Redirecting to:', loginPath);
-    window.location.href = loginPath;
+    const fullLoginUrl = window.location.origin + loginPath;
+    console.log('Redirecting to:', fullLoginUrl);
+    window.location.replace(fullLoginUrl);
     return;
   }
   
@@ -238,8 +239,10 @@ async function handleLogin() {
         }));
         sessionStorage.removeItem(SESSION_KEY); // Clear staff session
         
-        // Redirect directly to child's client page
-        window.location.href = getPath(`client.html?id=${client.id}`);
+        // Redirect directly to child's client page - use full URL for mobile
+        const clientPath = getPath(`client.html?id=${client.id}`);
+        const fullClientUrl = window.location.origin + clientPath;
+        window.location.replace(fullClientUrl);
       } else {
         if (errorMessage) {
           errorMessage.textContent = 'No client found with that name and code. Please check and try again.';
@@ -273,7 +276,9 @@ function initLogout() {
     logoutBtn.addEventListener('click', () => {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem('epc_parent_session'); // Clear parent session too
-      window.location.href = getPath('index.html');
+      const loginPath = getPath('index.html');
+      const fullLoginUrl = window.location.origin + loginPath;
+      window.location.replace(fullLoginUrl);
     });
   }
 }
