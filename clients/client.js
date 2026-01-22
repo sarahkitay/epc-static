@@ -2055,9 +2055,14 @@ function loadPackageInfo() {
   const usedSessions = currentClient.packageUsedSessions || 0;
   const remainingSessions = currentClient.packageRemainingSessions !== null ? currentClient.packageRemainingSessions : (totalSessions ? totalSessions - usedSessions : null);
   
+  // Always show package section
+  packageInfoSection.style.display = 'block';
+  
+  const addPackageBtn = document.getElementById('addPackageBtn');
+  const editPackageBtn = document.getElementById('editPackageBtn');
+  const sessionUsedBtn = document.getElementById('sessionUsedBtn');
+  
   if (packageName || totalSessions !== null) {
-    packageInfoSection.style.display = 'block';
-    
     if (packageNameEl) packageNameEl.textContent = packageName || 'Not Set';
     if (packageTotalSessionsEl) packageTotalSessionsEl.textContent = totalSessions !== null ? totalSessions : '--';
     if (packageRemainingSessionsEl) packageRemainingSessionsEl.textContent = remainingSessions !== null ? remainingSessions : '--';
@@ -2076,8 +2081,26 @@ function loadPackageInfo() {
         packageStatusBadge.className = 'package-status-badge status-ok';
       }
     }
+    
+    // Show edit and session used buttons
+    if (editPackageBtn) editPackageBtn.style.display = 'inline-block';
+    if (sessionUsedBtn) sessionUsedBtn.style.display = 'inline-block';
+    if (addPackageBtn) addPackageBtn.style.display = 'inline-block';
   } else {
-    packageInfoSection.style.display = 'none';
+    // No package yet - show "Add Package" button
+    if (packageNameEl) packageNameEl.textContent = 'Not Set';
+    if (packageTotalSessionsEl) packageTotalSessionsEl.textContent = '--';
+    if (packageRemainingSessionsEl) packageRemainingSessionsEl.textContent = '--';
+    if (packageUsedSessionsEl) packageUsedSessionsEl.textContent = '0';
+    if (packageStatusBadge) {
+      packageStatusBadge.textContent = '';
+      packageStatusBadge.className = 'package-status-badge';
+    }
+    
+    // Hide edit and session used, show add package
+    if (editPackageBtn) editPackageBtn.style.display = 'none';
+    if (sessionUsedBtn) sessionUsedBtn.style.display = 'none';
+    if (addPackageBtn) addPackageBtn.style.display = 'inline-block';
   }
 }
 
