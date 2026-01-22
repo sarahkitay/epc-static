@@ -166,18 +166,16 @@ async function handleLogin() {
           throw new Error('Failed to store session');
         }
         
-        const dashboardPath = getPath('dashboard.html');
-        console.log('Login successful! Redirecting to:', dashboardPath);
-        console.log('Current location:', window.location.href);
-        console.log('Full redirect URL:', window.location.origin + dashboardPath);
-        
-        // Use full URL for mobile compatibility
+        // Always use absolute path /clients/dashboard.html for consistency
+        const dashboardPath = '/clients/dashboard.html';
         const fullUrl = window.location.origin + dashboardPath;
         
-        // Small delay to ensure session is saved, then redirect
-        setTimeout(() => {
-          window.location.replace(fullUrl);
-        }, 50);
+        console.log('Login successful! Redirecting to:', fullUrl);
+        console.log('Current location:', window.location.href);
+        console.log('Current pathname:', window.location.pathname);
+        
+        // Use replace to prevent back button issues
+        window.location.replace(fullUrl);
         
         return true;
       } catch (e) {
