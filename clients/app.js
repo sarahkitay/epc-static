@@ -10,29 +10,25 @@ function getPath(filename) {
   
   console.log('getPath called with filename:', filename, 'pathname:', pathname, 'origin:', origin);
   
-  // Mobile-friendly: Always use absolute path starting from /clients/
-  // Check if we're in the clients directory or should be
-  if (pathname.includes('/clients/') || pathname.includes('/clients') || pathname.includes('index.html')) {
-    // Extract the base path up to and including /clients/
-    let basePath = '/clients/';
-    
-    if (pathname.includes('/clients/')) {
-      const clientsIndex = pathname.indexOf('/clients/');
-      basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
-    } else if (pathname.endsWith('/clients')) {
-      basePath = pathname + '/';
-    } else if (pathname.includes('index.html') && pathname.includes('/clients')) {
-      basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-    }
-    
-    const fullPath = basePath + filename;
-    console.log('Returning path (clients/):', fullPath);
-    return fullPath;
+  // Always use /clients/ as the base path for consistency
+  // Handle different path scenarios:
+  let basePath = '/clients/';
+  
+  if (pathname.includes('/clients/')) {
+    // We're already in /clients/ directory
+    const clientsIndex = pathname.indexOf('/clients/');
+    basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+  } else if (pathname === '/clients' || pathname.endsWith('/clients')) {
+    // We're at /clients (without trailing slash)
+    basePath = '/clients/';
+  } else if (pathname.includes('index.html') && pathname.includes('/clients')) {
+    // We're on index.html in clients directory
+    const lastSlash = pathname.lastIndexOf('/');
+    basePath = pathname.substring(0, lastSlash + 1);
   }
   
-  // Fallback: use /clients/ as base
-  const fullPath = '/clients/' + filename;
-  console.log('Returning path (fallback to /clients/):', fullPath);
+  const fullPath = basePath + filename;
+  console.log('Returning path:', fullPath);
   return fullPath;
 }
 
@@ -41,7 +37,12 @@ function checkAuth() {
   const pathname = window.location.pathname;
   
   // Don't check auth on login page
-  if (pathname.includes('index.html') || pathname.endsWith('/clients/') || pathname.endsWith('/clients')) {
+  // Handle both /clients and /clients/ and /clients/index.html
+  if (pathname.includes('index.html') || 
+      pathname === '/clients' || 
+      pathname === '/clients/' || 
+      pathname.endsWith('/clients/') || 
+      pathname.endsWith('/clients')) {
     return;
   }
 
