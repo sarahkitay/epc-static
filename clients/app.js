@@ -8,37 +8,31 @@ function getPath(filename) {
   const pathname = window.location.pathname;
   const origin = window.location.origin;
   
-  console.log('getPath called with filename:', filename, 'pathname:', pathname);
+  console.log('getPath called with filename:', filename, 'pathname:', pathname, 'origin:', origin);
   
-  // If we're in the /clients/ directory (most common case)
-  if (pathname.includes('/clients/')) {
+  // Mobile-friendly: Always use absolute path starting from /clients/
+  // Check if we're in the clients directory or should be
+  if (pathname.includes('/clients/') || pathname.includes('/clients') || pathname.includes('index.html')) {
     // Extract the base path up to and including /clients/
-    const clientsIndex = pathname.indexOf('/clients/');
-    const basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+    let basePath = '/clients/';
+    
+    if (pathname.includes('/clients/')) {
+      const clientsIndex = pathname.indexOf('/clients/');
+      basePath = pathname.substring(0, clientsIndex + '/clients/'.length);
+    } else if (pathname.endsWith('/clients')) {
+      basePath = pathname + '/';
+    } else if (pathname.includes('index.html') && pathname.includes('/clients')) {
+      basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    }
+    
     const fullPath = basePath + filename;
     console.log('Returning path (clients/):', fullPath);
     return fullPath;
   }
   
-  // If pathname ends with /clients or /clients/
-  if (pathname.endsWith('/clients') || pathname.endsWith('/clients/')) {
-    const fullPath = pathname + (pathname.endsWith('/') ? '' : '/') + filename;
-    console.log('Returning path (ends with clients):', fullPath);
-    return fullPath;
-  }
-  
-  // If we're on index.html in clients directory
-  if (pathname.includes('index.html') && pathname.includes('/clients')) {
-    const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-    const fullPath = basePath + filename;
-    console.log('Returning path (index.html):', fullPath);
-    return fullPath;
-  }
-  
-  // Fallback: try to determine from current path
-  const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-  const fullPath = basePath + filename;
-  console.log('Returning path (fallback):', fullPath);
+  // Fallback: use /clients/ as base
+  const fullPath = '/clients/' + filename;
+  console.log('Returning path (fallback to /clients/):', fullPath);
   return fullPath;
 }
 
@@ -157,15 +151,31 @@ async function handleLogin() {
     
     if (password === PASSWORD) {
       try {
+        // Set session storage first
         sessionStorage.setItem(SESSION_KEY, 'authenticated');
         sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
+        
+        // Verify session was set
+        const sessionCheck = sessionStorage.getItem(SESSION_KEY);
+        console.log('Session stored:', sessionCheck);
+        
+        if (!sessionCheck) {
+          throw new Error('Failed to store session');
+        }
+        
         const dashboardPath = getPath('dashboard.html');
         console.log('Login successful! Redirecting to:', dashboardPath);
         console.log('Current location:', window.location.href);
-        console.log('Session stored:', sessionStorage.getItem(SESSION_KEY));
+        console.log('Full redirect URL:', window.location.origin + dashboardPath);
         
-        // Force immediate redirect - use replace to prevent back button issues
-        window.location.replace(dashboardPath);
+        // Use full URL for mobile compatibility
+        const fullUrl = window.location.origin + dashboardPath;
+        
+        // Small delay to ensure session is saved, then redirect
+        setTimeout(() => {
+          window.location.replace(fullUrl);
+        }, 50);
+        
         return true;
       } catch (e) {
         console.error('Error setting session:', e);
