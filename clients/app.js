@@ -64,8 +64,9 @@ function checkAuth() {
     try {
       const parentData = JSON.parse(parentSession);
       const clientPath = getPath(`client.html?id=${parentData.clientId}`);
-      console.log('Parent session detected, redirecting to child page:', clientPath);
-      window.location.href = clientPath;
+      const fullClientUrl = window.location.origin + clientPath;
+      console.log('Parent session detected, redirecting to child page:', fullClientUrl);
+      window.location.replace(fullClientUrl);
     } catch (e) {
       console.error('Error parsing parent session:', e);
     }
