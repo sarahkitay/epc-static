@@ -30,12 +30,26 @@ function initFirebase() {
   // Check if Firebase is available (loaded via CDN)
   if (typeof firebase === 'undefined') {
     console.log('Firebase SDK not loaded. Waiting for CDN...');
-    // Retry after a short delay
-    setTimeout(initFirebase, 500);
+    // Retry after a short delay (max 10 attempts = 5 seconds)
+    if (typeof window.firebaseInitAttempts === 'undefined') {
+      window.firebaseInitAttempts = 0;
+    }
+    window.firebaseInitAttempts++;
+    if (window.firebaseInitAttempts < 10) {
+      setTimeout(initFirebase, 500);
+    } else {
+      console.error('Firebase SDK failed to load after multiple attempts');
+    }
     return false;
   }
 
   try {
+    // Check if already initialized
+    if (firebaseInitialized) {
+      console.log('Firebase already initialized');
+      return true;
+    }
+    
     const app = firebase.initializeApp(FIREBASE_CONFIG);
     firestoreDb = firebase.firestore(app);
     firebaseInitialized = true;
@@ -43,11 +57,26 @@ function initFirebase() {
     window.firestoreDb = firestoreDb;
     window.syncToFirebase = syncToFirebase;
     window.loadFromFirebase = loadFromFirebase;
-    console.log('Firebase initialized successfully - Cloud sync enabled!');
+    console.log('✅ Firebase initialized successfully - Cloud sync enabled!');
+    console.log('Firestore database ready:', !!firestoreDb);
     return true;
   } catch (error) {
     console.error('Firebase initialization error:', error);
-    return false;
+    // If app already exists, just get the firestore instance
+    try {
+      const app = firebase.app();
+      firestoreDb = firebase.firestore(app);
+      firebaseInitialized = true;
+      window.firebaseInitialized = true;
+      window.firestoreDb = firestoreDb;
+      window.syncToFirebase = syncToFirebase;
+      window.loadFromFirebase = loadFromFirebase;
+      console.log('✅ Firebase already initialized, using existing app');
+      return true;
+    } catch (e) {
+      console.error('Failed to get Firebase app:', e);
+      return false;
+    }
   }
 }
 

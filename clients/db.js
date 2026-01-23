@@ -10,11 +10,28 @@ let firebaseEnabled = false;
 // Check if Firebase is available and enabled
 async function checkFirebase() {
   try {
-    if (typeof window !== 'undefined' && window.firebaseInitialized) {
-      firebaseEnabled = true;
+    // Wait for Firebase to initialize (with timeout)
+    let attempts = 0;
+    const maxAttempts = 20; // 10 seconds max wait
+    
+    while (attempts < maxAttempts) {
+      if (typeof window !== 'undefined' && window.firebaseInitialized && window.firestoreDb) {
+        firebaseEnabled = true;
+        console.log('Firebase is enabled and ready');
+        return true;
+      }
+      // Wait 500ms before checking again
+      await new Promise(resolve => setTimeout(resolve, 500));
+      attempts++;
     }
+    
+    firebaseEnabled = false;
+    console.log('Firebase not available after waiting');
+    return false;
   } catch (e) {
     firebaseEnabled = false;
+    console.error('Error checking Firebase:', e);
+    return false;
   }
 }
 
@@ -87,13 +104,20 @@ async function getDB() {
 
 // Helper function to sync to Firebase after IndexedDB operations
 async function syncToCloud(collection, docId, data) {
-  await checkFirebase();
-  if (firebaseEnabled && typeof window !== 'undefined' && window.syncToFirebase) {
+  const firebaseReady = await checkFirebase();
+  if (firebaseReady && typeof window !== 'undefined' && window.syncToFirebase) {
     try {
-      await window.syncToFirebase(collection, docId, data);
+      const success = await window.syncToFirebase(collection, docId, data);
+      if (success) {
+        console.log(`Successfully synced ${collection}/${docId} to Firebase`);
+      } else {
+        console.warn(`Failed to sync ${collection}/${docId} to Firebase`);
+      }
     } catch (error) {
       console.error('Cloud sync error:', error);
     }
+  } else {
+    console.log(`Firebase not ready, skipping sync for ${collection}/${docId}`);
   }
 }
 
@@ -131,43 +155,46 @@ async function getAllClients() {
       let clients = request.result || [];
       
       // Try to load from Firebase/cloud if available
-      await checkFirebase();
-      if (firebaseEnabled && typeof window !== 'undefined' && window.loadFromFirebase) {
+      const firebaseReady = await checkFirebase();
+      if (firebaseReady && typeof window !== 'undefined' && window.firestoreDb) {
         try {
           console.log('Attempting to load clients from Firebase...');
           // Load all clients from Firebase
           const firestoreDb = window.firestoreDb;
-          if (firestoreDb) {
-            const snapshot = await firestoreDb.collection('clients').get();
-            const cloudClients = [];
-            snapshot.forEach(doc => {
-              const data = doc.data();
-              if (data.id) {
-                cloudClients.push(data);
-              }
-            });
-            
-            // Merge cloud data with local data (cloud takes precedence)
-            if (cloudClients.length > 0) {
-              console.log(`Loaded ${cloudClients.length} clients from Firebase`);
-              // Update local IndexedDB with cloud data
-              const writeTransaction = database.transaction(['clients'], 'readwrite');
-              const writeStore = writeTransaction.objectStore('clients');
-              
-              for (const cloudClient of cloudClients) {
-                await new Promise((resolve, reject) => {
-                  const putRequest = writeStore.put(cloudClient);
-                  putRequest.onsuccess = () => resolve();
-                  putRequest.onerror = () => reject(putRequest.error);
-                });
-              }
-              
-              clients = cloudClients;
+          const snapshot = await firestoreDb.collection('clients').get();
+          const cloudClients = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.id) {
+              cloudClients.push(data);
             }
+          });
+          
+          // Merge cloud data with local data (cloud takes precedence)
+          if (cloudClients.length > 0) {
+            console.log(`Loaded ${cloudClients.length} clients from Firebase`);
+            // Update local IndexedDB with cloud data
+            const writeTransaction = database.transaction(['clients'], 'readwrite');
+            const writeStore = writeTransaction.objectStore('clients');
+            
+            for (const cloudClient of cloudClients) {
+              await new Promise((resolve, reject) => {
+                const putRequest = writeStore.put(cloudClient);
+                putRequest.onsuccess = () => resolve();
+                putRequest.onerror = () => reject(putRequest.error);
+              });
+            }
+            
+            clients = cloudClients;
+            console.log('Clients synced from Firebase to local storage');
+          } else {
+            console.log('No clients found in Firebase, using local data');
           }
         } catch (error) {
           console.error('Error loading from Firebase, using local data:', error);
         }
+      } else {
+        console.log('Firebase not available, using local IndexedDB only');
       }
       
       resolve(clients);
