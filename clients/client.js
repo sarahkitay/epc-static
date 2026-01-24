@@ -302,11 +302,15 @@ async function loadAllAssessmentsModal() {
     const allAssessmentsList = document.getElementById('allAssessmentsList');
     
     if (assessments.length === 0) {
-      allAssessmentsList.innerHTML = '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No assessments found.</p>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(allAssessmentsList, '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No assessments found.</p>');
+      } else {
+        allAssessmentsList.textContent = 'No assessments found.';
+      }
       return;
     }
 
-    allAssessmentsList.innerHTML = assessments.map((assessment, index) => `
+    const html = assessments.map((assessment, index) => `
       <div class="assessment-history-item" style="margin-bottom: 24px;">
         <div class="assessment-history-date" style="font-size: 14px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--epc-line);">
           Assessment #${assessments.length - index} - ${formatDate(assessment.date)}

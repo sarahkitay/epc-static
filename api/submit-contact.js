@@ -1,35 +1,47 @@
+const { validateRequestBody, sanitizeForEmail, MAX_LENGTHS } = require('./utils/validation');
+const { rateLimitMiddleware } = require('./utils/rate-limit');
+const { validateCSRF, sanitizeError, errorResponse, successResponse } = require('./utils/security');
+
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return errorResponse(res, 405, 'Method not allowed');
+  }
+
+  // Rate limiting
+  if (!rateLimitMiddleware(req, res, 10, 60000)) {
+    return; // Response already sent
+  }
+
+  // CSRF protection
+  if (!validateCSRF(req)) {
+    return errorResponse(res, 403, 'Invalid request origin');
   }
 
   try {
     // Airtable config is required. Resend is optional (we'll still save even if email is disabled).
     const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY'].filter((k) => !process.env[k]);
     if (missingEnv.length) {
-      return res.status(500).json({
-        error: `Server configuration missing environment variables: ${missingEnv.join(', ')}`,
-        missingEnv
-      });
+      return errorResponse(res, 500, 'Server configuration error', sanitizeError({ message: 'Missing environment variables' }, true));
     }
 
     // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
     const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-    const { name, email, phone, subject, message } = req.body;
+    // Validate and sanitize input
+    const validation = validateRequestBody(req.body, {
+      name: { type: 'name', required: true },
+      email: { type: 'email', required: true },
+      phone: { type: 'phone', required: false },
+      subject: { type: 'text', required: true },
+      message: { type: 'message', required: true }
+    });
 
-    // Validate required fields
-    const requiredFields = { name, email, subject, message };
-    const missingFields = Object.entries(requiredFields)
-      .filter(([_, value]) => !value)
-      .map(([key]) => key);
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(', ')}`
-      });
+    if (!validation.valid) {
+      return errorResponse(res, 400, 'Validation failed', validation.errors);
     }
+
+    const { name, email, phone, subject, message } = validation.sanitized;
 
     // Build fields object, only including optional fields if they have values
     const fields = {
@@ -105,13 +117,13 @@ export default async function handler(req, res) {
                 📧 New Contact Form: ${subject}
               </h1>
               <div style="background-color: rgba(201,178,127,.04); border-radius: 4px; padding: 24px; margin-bottom: 20px;">
-                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Name:</strong> ${name}</p>
-                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Email:</strong> ${email}</p>
-                ${phone ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Phone:</strong> ${phone}</p>` : ''}
-                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Subject:</strong> ${subject}</p>
+                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Name:</strong> ${sanitizeForEmail(name)}</p>
+                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Email:</strong> ${sanitizeForEmail(email)}</p>
+                ${phone ? `<p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Phone:</strong> ${sanitizeForEmail(phone)}</p>` : ''}
+                <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;"><strong style="color: #C9B27F;">Subject:</strong> ${sanitizeForEmail(subject)}</p>
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(201,178,127,.2);">
                   <p style="margin: 0 0 8px 0; font-size: 16px; line-height: 1.6; color: #C9B27F; font-weight: 600;">Message:</p>
-                  <p style="margin: 0; font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${message.replace(/\n/g, '<br>')}</p>
+                  <p style="margin: 0; font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${sanitizeForEmail(message)}</p>
                 </div>
               </div>
               <p style="margin: 20px 0 0 0; font-size: 14px; color: rgba(242,237,230,.6);">
@@ -137,9 +149,9 @@ export default async function handler(req, res) {
       // Continue even if email fails
     }
 
-    return res.status(200).json({ success: true });
+    return successResponse(res);
   } catch (error) {
     console.error('Handler error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return errorResponse(res, 500, 'Internal server error', sanitizeError(error));
   }
 }
