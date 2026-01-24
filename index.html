@@ -1272,7 +1272,7 @@
         return part && part.dataset.label ? part.dataset.label : area.replace(/-/g, ' ');
       });
       
-      if (typeof setSafeHTML !== 'undefined') {
+      if (typeof setSafeHTML !== 'undefined' && typeof escapeHtml !== 'undefined') {
         setSafeHTML(selectedDiv, `<strong>Selected Areas:</strong><br>${labels.map(l => escapeHtml(l)).join(' • ')}`);
       } else {
         selectedDiv.textContent = `Selected Areas: ${labels.join(' • ')}`;
