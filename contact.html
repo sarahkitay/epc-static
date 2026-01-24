@@ -804,42 +804,72 @@
 
     // ===== PDF Modal Logic =====
     (function(){
-      const FILE_ID='1_6UU6ls1JtK56cYdjDOibfEgBxczcPEE';
-      const PREVIEW=`https://drive.google.com/file/d/${FILE_ID}/preview`;
-      const DOWNLOAD=`https://drive.google.com/uc?export=download&id=${FILE_ID}`;
+      function initPDFModal(){
+        const FILE_ID='1_6UU6ls1JtK56cYdjDOibfEgBxczcPEE';
+        const PREVIEW=`https://drive.google.com/file/d/${FILE_ID}/preview`;
+        const DOWNLOAD=`https://drive.google.com/uc?export=download&id=${FILE_ID}`;
 
-      const openBtn=document.querySelector('.js-open-pdf');
-      const modal=document.getElementById('pdf-modal');
-      const frame=modal.querySelector('.pdf-frame');
-      const dl=modal.querySelector('.pdf-download');
+        const openBtn=document.querySelector('.js-open-pdf');
+        const modal=document.getElementById('pdf-modal');
+        
+        if(!modal) {
+          console.warn('PDF modal not found');
+          return;
+        }
+        
+        const frame=modal.querySelector('.pdf-frame');
+        const dl=modal.querySelector('.pdf-download');
 
-      function openModal(e){
-        if(e) e.preventDefault();
-        frame.src=PREVIEW;
-        dl.href=DOWNLOAD;
-        modal.removeAttribute('hidden');
-        modal.setAttribute('aria-hidden','false');
-        document.body.style.overflow='hidden';
+        if(!frame || !dl) {
+          console.warn('PDF modal elements not found');
+          return;
+        }
+
+        function openModal(e){
+          if(e) e.preventDefault();
+          try {
+            frame.src=PREVIEW;
+            dl.href=DOWNLOAD;
+            modal.removeAttribute('hidden');
+            modal.setAttribute('aria-hidden','false');
+            document.body.style.overflow='hidden';
+          } catch(err) {
+            console.error('Error opening PDF modal:', err);
+          }
+        }
+
+        function closeModal(){
+          try {
+            modal.setAttribute('aria-hidden','true');
+            modal.setAttribute('hidden','');
+            frame.src='';
+            document.body.style.overflow='';
+          } catch(err) {
+            console.error('Error closing PDF modal:', err);
+          }
+        }
+
+        if(openBtn){
+          openBtn.addEventListener('click',openModal);
+        } else {
+          console.warn('PDF open button not found');
+        }
+
+        modal.addEventListener('click',(e)=>{
+          if(e.target.hasAttribute('data-close')) closeModal();
+        });
+
+        document.addEventListener('keydown',(e)=>{
+          if(e.key==='Escape' && modal.getAttribute('aria-hidden')==='false') closeModal();
+        });
       }
-
-      function closeModal(){
-        modal.setAttribute('aria-hidden','true');
-        modal.setAttribute('hidden','');
-        frame.src='';
-        document.body.style.overflow='';
+      
+      // Wait for DOM to be ready
+      if(document.readyState==='loading'){
+        document.addEventListener('DOMContentLoaded',initPDFModal);
+      }else{
+        initPDFModal();
       }
-
-      if(openBtn){
-        openBtn.addEventListener('click',openModal);
-      }
-
-      modal.addEventListener('click',(e)=>{
-        if(e.target.hasAttribute('data-close')) closeModal();
-      });
-
-      document.addEventListener('keydown',(e)=>{
-        if(e.key==='Escape') closeModal();
-      });
     })();
   </script>
 
