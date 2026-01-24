@@ -27,13 +27,30 @@
     });
   }, true);
 
-  const onScroll = () => {
-    if (!nav) return;
+  // Optimize scroll handler with IntersectionObserver
+  const heroSection = document.querySelector(".epc-hero");
+  if (heroSection && nav) {
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          nav.classList.toggle("scrolled", !entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1, rootMargin: "-100px 0px 0px 0px" }
+    );
+    heroObserver.observe(heroSection);
+    
+    // Fallback for initial state
     nav.classList.toggle("scrolled", window.scrollY > 100);
-  };
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  } else {
+    // Fallback if hero section not found
+    const onScroll = () => {
+      if (!nav) return;
+      nav.classList.toggle("scrolled", window.scrollY > 100);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
 
   // Mobile menu
   if (navToggle && navMenu) {

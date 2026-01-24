@@ -703,13 +703,13 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="services.html">Physical Therapy and Chiropractic Care</a></li>
-            <li><a class="acc-link" href="services.html">Pre and Post Operation Treatments</a></li>
-            <li><a class="acc-link" href="services.html">PRP and Stem Cell Therapy</a></li>
-            <li><a class="acc-link" href="services.html">Lymphatic Drainage Massage and Wraps</a></li>
-            <li><a class="acc-link" href="services.html">Massage Therapy</a></li>
-            <li><a class="acc-link" href="services.html">Normatec Compression Therapy</a></li>
-            <li><a class="acc-link" href="services.html">Cupping and Fire Cupping Therapy</a></li>
+              <li><a class="acc-link" href="/services">Physical Therapy and Chiropractic Care</a></li>
+              <li><a class="acc-link" href="/services">Pre and Post Operation Treatments</a></li>
+              <li><a class="acc-link" href="/services">PRP and Stem Cell Therapy</a></li>
+              <li><a class="acc-link" href="/services">Lymphatic Drainage Massage and Wraps</a></li>
+              <li><a class="acc-link" href="/services">Massage Therapy</a></li>
+              <li><a class="acc-link" href="/services">Normatec Compression Therapy</a></li>
+              <li><a class="acc-link" href="/services">Cupping and Fire Cupping Therapy</a></li>
           </ul>
         </div>
       </div>
@@ -723,9 +723,9 @@
           <ul class="acc-list">
             <li><a class="acc-link" href="/services">Personal Training and Group Training</a></li>
             <li><a class="acc-link" href="assessment.html">Comprehensive Assessment (Pedics, Proteus, Movement Screening)</a></li>
-            <li><a class="acc-link" href="services.html">Cold Plunge and Sauna Sessions</a></li>
-            <li><a class="acc-link" href="services.html">Red Light and PEMF Therapy</a></li>
-            <li><a class="acc-link" href="services.html">Weight Loss and Nutrition Coaching</a></li>
+              <li><a class="acc-link" href="/services">Cold Plunge and Sauna Sessions</a></li>
+              <li><a class="acc-link" href="/services">Red Light and PEMF Therapy</a></li>
+              <li><a class="acc-link" href="/services">Weight Loss and Nutrition Coaching</a></li>
           </ul>
         </div>
       </div>
@@ -737,10 +737,10 @@
         </button>
         <div class="acc-panel" aria-hidden="true">
           <ul class="acc-list">
-            <li><a class="acc-link" href="services.html">Blood Work Analysis and Peptide Therapy</a></li>
-            <li><a class="acc-link" href="services.html">Personalized IV Drips</a></li>
-            <li><a class="acc-link" href="services.html">Meal Prep Services</a></li>
-            <li><a class="acc-link" href="services.html">Shockwave Therapy and Emsculpt</a></li>
+              <li><a class="acc-link" href="/services">Blood Work Analysis and Peptide Therapy</a></li>
+              <li><a class="acc-link" href="/services">Personalized IV Drips</a></li>
+              <li><a class="acc-link" href="/services">Meal Prep Services</a></li>
+              <li><a class="acc-link" href="/services">Shockwave Therapy and Emsculpt</a></li>
           </ul>
         </div>
       </div>
@@ -1074,10 +1074,15 @@
 
           </div> <!-- closes .body-map -->
 
-<!-- ADD THIS LINE: -->
-<div class="body-map-selected" id="selectedAreas"></div>
+          <div class="body-map-selected" id="selectedAreas"></div>
+          
+          <div class="body-map-actions" style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+            <button type="button" class="btn-clear-areas" id="clearAllAreas" style="display: none; padding: 8px 16px; background: rgba(201, 178, 127, 0.1); border: 1px solid rgba(201, 178, 127, 0.3); color: var(--epc-gold); border-radius: 6px; font-size: 12px; cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;">Clear All</button>
+          </div>
+          
+          <div class="quiz-error-message" id="bodyAreaError" style="display: none; margin-top: 16px; padding: 12px 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 8px; color: #ff6b7a; font-size: 13px; text-align: center;"></div>
 
-<button type="button" class="option-btn continue-btn" onclick="nextStep()">Continue</button>
+          <button type="button" class="option-btn continue-btn" onclick="nextStep()">Continue</button>
         </div>
       </div>
 
@@ -1215,10 +1220,19 @@
 
     function updateSelectedAreas() {
       const selectedDiv = document.getElementById('selectedAreas');
+      const clearAllBtn = document.getElementById('clearAllAreas');
+      const errorMsg = document.getElementById('bodyAreaError');
+      
       if (!selectedDiv) return;
+      
+      // Hide error message when areas are selected
+      if (errorMsg) {
+        errorMsg.style.display = 'none';
+      }
       
       if (formData.body_areas.length === 0) {
         selectedDiv.innerHTML = '';
+        if (clearAllBtn) clearAllBtn.style.display = 'none';
         return;
       }
       
@@ -1228,13 +1242,27 @@
       });
       
       selectedDiv.innerHTML = `<strong>Selected Areas:</strong><br>${labels.join(' • ')}`;
+      
+      // Show Clear All button when areas are selected
+      if (clearAllBtn) clearAllBtn.style.display = 'inline-block';
     }
 
     function nextStep() {
       if (currentStep === 2 && formData.body_areas.length === 0) {
-        alert('Please select at least one body area');
+        // Show inline error message instead of alert
+        const errorMsg = document.getElementById('bodyAreaError');
+        if (errorMsg) {
+          errorMsg.textContent = 'Please select at least one body area to continue';
+          errorMsg.style.display = 'block';
+          // Scroll error into view
+          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         return;
       }
+      
+      // Hide any error messages when proceeding
+      const errorMsg = document.getElementById('bodyAreaError');
+      if (errorMsg) errorMsg.style.display = 'none';
       
       if (currentStep < 4) {
         document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
@@ -1304,46 +1332,64 @@
     }
 
     function generateProtocol(data) {
-      let protocol = [];
-
-      // ALWAYS include Physical Therapy OR Performance Training
+      // Weighted scoring system for protocol recommendations
+      const protocolScores = {};
+      
+      // Base services with weights
+      const baseServices = {
+        'Physical Therapy - Comprehensive Assessment & Treatment': 0,
+        'Performance Training - Personalized Program': 0,
+        'Proteus® Assessment - 3D Movement Analysis': 0,
+        'Physical Therapy - Movement Screening': 0,
+        'Performance Training - Injury Prevention Protocol': 0
+      };
+      
+      // Recovery/Pain goal = +10 to PT
       if (data.goal === 'recovery' || data.goal === 'pain') {
-        protocol.push('Physical Therapy - Comprehensive Assessment & Treatment');
+        protocolScores['Physical Therapy - Comprehensive Assessment & Treatment'] = 10;
         
         if (data.priority === 'immediate-relief') {
-          protocol.push('Massage Therapy - Deep Tissue & Myofascial Release');
-          protocol.push('Normatec Compression Therapy');
+          protocolScores['Massage Therapy - Deep Tissue & Myofascial Release'] = 8;
+          protocolScores['Normatec Compression Therapy'] = 7;
+          protocolScores['Cold Plunge & Sauna Sessions'] = 6;
         }
       } else if (data.goal === 'performance') {
-        protocol.push('Performance Training - Personalized Program');
-        protocol.push('Proteus® Assessment - 3D Movement Analysis');
+        protocolScores['Performance Training - Personalized Program'] = 10;
+        protocolScores['Proteus® Assessment - 3D Movement Analysis'] = 9;
         
         if (data.activity === 'pro-athlete' || data.activity === 'competitive') {
-          protocol.push('Team Training: S.P.A - Sport-Specific Performance');
+          protocolScores['Team Training: S.P.A - Sport-Specific Performance'] = 8;
         } else if (data.activity === 'active-exec') {
-          protocol.push('Personal Training - Executive Performance');
+          protocolScores['Personal Training - Executive Performance'] = 8;
         }
       } else if (data.goal === 'prevention') {
-        protocol.push('Physical Therapy - Movement Screening');
-        protocol.push('Performance Training - Injury Prevention Protocol');
+        protocolScores['Physical Therapy - Movement Screening'] = 10;
+        protocolScores['Performance Training - Injury Prevention Protocol'] = 9;
       }
-
-      // Priority-specific additions
-      if (data.priority === 'immediate-relief') {
-        protocol.push('Cold Plunge & Sauna Sessions');
-      } else if (data.priority === 'performance') {
-        if (data.activity === 'pro-athlete') {
-          protocol.push('Peptide Therapies - Physician-Directed');
-          protocol.push('IV Drip Therapy - Performance Optimization');
-        } else if (data.activity === 'active-exec') {
-          protocol.push('IV Drip Therapy - Energy & Recovery');
-        } else if (data.activity === 'weekend') {
-          protocol.push('Group Training - Community & Accountability');
+      
+      // Pro Athlete = +10 to High-End Modalities
+      if (data.activity === 'pro-athlete') {
+        protocolScores['Peptide Therapies - Physician-Directed'] = 10;
+        protocolScores['IV Drip Therapy - Performance Optimization'] = 9;
+        protocolScores['Red Light & PEMF Therapy'] = 8;
+      } else if (data.activity === 'active-exec') {
+        if (data.priority === 'performance') {
+          protocolScores['IV Drip Therapy - Energy & Recovery'] = 8;
         }
-      } else if (data.priority === 'prevention') {
-        protocol.push('Optimization Consult - Personalized Wellness Strategy');
+      } else if (data.activity === 'competitive') {
+        protocolScores['Cold Plunge & Sauna - Recovery Protocol'] = 7;
+      } else if (data.activity === 'weekend') {
+        if (data.priority === 'performance') {
+          protocolScores['Group Training - Community & Accountability'] = 7;
+        }
+        protocolScores['Emsculpt - Muscle Building & Recovery'] = 6;
       }
-
+      
+      // Priority-specific additions
+      if (data.priority === 'prevention') {
+        protocolScores['Optimization Consult - Personalized Wellness Strategy'] = 8;
+      }
+      
       // Body-area specific treatments
       if (data.body_areas.length > 0) {
         const hasLimbs = data.body_areas.some(area => 
@@ -1351,7 +1397,7 @@
         );
         
         if (hasLimbs && (data.goal === 'recovery' || data.goal === 'pain')) {
-          protocol.push('Shockwave Therapy - Targeted Joint & Tissue Recovery');
+          protocolScores['Shockwave Therapy - Targeted Joint & Tissue Recovery'] = 8;
         }
         
         const labels = data.body_areas.map(area => {
@@ -1359,23 +1405,19 @@
           return part && part.dataset.label ? part.dataset.label : area.replace(/-/g, ' ');
         });
         
-        protocol.push(`Targeted Treatment Areas: ${labels.join(', ')}`);
+        protocolScores[`Targeted Treatment Areas: ${labels.join(', ')}`] = 5; // Always include
       }
-
-      // Activity-level additions
-      if (data.activity === 'pro-athlete') {
-        protocol.push('Red Light & PEMF Therapy');
-      } else if (data.activity === 'competitive') {
-        protocol.push('Cold Plunge & Sauna - Recovery Protocol');
-      } else if (data.activity === 'weekend') {
-        protocol.push('Emsculpt - Muscle Building & Recovery');
-      }
-
+      
       // Always include follow-up
-      protocol.push('Follow-up: Progress Assessment in 4 weeks');
-
-      // Remove duplicates
-      return [...new Set(protocol)];
+      protocolScores['Follow-up: Progress Assessment in 4 weeks'] = 5;
+      
+      // Sort by score (highest first) and return top 3-5 items
+      const sortedProtocols = Object.entries(protocolScores)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5) // Top 5 items
+        .map(([service]) => service);
+      
+      return sortedProtocols;
     }
 
     // Result step: proceed option UX
@@ -1411,7 +1453,20 @@
         const proceed = (form.querySelector('input[name="proceed"]:checked')?.value || '').trim();
 
         if (!name || !email || !phone) {
-          alert('Please enter your name, email, and phone number.');
+          // Show inline error instead of alert
+          const errorMsg = document.createElement('div');
+          errorMsg.className = 'quiz-error-message';
+          errorMsg.style.cssText = 'margin-top: 16px; padding: 12px 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 8px; color: #ff6b7a; font-size: 13px; text-align: center;';
+          errorMsg.textContent = 'Please enter your name, email, and phone number.';
+          
+          const resultCard = document.querySelector('.result-card');
+          if (resultCard) {
+            const existingError = resultCard.querySelector('.quiz-error-message');
+            if (existingError) existingError.remove();
+            resultCard.insertBefore(errorMsg, resultCard.firstChild);
+            errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          
           if (submitButton) submitButton.disabled = false;
           return;
         }
@@ -1818,7 +1873,7 @@
             <h3>Navigate</h3>
             <ul>
               <li><a href="index.html">Home</a></li>
-              <li><a href="services.html">Services</a></li>
+              <li><a href="/services">Services</a></li>
               <li><a href="about.html">About</a></li>
               <li><a href="contact.html">Contact</a></li>
             </ul>
