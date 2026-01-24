@@ -1196,27 +1196,58 @@
       });
     });
 
-    // Body map click handler with label display
+    // Body map click handler with label display and keyboard support
     document.querySelectorAll('.body-region').forEach(part => {
-      part.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const area = this.dataset.area;
-        const label = this.dataset.label || area.replace(/-/g, ' ');
-        const isSelected = this.classList.toggle('is-selected');
-        this.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      // Add keyboard accessibility
+      part.setAttribute('tabindex', '0');
+      part.setAttribute('role', 'button');
+      
+      const toggleArea = (element) => {
+        const area = element.dataset.area;
+        const isSelected = element.classList.contains('is-selected');
         
         if (isSelected) {
+          element.classList.remove('is-selected');
+          element.setAttribute('aria-pressed', 'false');
+          formData.body_areas = formData.body_areas.filter(a => a !== area);
+        } else {
+          element.classList.add('is-selected');
+          element.setAttribute('aria-pressed', 'true');
           if (!formData.body_areas.includes(area)) {
             formData.body_areas.push(area);
           }
-        } else {
-          formData.body_areas = formData.body_areas.filter(a => a !== area);
         }
         
         updateSelectedAreas();
+      };
+      
+      // Click handler
+      part.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleArea(this);
+      });
+      
+      // Keyboard handler (Enter and Space)
+      part.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleArea(this);
+        }
       });
     });
+    
+    // Clear All button
+    const clearAllBtn = document.getElementById('clearAllAreas');
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', function() {
+        formData.body_areas = [];
+        document.querySelectorAll('.body-region').forEach(part => {
+          part.classList.remove('is-selected');
+          part.setAttribute('aria-pressed', 'false');
+        });
+        updateSelectedAreas();
+      });
+    }
 
     function updateSelectedAreas() {
       const selectedDiv = document.getElementById('selectedAreas');
@@ -1542,21 +1573,71 @@
           window.trackCta('quiz_submit_success', { proceed });
         }
 
-        // Clear button state + next step routing
-        if (submitButton) submitButton.textContent = 'Submitted';
-
-        if (proceed === 'book_now') {
-          window.location.href = '/booking';
-        } else if (proceed === 'ill_call') {
-          const callout = document.getElementById('result-callout');
-          if (callout) callout.hidden = false;
-        }
+        // Show success state (Step 5)
+        showSuccessStep(name, phone, proceed);
       } catch (err) {
-        console.error(err);
-        alert('Thanks - we could not submit your assessment right now. Please call (818) 646-0040.');
+        console.error('Submission error:', err);
+        // Show inline error instead of alert
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'quiz-error-message';
+        errorMsg.style.cssText = 'margin-top: 16px; padding: 12px 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 8px; color: #ff6b7a; font-size: 13px; text-align: center;';
+        errorMsg.innerHTML = 'Thanks - we could not submit your assessment right now. Please call <a href="tel:+18186460040" style="color: #ff6b7a; text-decoration: underline;">(818) 646-0040</a>.';
+        
+        const resultCard = document.querySelector('.result-card');
+        if (resultCard) {
+          const existingError = resultCard.querySelector('.quiz-error-message');
+          if (existingError) existingError.remove();
+          resultCard.insertBefore(errorMsg, resultCard.firstChild);
+        }
+        
         if (submitButton) submitButton.disabled = false;
       }
     });
+    
+    // Show success step (Step 5)
+    function showSuccessStep(name, phone, proceed) {
+      // Hide result step
+      document.querySelector(`[data-step="result"]`).classList.remove('active');
+      
+      // Create or show success step
+      let successStep = document.querySelector('[data-step="success"]');
+      if (!successStep) {
+        successStep = document.createElement('div');
+        successStep.className = 'step';
+        successStep.setAttribute('data-step', 'success');
+        successStep.innerHTML = `
+          <div class="result-card" style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 24px; color: var(--epc-gold);">✓</div>
+            <h3 class="result-title" style="margin-bottom: 16px;">Thank You, ${name}!</h3>
+            <p class="result-summary" style="margin-bottom: 24px; line-height: 1.8;">
+              We've received your personalized protocol. ${proceed === 'call_me' ? `A specialist will call you at <strong>${phone}</strong> within 24 hours.` : proceed === 'ill_call' ? `When you're ready, call us at <a href="tel:+18186460040" style="color: var(--epc-gold); text-decoration: underline;">(818) 646-0040</a> (Mon-Fri, 9am-6pm).` : 'Redirecting to booking...'}
+            </p>
+            ${proceed === 'book_now' ? '<p style="color: var(--epc-gold-dim); font-size: 14px; margin-top: 16px;">Redirecting to booking page...</p>' : ''}
+          </div>
+        `;
+        document.querySelector('#intakeForm').parentElement.appendChild(successStep);
+      }
+      
+      // Show success step
+      setTimeout(() => {
+        successStep.classList.add('active');
+        
+        const intakeSection = document.querySelector('#intake');
+        if (intakeSection) {
+          intakeSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+        
+        // Redirect if booking
+        if (proceed === 'book_now') {
+          setTimeout(() => {
+            window.location.href = '/booking';
+          }, 2000);
+        }
+      }, 300);
+    }
   </script>
 </section>
     <!-- ===== MOODY MANIFESTO SECTION ===== -->
