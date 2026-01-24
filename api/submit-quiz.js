@@ -1,57 +1,74 @@
+const { validateRequestBody, sanitizeForEmail, MAX_LENGTHS } = require('./utils/validation');
+const { rateLimitMiddleware } = require('./utils/rate-limit');
+const { validateCSRF, sanitizeError, errorResponse, successResponse } = require('./utils/security');
+
 export default async function handler(req, res) {
   // POST only
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return errorResponse(res, 405, 'Method not allowed');
+  }
+
+  // Rate limiting
+  if (!rateLimitMiddleware(req, res, 10, 60000)) {
+    return; // Response already sent
+  }
+
+  // CSRF protection
+  if (!validateCSRF(req)) {
+    return errorResponse(res, 403, 'Invalid request origin');
   }
 
   try {
     const missingEnv = ['AIRTABLE_BASE_ID', 'AIRTABLE_API_KEY'].filter((k) => !process.env[k]);
     if (missingEnv.length) {
-      return res.status(500).json({
-        error: `Server configuration missing environment variables: ${missingEnv.join(', ')}`,
-        missingEnv
-      });
+      return errorResponse(res, 500, 'Server configuration error', sanitizeError({ message: 'Missing environment variables' }, true));
+    }
+
+    // Validate that request body exists and is not empty
+    if (!req.body || typeof req.body !== 'object' || Object.keys(req.body).length === 0) {
+      return errorResponse(res, 400, 'Request payload is empty or invalid');
     }
 
     // Airtable Date fields can be strict depending on field settings; date-only is the most compatible.
     const submittedAt = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-    const {
-      email,
-      goal,
-      body_areas,
-      activity,
-      priority,
-      source,
-      protocol_list,
-      protocol_summary
-    } = req.body || {};
+    // Validate and sanitize input
+    const validation = validateRequestBody(req.body, {
+      email: { type: 'email', required: true },
+      goal: { type: 'text', required: true },
+      body_areas: { type: 'text', required: true },
+      activity: { type: 'text', required: true },
+      priority: { type: 'text', required: true },
+      source: { type: 'text', required: false },
+      protocol_list: { type: 'text', required: false },
+      protocol_summary: { type: 'text', required: false }
+    });
 
-    // Validate required fields (aligns with QUIZ_AIRTABLE_PROMPT.md)
-    const requiredFields = { email, goal, body_areas, activity, priority };
-    const missingFields = Object.entries(requiredFields)
-      .filter(([_, value]) => !value)
-      .map(([key]) => key);
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(', ')}`
-      });
+    if (!validation.valid) {
+      return errorResponse(res, 400, 'Validation failed', validation.errors);
     }
 
+    const { email, goal, body_areas, activity, priority, source, protocol_list, protocol_summary } = validation.sanitized;
+
+    // Ensure fields object is not empty before sending to Airtable
     const fields = {
-      'Email': String(email).trim(),
-      'Goal': String(goal).trim(),
-      'Body Areas': String(body_areas).trim(),
-      'Activity Level': String(activity).trim(),
-      'Priority': String(priority).trim(),
+      'Email': email,
+      'Goal': goal,
+      'Body Areas': body_areas,
+      'Activity Level': activity,
+      'Priority': priority,
       'Submitted At': submittedAt
     };
 
     // Optional tracking fields if present in Airtable
-    if (source) fields['Source'] = String(source).trim();
-    if (protocol_list) fields['Protocol List'] = String(protocol_list).trim();
-    if (protocol_summary) fields['Protocol Summary'] = String(protocol_summary).trim();
+    if (source) fields['Source'] = source;
+    if (protocol_list) fields['Protocol List'] = protocol_list;
+    if (protocol_summary) fields['Protocol Summary'] = protocol_summary;
+
+    // Final validation: ensure fields object is not empty
+    if (!fields || Object.keys(fields).length === 0) {
+      return errorResponse(res, 400, 'No valid data to save');
+    }
 
     const tableName = 'EPC Intake Quiz Submissions';
     const airtableResponse = await fetch(
@@ -71,18 +88,13 @@ export default async function handler(req, res) {
       let errorData;
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error('Airtable error (submit-quiz):', airtableResponse.status, errorData);
-      return res.status(502).json({
-        error: 'Failed to save to Airtable',
-        airtableStatus: airtableResponse.status,
-        airtableError: errorData,
-        table: tableName
-      });
+      return errorResponse(res, 502, 'Failed to save to Airtable', sanitizeError({ message: 'Airtable error' }, true));
     }
 
-    return res.status(200).json({ success: true });
+    return successResponse(res);
   } catch (error) {
     console.error('Handler error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return errorResponse(res, 500, 'Internal server error', sanitizeError(error));
   }
 }
 

@@ -1,14 +1,17 @@
 // Firebase Configuration for Cloud Sync
 // EPC Client Management System
+// Note: Firebase client config is public by design, but should be restricted via Firestore rules
 
+// Load from environment variables if available (for server-side), otherwise use defaults
+// Client-side will use the default config as Firebase client keys are meant to be public
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBawF_wynu2aM60hrknuESv-hA2g_8W18A",
-  authDomain: "epcclients-61ee6.firebaseapp.com",
-  projectId: "epcclients-61ee6",
-  storageBucket: "epcclients-61ee6.firebasestorage.app",
-  messagingSenderId: "290706438619",
-  appId: "1:290706438619:web:d8beb28d6a8282fd574ffe",
-  measurementId: "G-9FW3SMZ944"
+  apiKey: process.env.FIREBASE_API_KEY || "AIzaSyBawF_wynu2aM60hrknuESv-hA2g_8W18A",
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "epcclients-61ee6.firebaseapp.com",
+  projectId: process.env.FIREBASE_PROJECT_ID || "epcclients-61ee6",
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "epcclients-61ee6.firebasestorage.app",
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "290706438619",
+  appId: process.env.FIREBASE_APP_ID || "1:290706438619:web:d8beb28d6a8282fd574ffe",
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID || "G-9FW3SMZ944"
 };
 
 // Initialize Firebase (using CDN version for compatibility)

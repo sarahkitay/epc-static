@@ -1262,7 +1262,7 @@
       }
       
       if (formData.body_areas.length === 0) {
-        selectedDiv.innerHTML = '';
+        selectedDiv.textContent = '';
         if (clearAllBtn) clearAllBtn.style.display = 'none';
         return;
       }
@@ -1272,7 +1272,11 @@
         return part && part.dataset.label ? part.dataset.label : area.replace(/-/g, ' ');
       });
       
-      selectedDiv.innerHTML = `<strong>Selected Areas:</strong><br>${labels.join(' • ')}`;
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(selectedDiv, `<strong>Selected Areas:</strong><br>${labels.map(l => escapeHtml(l)).join(' • ')}`);
+      } else {
+        selectedDiv.textContent = `Selected Areas: ${labels.join(' • ')}`;
+      }
       
       // Show Clear All button when areas are selected
       if (clearAllBtn) clearAllBtn.style.display = 'inline-block';
@@ -1333,7 +1337,7 @@
       const protocols = generateProtocol(formData);
       
       const list = document.getElementById('protocolList');
-      list.innerHTML = '';
+      list.textContent = '';
       protocols.forEach(p => {
         const li = document.createElement('li');
         li.className = 'protocol-item';
@@ -1581,7 +1585,11 @@
         const errorMsg = document.createElement('div');
         errorMsg.className = 'quiz-error-message';
         errorMsg.style.cssText = 'margin-top: 16px; padding: 12px 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 8px; color: #ff6b7a; font-size: 13px; text-align: center;';
-        errorMsg.innerHTML = 'Thanks - we could not submit your assessment right now. Please call <a href="tel:+18186460040" style="color: #ff6b7a; text-decoration: underline;">(818) 646-0040</a>.';
+        if (typeof setSafeHTML !== 'undefined') {
+          setSafeHTML(errorMsg, 'Thanks - we could not submit your assessment right now. Please call <a href="tel:+18186460040" style="color: #ff6b7a; text-decoration: underline;">(818) 646-0040</a>.');
+        } else {
+          errorMsg.textContent = 'Thanks - we could not submit your assessment right now. Please call (818) 646-0040.';
+        }
         
         const resultCard = document.querySelector('.result-card');
         if (resultCard) {
@@ -1605,7 +1613,7 @@
         successStep = document.createElement('div');
         successStep.className = 'step';
         successStep.setAttribute('data-step', 'success');
-        successStep.innerHTML = `
+        const successHtml = `
           <div class="result-card" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 24px; color: var(--epc-gold);">✓</div>
             <h3 class="result-title" style="margin-bottom: 16px;">Thank You, ${name}!</h3>
@@ -1989,6 +1997,11 @@
     </div>
   </footer>
 
+  <!-- Security Utilities -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="assets/js/constants.js"></script>
+  <script src="assets/js/security-utils.js"></script>
+  
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>

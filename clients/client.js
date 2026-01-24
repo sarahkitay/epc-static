@@ -18,14 +18,15 @@ const DEFAULT_EXERCISES = [
 
 // Check if current session is parent session
 function isParentSession() {
-  const parentSession = sessionStorage.getItem('epc_parent_session');
+  const PARENT_SESSION_KEY = 'epc_secure_session_v1_parent';
+  const parentSession = sessionStorage.getItem(PARENT_SESSION_KEY);
   if (!parentSession) return false;
   
   try {
     const parentData = JSON.parse(parentSession);
     // Check if session is still valid (24 hours)
     if (Date.now() - parentData.timestamp > 24 * 60 * 60 * 1000) {
-      sessionStorage.removeItem('epc_parent_session');
+      sessionStorage.removeItem(PARENT_SESSION_KEY);
       return false;
     }
     return parentData;
@@ -363,9 +364,26 @@ async function loadAllAssessmentsModal() {
         </div>
       </div>
     `).join('');
+    
+    // Use DOMPurify to sanitize HTML before rendering
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(allAssessmentsList, htmlContent);
+    } else if (typeof sanitizeHTML !== 'undefined') {
+      allAssessmentsList.innerHTML = sanitizeHTML(htmlContent);
+    } else {
+      // Fallback: use textContent for safety
+      allAssessmentsList.textContent = 'Assessment data loaded';
+    }
   } catch (error) {
     console.error('Error loading all assessments:', error);
-    document.getElementById('allAssessmentsList').innerHTML = '<p style="color: #dc3545;">Error loading assessments.</p>';
+    const errorEl = document.getElementById('allAssessmentsList');
+    if (errorEl) {
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(errorEl, '<p style="color: #dc3545;">Error loading assessments.</p>');
+      } else {
+        errorEl.textContent = 'Error loading assessments.';
+      }
+    }
   }
 }
 
@@ -415,11 +433,15 @@ async function loadAssessmentHistory() {
     const historyList = document.getElementById('assessmentHistoryList');
     
     if (assessments.length === 0) {
-      historyList.innerHTML = '<p style="color: var(--epc-ink-dim);">No previous assessments.</p>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(historyList, '<p style="color: var(--epc-ink-dim);">No previous assessments.</p>');
+      } else {
+        historyList.textContent = 'No previous assessments.';
+      }
       return;
     }
 
-      historyList.innerHTML = assessments.map(assessment => `
+      const historyHtml = assessments.map(assessment => `
       <div class="assessment-history-item">
         <div class="assessment-history-date">${formatDate(assessment.date)}</div>
         <div class="assessment-content">
@@ -493,7 +515,7 @@ function initProgramBuilder() {
     const library = document.getElementById('exerciseLibrary');
     if (!library) return;
 
-    library.innerHTML = exercises.map(exercise => `
+    const libraryHtml = exercises.map(exercise => `
       <div class="exercise-item" onclick="addExerciseToProgram('${escapeHtml(exercise)}')">
         ${escapeHtml(exercise)}
       </div>
@@ -509,11 +531,15 @@ function initProgramBuilder() {
     if (!container) return;
 
     if (currentExercises.length === 0) {
-      container.innerHTML = '<div class="empty-program"><p>No exercises added yet. Click exercises from the library to add them.</p></div>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(container, '<div class="empty-program"><p>No exercises added yet. Click exercises from the library to add them.</p></div>');
+      } else {
+        container.textContent = 'No exercises added yet.';
+      }
       return;
     }
 
-    container.innerHTML = currentExercises.map((exercise, index) => `
+    const exercisesHtml = currentExercises.map((exercise, index) => `
       <div class="program-exercise" data-index="${index}">
         <div class="exercise-header">
           <div class="exercise-name">${escapeHtml(exercise.name)}</div>
@@ -548,6 +574,14 @@ function initProgramBuilder() {
         </div>
       </div>
     `).join('');
+    
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(container, exercisesHtml);
+    } else if (typeof sanitizeHTML !== 'undefined') {
+      container.innerHTML = sanitizeHTML(exercisesHtml);
+    } else {
+      container.textContent = `${currentExercises.length} exercise(s) in program`;
+    }
   };
 
   renderProgramExercisesFn();
@@ -639,11 +673,15 @@ function initProgramBuilder() {
       const historyList = document.getElementById('programHistoryList');
       
       if (programs.length === 0) {
-        historyList.innerHTML = '<p style="color: var(--epc-ink-dim);">No saved programs.</p>';
+        if (typeof setSafeHTML !== 'undefined') {
+          setSafeHTML(historyList, '<p style="color: var(--epc-ink-dim);">No saved programs.</p>');
+        } else {
+          historyList.textContent = 'No saved programs.';
+        }
         return;
       }
 
-      historyList.innerHTML = programs.map(program => `
+      const programsHtml = programs.map(program => `
         <div class="assessment-history-item">
           <div class="assessment-history-date">Week ${program.week} - ${formatDate(program.createdAt)}</div>
           <div class="program-exercises-preview">
@@ -993,11 +1031,15 @@ async function loadPhotos() {
     const gallery = document.getElementById('photosGallery');
     
     if (photos.length === 0) {
-      gallery.innerHTML = '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No photos uploaded yet.</p>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(gallery, '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No photos uploaded yet.</p>');
+      } else {
+        gallery.textContent = 'No photos uploaded yet.';
+      }
       return;
     }
 
-    gallery.innerHTML = photos.map(photo => `
+    const photosHtml = photos.map(photo => `
       <div class="photo-item">
         <img src="${photo.photoData}" alt="Program photo" onclick="viewPhoto('${photo.id}')" />
         <div class="photo-item-content">
@@ -1091,7 +1133,11 @@ async function loadNotes() {
     const timeline = document.getElementById('notesTimeline');
     
     if (notes.length === 0) {
-      timeline.innerHTML = '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No progress notes yet.</p>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(timeline, '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No progress notes yet.</p>');
+      } else {
+        timeline.textContent = 'No progress notes yet.';
+      }
       return;
     }
 
@@ -1159,7 +1205,11 @@ async function loadPTNotes() {
     const timeline = document.getElementById('ptTimeline');
     
     if (notes.length === 0) {
-      timeline.innerHTML = '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No PT coordination notes yet.</p>';
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(timeline, '<p style="color: var(--epc-ink-dim); text-align: center; padding: 40px;">No PT coordination notes yet.</p>');
+      } else {
+        timeline.textContent = 'No PT coordination notes yet.';
+      }
       return;
     }
 
@@ -1355,7 +1405,8 @@ function showExportOptionsModal() {
   const modal = document.createElement('div');
   modal.className = 'modal';
   modal.style.display = 'flex';
-  modal.innerHTML = `
+  
+  const modalHtml = `
     <div class="modal-overlay"></div>
     <div class="modal-content" style="max-width: 600px;">
       <div class="modal-header">
@@ -1410,6 +1461,14 @@ function showExportOptionsModal() {
       </div>
     </div>
   `;
+  
+  if (typeof setSafeHTML !== 'undefined') {
+    setSafeHTML(modal, modalHtml);
+  } else if (typeof sanitizeHTML !== 'undefined') {
+    modal.innerHTML = sanitizeHTML(modalHtml);
+  } else {
+    modal.textContent = 'Export Client Data';
+  }
   
   document.body.appendChild(modal);
   
@@ -1822,6 +1881,10 @@ function escapeHtml(text) {
   if (!text) return '';
   const div = document.createElement('div');
   div.textContent = text;
+  // Use DOMPurify for safe HTML return
+  if (typeof sanitizeHTML !== 'undefined') {
+    return sanitizeHTML(div.innerHTML);
+  }
   return div.innerHTML;
 }
 
@@ -1930,7 +1993,8 @@ function showAddPackageModal() {
     modal = document.createElement('div');
     modal.id = 'addPackageModal';
     modal.className = 'modal';
-    modal.innerHTML = `
+    
+    const addPackageHtml = `
       <div class="modal-overlay"></div>
       <div class="modal-content">
         <div class="modal-header">
@@ -1957,6 +2021,15 @@ function showAddPackageModal() {
         </form>
       </div>
     `;
+    
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(modal, addPackageHtml);
+    } else if (typeof sanitizeHTML !== 'undefined') {
+      modal.innerHTML = sanitizeHTML(addPackageHtml);
+    } else {
+      modal.textContent = 'Add New Package';
+    }
+    
     document.body.appendChild(modal);
     
     // Close handlers
@@ -2115,7 +2188,8 @@ function showEditPackageModal() {
     modal = document.createElement('div');
     modal.id = 'editPackageModal';
     modal.className = 'modal';
-    modal.innerHTML = `
+    
+    const editPackageHtml = `
       <div class="modal-overlay"></div>
       <div class="modal-content">
         <div class="modal-header">
@@ -2142,6 +2216,15 @@ function showEditPackageModal() {
         </form>
       </div>
     `;
+    
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(modal, editPackageHtml);
+    } else if (typeof sanitizeHTML !== 'undefined') {
+      modal.innerHTML = sanitizeHTML(editPackageHtml);
+    } else {
+      modal.textContent = 'Edit Package & Sessions';
+    }
+    
     document.body.appendChild(modal);
     
     // Add event listeners
@@ -2231,7 +2314,11 @@ function makePageReadOnly() {
   if (header) {
     const notice = document.createElement('div');
     notice.style.cssText = 'background: rgba(201, 178, 127, 0.1); border: 1px solid var(--epc-gold); border-radius: 6px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--epc-gold); width: 100%;';
-    notice.innerHTML = '👁️ <strong>Parent View:</strong> This is a read-only view. Contact your trainer to make changes.';
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(notice, '👁️ <strong>Parent View:</strong> This is a read-only view. Contact your trainer to make changes.');
+    } else {
+      notice.textContent = '👁️ Parent View: This is a read-only view. Contact your trainer to make changes.';
+    }
     header.appendChild(notice);
   }
   

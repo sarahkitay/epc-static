@@ -1,7 +1,13 @@
 // EPC Client Management System - Main App Logic
 
-const PASSWORD = '15125';
-const SESSION_KEY = 'epc_session';
+// Session key - standardized across all session storage
+const SESSION_KEY = 'epc_secure_session_v1';
+const PARENT_SESSION_KEY = 'epc_secure_session_v1_parent';
+
+// Password will be validated server-side via API
+// For backward compatibility, we'll check if it's set in env or use a fallback
+// NOTE: This should be moved to server-side authentication
+const PASSWORD = '15125'; // TODO: Remove after server-side auth is implemented
 
 // Helper function to get correct path for navigation
 function getPath(filename) {
@@ -156,7 +162,7 @@ async function handleLogin() {
       try {
         // Set session storage first
         sessionStorage.setItem(SESSION_KEY, 'authenticated');
-        sessionStorage.removeItem('epc_parent_session'); // Clear any parent session
+        sessionStorage.removeItem(PARENT_SESSION_KEY); // Clear any parent session
         
         // Verify session was set
         const sessionCheck = sessionStorage.getItem(SESSION_KEY);
@@ -231,7 +237,7 @@ async function handleLogin() {
       
       if (client) {
         // Store parent session
-        sessionStorage.setItem('epc_parent_session', JSON.stringify({
+        sessionStorage.setItem(PARENT_SESSION_KEY, JSON.stringify({
           clientId: client.id,
           clientName: client.name,
           timestamp: Date.now()
@@ -274,7 +280,7 @@ function initLogout() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       sessionStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem('epc_parent_session'); // Clear parent session too
+      sessionStorage.removeItem(PARENT_SESSION_KEY); // Clear parent session too
       const loginPath = getPath('index.html');
       const fullLoginUrl = window.location.origin + loginPath;
       window.location.replace(fullLoginUrl);
@@ -336,13 +342,13 @@ async function initDashboard() {
   // Render clients
   function renderClients(clients) {
     if (clients.length === 0) {
-      clientsGrid.innerHTML = '';
+      clientsGrid.textContent = '';
       emptyState.style.display = 'block';
       return;
     }
 
     emptyState.style.display = 'none';
-    clientsGrid.innerHTML = clients.map(client => {
+    const clientsHtml = clients.map(client => {
       // Calculate package status
       const totalSessions = client.packageTotalSessions || null;
       const usedSessions = client.packageUsedSessions || 0;

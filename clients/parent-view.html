@@ -183,7 +183,7 @@
 
     // Check parent session
     function checkParentSession() {
-      const parentSession = sessionStorage.getItem('parentSession');
+      const parentSession = sessionStorage.getItem('epc_secure_session_v1_parent');
       if (!parentSession) {
         window.location.href = 'parent-portal.html';
         return null;
@@ -193,7 +193,7 @@
         const session = JSON.parse(parentSession);
         // Check if session is still valid (24 hours)
         if (Date.now() - session.timestamp > 24 * 60 * 60 * 1000) {
-          sessionStorage.removeItem('parentSession');
+          sessionStorage.removeItem('epc_secure_session_v1_parent');
           window.location.href = 'parent-portal.html';
           return null;
         }

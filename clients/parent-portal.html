@@ -210,7 +210,7 @@
           
           if (client) {
             // Store parent session
-            sessionStorage.setItem('parentSession', JSON.stringify({
+            sessionStorage.setItem('epc_secure_session_v1_parent', JSON.stringify({
               clientId: client.id,
               clientName: client.name,
               timestamp: Date.now()
@@ -233,7 +233,7 @@
     }
     
     // Check if already logged in
-    const parentSession = sessionStorage.getItem('parentSession');
+    const parentSession = sessionStorage.getItem('epc_secure_session_v1_parent');
     if (parentSession) {
       try {
         const session = JSON.parse(parentSession);
@@ -241,7 +241,7 @@
         if (Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
           window.location.href = `parent-view.html?id=${session.clientId}`;
         } else {
-          sessionStorage.removeItem('parentSession');
+          sessionStorage.removeItem('epc_secure_session_v1_parent');
         }
       } catch (e) {
         sessionStorage.removeItem('parentSession');
