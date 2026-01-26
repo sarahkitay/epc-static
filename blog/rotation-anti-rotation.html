@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rotation and Anti-Rotation: The Missing Sixth Pattern. Rotation is athletic. Anti rotation is protective. You need both for a strong, pain free core." />
+  <title>Rotation and Anti-Rotation: The Missing Sixth Pattern | Elite Performance Clinic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@400;600;700;800&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../epc-sections.css">
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <script src="../epc-sections.js"></script>
+
+  <nav class="epc-nav" id="mainNav" aria-label="Primary">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo" aria-label="Elite Performance Clinic Home">
+        <span class="logo-text">EPC</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="../services.html" class="nav-link">Services</a></li>
+        <li><a href="../team.html" class="nav-link">Team</a></li>
+        <li><a href="../about.html" class="nav-link">About</a></li>
+        <li><a href="../blog.html" class="nav-link active">Journal</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <style>
+      .epc-blog-post {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 40px 80px;
+        font-family: 'Playfair Display', Georgia, serif;
+        background: #000;
+        color: #fff;
+      }
+      
+      .epc-blog-header {
+        text-align: center;
+        margin-bottom: 80px;
+        padding-bottom: 40px;
+        border-bottom: 1px solid #C9B991;
+      }
+      
+      .epc-blog-title {
+        font-size: 56px;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        color: #C9B991;
+        letter-spacing: 2px;
+      }
+      
+      .epc-blog-meta {
+        font-size: 12px;
+        color: #C9B991;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 300;
+      }
+      
+      .epc-blog-intro {
+        font-size: 24px;
+        line-height: 1.8;
+        color: #fff;
+        margin-bottom: 60px;
+        text-align: center;
+        font-weight: 300;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-blog-section {
+        margin-bottom: 50px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .epc-section-title {
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 20px;
+        color: #C9B991;
+        margin-top: 50px;
+        letter-spacing: 1px;
+      }
+      
+      .epc-blog-text {
+        font-size: 18px;
+        margin-bottom: 25px;
+        line-height: 1.9;
+        color: #fff;
+        font-weight: 300;
+      }
+      
+      .epc-example {
+        background: transparent;
+        border-left: 2px solid #C9B991;
+        padding: 25px 30px;
+        margin: 35px 0;
+        font-style: italic;
+        color: #C9B991;
+      }
+      
+      .epc-example strong {
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 14px;
+      }
+      
+      .epc-highlight-box {
+        background: transparent;
+        border: 1px solid #C9B991;
+        color: #fff;
+        padding: 50px;
+        margin: 60px auto;
+        max-width: 900px;
+      }
+      
+      .epc-highlight-box h3 {
+        color: #C9B991;
+        margin-top: 0;
+        font-size: 32px;
+        margin-bottom: 30px;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
+      
+      .epc-highlight-box p {
+        font-size: 18px;
+        line-height: 1.8;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      
+      .epc-highlight-box li {
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 18px;
+        line-height: 1.8;
+        font-size: 17px;
+        font-weight: 300;
+      }
+      
+      .epc-highlight-box li:before {
+        content: "-";
+        position: absolute;
+        left: 0;
+        color: #C9B991;
+      }
+      
+      .epc-cta {
+        background: transparent;
+        border: 1px solid #C9B991;
+        padding: 60px 40px;
+        margin: 80px auto;
+        text-align: center;
+        max-width: 900px;
+      }
+      
+      .epc-cta-text {
+        font-size: 22px;
+        font-weight: 300;
+        margin-bottom: 35px;
+        line-height: 1.8;
+        color: #fff;
+      }
+      
+      .epc-cta-button {
+        display: inline-block;
+        background: transparent;
+        color: #C9B991;
+        padding: 18px 50px;
+        text-decoration: none;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 12px;
+        border: 1px solid #C9B991;
+        transition: all 0.3s ease;
+        margin: 10px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
+      
+      .epc-cta-button:hover {
+        background: #C9B991;
+        color: #000;
+      }
+      
+      .epc-divider {
+        width: 100px;
+        height: 1px;
+        background: #C9B991;
+        margin: 60px auto;
+      }
+      
+      @media (max-width: 768px) {
+        .epc-blog-post {
+          padding: 100px 20px 60px;
+        }
+        
+        .epc-blog-title {
+          font-size: 36px;
+        }
+        
+        .epc-blog-intro {
+          font-size: 20px;
+        }
+        
+        .epc-section-title {
+          font-size: 26px;
+        }
+        
+        .epc-blog-text {
+          font-size: 16px;
+        }
+        
+        .epc-highlight-box {
+          padding: 30px 25px;
+        }
+        
+        .epc-cta {
+          padding: 40px 25px;
+        }
+      }
+    </style>
+
+    <div class="epc-blog-post">
+      <div class="epc-blog-header">
+        <h1 class="epc-blog-title">Rotation and Anti-Rotation: The Missing Sixth Pattern</h1>
+        <div class="epc-blog-meta">Elite Performance Clinic • January 2026</div>
+      </div>
+      
+      <div class="epc-blog-intro">
+        Rotation is athletic. Anti rotation is protective. If your trunk can't resist unwanted rotation, your low back ends up doing it for you.
+      </div>
+      
+      <div class="epc-divider"></div>
+      
+      <div class="epc-blog-section">
+        <p class="epc-blog-text">
+          Most training programs focus on the five foundational movement patterns: squat, hinge, push, pull, and carry. But there's a sixth pattern that's equally important and often overlooked: rotation and anti-rotation. These aren't separate patterns—they're two sides of the same coin, and you need both for a strong, pain-free core.
+        </p>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we see the consequences of neglecting rotation work daily. Clients with low back pain who can't resist rotation. Athletes with weak cores who can't generate power through rotation. People who do hundreds of crunches but still can't control their trunk during functional movements.
+        </p>
+        <p class="epc-blog-text">
+          The truth is simple: rotation builds power, and anti-rotation builds longevity. If your trunk can't resist unwanted rotation, your low back ends up doing it for you—and that's a recipe for chronic pain and injury.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Rotation Builds Power</h2>
+        <p class="epc-blog-text">
+          Think about the most powerful movements in sport: a baseball swing, a golf drive, a tennis serve, a throwing motion, a change of direction in soccer or basketball. All of these require controlled rotation through the trunk. The ability to generate and transfer rotational force is what separates elite athletes from good ones.
+        </p>
+        <p class="epc-blog-text">
+          Rotation isn't just about the core—it's about the kinetic chain. Power starts in the ground, transfers through the hips, rotates through the trunk, and expresses through the arms. When any link in this chain is weak, power is lost. When the trunk can't rotate effectively, the entire chain breaks down.
+        </p>
+        <div class="epc-example">
+          <strong>The power transfer:</strong> Rotation is how you generate force across your body. A strong rotational core allows you to transfer power from your lower body to your upper body, creating movements that are both powerful and efficient. Without it, you're leaving performance on the table.
+        </div>
+        <p class="epc-blog-text">
+          But rotation isn't just for athletes. Every time you reach across your body, twist to grab something, or change direction while walking, you're using rotation. If your core can't control these movements, you compensate elsewhere—usually in your lower back, which wasn't designed to rotate.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Anti-Rotation Builds Longevity</h2>
+        <p class="epc-blog-text">
+          While rotation generates power, anti-rotation prevents injury. Your core's job isn't just to create movement—it's to resist unwanted movement. When you're carrying a heavy bag on one side, reaching for something while maintaining position, or performing a single-arm exercise, your core must resist rotation to protect your spine.
+        </p>
+        <p class="epc-blog-text">
+          If your trunk can't resist unwanted rotation, your low back ends up doing it for you. The lumbar spine isn't designed to rotate—it's designed to flex, extend, and side-bend. When it's forced to rotate, it creates excessive shear forces on the discs and facet joints, leading to chronic pain and eventual injury.
+        </p>
+        <div class="epc-example">
+          <strong>The protection mechanism:</strong> Anti-rotation teaches your trunk to stay solid while your hips and shoulders move. This is critical for longevity because it prevents your lower back from compensating for a weak core. A strong core is a quiet core—it does its job without drawing attention to itself.
+        </div>
+        <p class="epc-blog-text">
+          This is why we program rotation for athletes and anti-rotation for everyone. Athletes need to generate rotational power. Everyone needs to resist unwanted rotation to protect their lower back. Both are essential, but they serve different purposes.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Quick Test: Are You Leaking Force?</h2>
+        <p class="epc-blog-text">
+          If you can hold a side plank for 20–30 seconds but your hips shift or your ribs flare, you're leaking force. Your core isn't doing its job—it's just holding a position while other structures compensate.
+        </p>
+        <div class="epc-highlight-box">
+          <h3>How to Test Your Anti-Rotation Capacity</h3>
+          <p>
+            <strong>The Side Plank Test:</strong> Hold a side plank for 30 seconds. Can you maintain a straight line from your ankles to your shoulders? Do your hips sag or shift? Do your ribs flare forward? If any of these happen, your core is leaking force.
+          </p>
+          <p>
+            <strong>The Pallof Press Test:</strong> Stand perpendicular to a cable or band, holding the handle at chest height. Press it straight out and hold for 10 seconds. Does your trunk rotate toward the resistance? If yes, your anti-rotation capacity is insufficient.
+          </p>
+          <p>
+            <strong>The Single-Arm Carry Test:</strong> Walk 20 yards while carrying a heavy weight in one hand. Does your trunk lean to the side? Does your lower back feel strained? If yes, your core isn't resisting rotation effectively.
+          </p>
+        </div>
+        <p class="epc-blog-text">
+          These tests reveal whether your core is doing its job or whether other structures are compensating. If you're leaking force, you need to build anti-rotation capacity before you can safely build rotational power.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Two-Drill Starter</h2>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we start clients with two foundational drills that build both rotation and anti-rotation capacity. These aren't complicated—they're simple, effective, and they work.
+        </p>
+
+        <div class="epc-highlight-box">
+          <h3>Drill 1: Pallof Press (Anti-Rotation)</h3>
+          <p>
+            <strong>Why it works:</strong> The Pallof press challenges your core to resist rotation while your arms move. This builds the stability you need to protect your lower back during functional movements.
+          </p>
+          <p>
+            <strong>How to do it:</strong> Stand perpendicular to a cable or band, holding the handle at chest height. Press it straight out, hold for 2 seconds, then bring it back. Keep your trunk completely still—no rotation, no leaning, no compensation.
+          </p>
+          <p>
+            <strong>Progression:</strong> Start with light resistance and perfect form. As you get stronger, increase resistance, add tempo (slow press, hold, slow return), or perform it in a half-kneeling position for added challenge.
+          </p>
+        </div>
+
+        <div class="epc-highlight-box">
+          <h3>Drill 2: Half-Kneeling Cable Chop (Controlled Rotation)</h3>
+          <p>
+            <strong>Why it works:</strong> The half-kneeling cable chop teaches your core to generate and control rotational force. This builds the power you need for athletic movements and functional tasks.
+          </p>
+          <p>
+            <strong>How to do it:</strong> Kneel on one knee, holding a cable or band at shoulder height. Rotate your trunk while pulling the cable across your body, finishing with your hands at your opposite hip. Control the movement in both directions.
+          </p>
+          <p>
+            <strong>Progression:</strong> Start with light resistance and focus on smooth, controlled rotation. As you get stronger, increase resistance, add speed (controlled), or perform it standing for added challenge.
+          </p>
+        </div>
+        <p class="epc-blog-text">
+          These two drills address both sides of the rotation equation. The Pallof press builds anti-rotation capacity to protect your lower back. The cable chop builds rotational power for athletic performance. Together, they create a strong, functional core.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">Why Most Core Training Fails</h2>
+        <p class="epc-blog-text">
+          Most people train their core like it's just another muscle group. They do crunches, planks, and sit-ups, thinking that more is better. But the core isn't a muscle—it's a system, and it needs to be trained as a system.
+        </p>
+        <p class="epc-blog-text">
+          <strong>The Problem with Traditional Core Work:</strong><br>
+          Crunches and sit-ups train flexion, but they don't train rotation or anti-rotation. Planks train anti-extension, but they don't train anti-rotation. Most core training is one-dimensional, focusing on one function while neglecting others.
+        </p>
+        <p class="epc-blog-text">
+          <strong>The Missing Piece:</strong><br>
+          Your core needs to do three things: create movement (rotation), resist movement (anti-rotation, anti-extension, anti-flexion), and transfer force (from lower body to upper body). Most training only addresses one of these functions, leaving the others weak.
+        </p>
+        <div class="epc-example">
+          <strong>The system approach:</strong> At EPC, we train the core as a system. We build rotation for power, anti-rotation for protection, and force transfer for efficiency. This comprehensive approach creates a core that works in all planes of motion, not just one.
+        </div>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The EPC Approach: Rotation for Athletes, Anti-Rotation for Everyone</h2>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we program rotation for athletes and anti-rotation for everyone. This isn't arbitrary—it's based on what each population needs most.
+        </p>
+        <p class="epc-blog-text">
+          <strong>For Athletes:</strong><br>
+          Athletes need to generate rotational power for sport performance. We program controlled rotation drills like cable chops, medicine ball throws, and rotational lunges. These build the power they need to perform at their best.
+        </p>
+        <p class="epc-blog-text">
+          <strong>For Everyone:</strong><br>
+          Everyone needs to resist unwanted rotation to protect their lower back. We program anti-rotation drills like Pallof presses, single-arm carries, and anti-rotation planks. These build the stability they need to stay pain-free.
+        </p>
+        <p class="epc-blog-text">
+          <strong>The Balance:</strong><br>
+          Most people need both, but in different proportions. Athletes might do 70% rotation work and 30% anti-rotation. General population might do 30% rotation and 70% anti-rotation. The key is addressing both sides of the equation.
+        </p>
+      </div>
+
+      <div class="epc-blog-section">
+        <h2 class="epc-section-title">The Bottom Line</h2>
+        <p class="epc-blog-text">
+          Rotation and anti-rotation are the missing sixth movement pattern. Most training programs focus on the five foundational patterns but neglect rotation work entirely. This creates weak cores that can't generate power or resist unwanted movement.
+        </p>
+        <p class="epc-blog-text">
+          Rotation builds power. Anti-rotation builds longevity. You need both for a strong, pain-free core. If your trunk can't resist unwanted rotation, your low back ends up doing it for you—and that's a recipe for chronic pain and injury.
+        </p>
+        <p class="epc-blog-text">
+          At Elite Performance Clinic, we assess rotation and anti-rotation capacity in every evaluation. We identify which side of the equation is weak, build the foundation that allows both to develop, and create programming that addresses deficits while continuing to build strength. The result: a core that generates power when you need it and resists movement when you don't.
+        </p>
+      </div>
+
+      <div class="epc-divider"></div>
+      
+      <div class="epc-cta">
+        <p class="epc-cta-text">
+          Want your core to feel solid again? Book an assessment and we'll identify what your trunk is compensating for and give you a simple progression you can feel immediately.
+        </p>
+        <a href="tel:8186460040" class="epc-cta-button">Call (818) 646-0040</a>
+        <a href="../contact.html" class="epc-cta-button">Book Assessment</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="epc-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">EPC</span>
+          <p class="footer-tagline">Recovery • Performance • Wellness</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h3>Navigate</h3>
+            <ul>
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../services.html">Services</a></li>
+              <li><a href="../team.html">Team</a></li>
+              <li><a href="../about.html">About</a></li>
+              <li><a href="../blog.html">Journal</a></li>
+              <li><a href="../contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="https://www.epcla.com/store" rel="noopener">Store</a></li>
+              <li><a href="../careers.html">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Social</h3>
+            <ul>
+              <li><a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social" aria-label="Instagram">
+          <a href="https://instagram.com/elite.performance.clinic" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="tagline">EVERY&nbsp;WINNER&nbsp;HAS&nbsp;A&nbsp;SECRET&nbsp;WEAPON</p>
+        <div class="footer-copy">&copy; 2026 Elite Performance Clinic. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/reading-progress.js" defer></script>
+  <script src="../assets/js/blog-navigation.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
