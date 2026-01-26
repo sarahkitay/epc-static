@@ -51,12 +51,39 @@
         <p class="epc-page-subtitle">Movement • Recovery • Performance</p>
       </div>
       
-      <!-- Blog Grid -->
-      <div class="epc-blog-content">
-      <div class="epc-blog-grid">
+      <!-- Spiral Journal Container -->
+      <div class="epc-spiral-wrapper">
+        <div class="epc-spiral-container" id="spiralContainer">
+          <!-- Center Logo Anchor -->
+          <div class="epc-spiral-logo">
+            <span class="epc-spiral-logo-text">EPC</span>
+            <p class="epc-spiral-logo-subtitle">Journal</p>
+          </div>
+          
+          <!-- Spiral Path (subtle visual guide) -->
+          <svg class="epc-spiral-path" viewBox="0 0 2000 4000" preserveAspectRatio="xMidYMin meet">
+            <path d="M 1000 200 Q 1200 400 1000 600 T 1000 1000 T 1000 1400 T 1000 1800" 
+                  fill="none" 
+                  stroke="rgba(201, 185, 145, 0.08)" 
+                  stroke-width="1" 
+                  stroke-dasharray="2,8"/>
+          </svg>
+          
+          <!-- Constellation Services (background) -->
+          <div class="epc-spiral-constellation">
+            <span class="epc-constellation-label" style="top: 10%; left: 15%;">PT</span>
+            <span class="epc-constellation-label" style="top: 20%; right: 12%;">Performance</span>
+            <span class="epc-constellation-label" style="top: 35%; left: 8%;">EMSculpt</span>
+            <span class="epc-constellation-label" style="top: 50%; right: 18%;">Shockwave</span>
+            <span class="epc-constellation-label" style="top: 65%; left: 12%;">Recovery</span>
+            <span class="epc-constellation-label" style="top: 80%; right: 10%;">Proteus</span>
+          </div>
+          
+          <!-- Blog Cards in Spiral -->
+          <div class="epc-spiral-cards-wrapper">
         
         <!-- FEATURED - The 2026 Challenge -->
-        <article class="epc-blog-card epc-featured-post">
+        <article class="epc-blog-card epc-spiral-card" data-category="Challenge">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ebd4c019-d23b-4608-8f0b-dc060cb00526/tempImage6pAGRP.jpg?content-type=image%2Fjpeg" alt="The 2026 Challenge" />
           </div>
@@ -72,7 +99,7 @@
         </article>
         
         <!-- Performance Testing Guide -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Sports performance testing" />
           </div>
@@ -88,7 +115,7 @@
         </article>
         
         <!-- ACL Prevention Protocol -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/4e1775b5-b0d2-4004-83e8-2e3588102d67/a-39.jpg?content-type=image%2Fjpeg" alt="ACL injury prevention" />
           </div>
@@ -104,7 +131,7 @@
         </article>
         
         <!-- Return to Play Criteria -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ab84c29c-57d1-4cca-8dd0-dfaecc7a8879/EPC-68.JPEG?content-type=image%2Fjpeg" alt="Return to play assessment" />
           </div>
@@ -120,7 +147,7 @@
         </article>
         
         <!-- Performance Care vs PT -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ecf1304f-26c8-4226-b884-807ab80517ba/Screenshot+2025-11-10+at+2.26.29%E2%80%AFPM.png?content-type=image%2Fpng" alt="Performance clinic vs physical therapy" />
           </div>
@@ -136,7 +163,7 @@
         </article>
         
         <!-- Performance Pyramid -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/5479ca3e-3b1a-4a20-b6b7-8c09281bed27/IMG_22824.png?content-type=image%2Fpng" alt="Athletic development progression" />
           </div>
@@ -152,7 +179,7 @@
         </article>
         
         <!-- Pre-Surgery PT -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/43eb88ea-92b4-4ef1-8f32-3f60201ed48d/IMG_5038.jpg?content-type=image%2Fjpeg" alt="Pre-surgical physical therapy" />
           </div>
@@ -168,7 +195,7 @@
         </article>
         
         <!-- What PT Looks Like After Surgery -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/0907d612-62db-436d-9fcd-6e118b2dc014/epct3.png?content-type=image%2Fpng" alt="Post-surgical recovery" />
           </div>
@@ -184,7 +211,7 @@
         </article>
         
         <!-- Preventative Care -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Preventative care and training" />
           </div>
@@ -200,7 +227,7 @@
         </article>
         
         <!-- Movement Patterns -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Movement patterns and injury prevention" />
           </div>
@@ -216,7 +243,7 @@
         </article>
         
         <!-- How to Squat -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/7075fbaa-efac-4533-bd5c-40f425468fee/epcsquat.png?content-type=image%2Fpng" alt="How to squat properly" />
           </div>
@@ -232,7 +259,7 @@
         </article>
         
         <!-- Contrast Therapy -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/786f83ff-bd71-4108-9799-61db39b84462/EPC+contrast.png?content-type=image%2Fpng" alt="Contrast therapy benefits" />
           </div>
@@ -248,7 +275,7 @@
         </article>
         
         <!-- EMSculpt -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/c444f51c-7818-4bfd-8714-f5b8a19e8722/_DSC6077.jpg?content-type=image%2Fjpeg" alt="EMSculpt technology" />
           </div>
@@ -264,7 +291,7 @@
         </article>
         
         <!-- Shockwave Therapy -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/908d44f6-9764-4dc1-8d52-b7dbaca7e5c6/shockwave.jpg?content-type=image%2Fjpeg" alt="Shockwave therapy" />
           </div>
@@ -280,7 +307,7 @@
         </article>
         
         <!-- Proteus System -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/51fa2404-9ebe-4bed-a9b9-a3cc5df2ab8d/proteus2.jpg?content-type=image%2Fjpeg" alt="Proteus motion system" />
           </div>
@@ -296,7 +323,7 @@
         </article>
         
         <!-- Custom Insoles -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/f6afa097-f2d4-4a71-85fd-ecf88eedec63/IMG_6065.jpg?content-type=image%2Fjpeg" alt="Custom insoles and foot assessment" />
           </div>
@@ -312,7 +339,7 @@
         </article>
         
         <!-- Stability Before Strength -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Stability before strength" />
           </div>
@@ -328,7 +355,7 @@
         </article>
         
         <!-- Rotation and Anti-Rotation -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Rotation and anti-rotation" />
           </div>
@@ -344,7 +371,7 @@
         </article>
         
         <!-- Training Programs Stall -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Training programs stall" />
           </div>
@@ -360,7 +387,7 @@
         </article>
         
         <!-- Better Progressions -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Better progressions" />
           </div>
@@ -376,7 +403,7 @@
         </article>
         
         <!-- Feeling Worked vs Results -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Feeling worked vs results" />
           </div>
@@ -392,7 +419,7 @@
         </article>
         
         <!-- Pain Not Badge -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Pain not badge" />
           </div>
@@ -408,7 +435,7 @@
         </article>
         
         <!-- Build Resilience -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Build resilience" />
           </div>
@@ -424,7 +451,7 @@
         </article>
         
         <!-- First Session Matters -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="First session matters" />
           </div>
@@ -440,7 +467,7 @@
         </article>
         
         <!-- Carries Underrated -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Carries underrated" />
           </div>
@@ -456,7 +483,7 @@
         </article>
         
         <!-- Single Leg Work -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Single leg work" />
           </div>
@@ -472,7 +499,7 @@
         </article>
         
         <!-- Warmup Matters -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Warmup matters" />
           </div>
@@ -488,7 +515,7 @@
         </article>
         
         <!-- Mobility vs Stability -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Mobility vs stability" />
           </div>
@@ -504,7 +531,7 @@
         </article>
         
         <!-- Low Back Training -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Low back training" />
           </div>
@@ -520,7 +547,7 @@
         </article>
         
         <!-- Neck Pain Core -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Neck pain core" />
           </div>
@@ -536,7 +563,7 @@
         </article>
         
         <!-- Tight Hips Problem -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Tight hips problem" />
           </div>
@@ -552,7 +579,7 @@
         </article>
         
         <!-- Train Through Pain -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Train through pain" />
           </div>
@@ -568,7 +595,7 @@
         </article>
         
         <!-- Decide Client Ready -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Decide client ready" />
           </div>
@@ -584,7 +611,7 @@
         </article>
         
         <!-- Don't Start Max Effort -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Don't start max effort" />
           </div>
@@ -600,7 +627,7 @@
         </article>
         
         <!-- Evaluation 30 Min -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Evaluation 30 min" />
           </div>
@@ -616,7 +643,7 @@
         </article>
         
         <!-- Rehab Training Performance -->
-        <article class="epc-blog-card">
+        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
           <div class="epc-blog-card-image">
             <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Rehab training performance" />
           </div>
@@ -631,7 +658,8 @@
           </div>
         </article>
         
-      </div>
+          </div>
+        </div>
       </div>
       
       <!-- CTA Section -->
@@ -702,35 +730,388 @@
   </footer>
 
   <style>
+    /* Spiral Journal Layout */
     .epc-blog-overview {
-      max-width: 1400px;
-      margin: 0 auto;
+      max-width: 100%;
+      margin: 0;
       padding: 0;
-      background: #000;
+      background: linear-gradient(to bottom, #0a0a0a 0%, #000 100%);
       color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
     
-    /* Blog content wrapper - adds padding after header */
-    .epc-blog-content {
-      padding: 0 40px 80px;
+    /* Spiral Wrapper */
+    .epc-spiral-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 4000px;
+      padding: 0;
     }
     
-    @media (max-width: 768px) {
-      .epc-blog-content {
-        padding: 0 20px 40px;
-      }
+    /* Spiral Container - the 3D space */
+    .epc-spiral-container {
+      position: relative;
+      width: 100%;
+      height: 4000px;
+      perspective: 2000px;
+      perspective-origin: center center;
     }
+    
+    /* Center Logo Anchor */
+    .epc-spiral-logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 1000;
+      text-align: center;
+      pointer-events: none;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+    }
+    
+    .epc-spiral-logo-text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 120px;
+      font-weight: 400;
+      color: #C9B991;
+      letter-spacing: 8px;
+      display: block;
+      text-shadow: 0 0 30px rgba(201, 185, 145, 0.3);
+      filter: drop-shadow(0 0 20px rgba(201, 185, 145, 0.2));
+    }
+    
+    .epc-spiral-logo-subtitle {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #fff;
+      color: rgba(201, 185, 145, 0.6);
+      margin-top: 20px;
       font-weight: 300;
     }
     
-    .epc-blog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 50px;
-      margin-bottom: 80px;
+    /* Spiral Path (subtle visual guide) */
+    .epc-spiral-path {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2000px;
+      height: 4000px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    
+    /* Constellation Services */
+    .epc-spiral-constellation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .epc-constellation-label {
+      position: absolute;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(201, 185, 145, 0.15);
+      font-weight: 300;
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-10px) translateX(5px); }
+      50% { transform: translateY(5px) translateX(-5px); }
+      75% { transform: translateY(-5px) translateX(10px); }
+    }
+    
+    /* Spiral Cards Wrapper */
+    .epc-spiral-cards-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+    
+    /* Spiral Card Styling */
+    .epc-spiral-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 420px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(201, 185, 145, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center center;
+      will-change: transform, opacity, filter;
+      cursor: pointer;
+    }
+    
+    .epc-spiral-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #C9B991, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .epc-spiral-card:hover::before {
+      opacity: 1;
+    }
+    
+    .epc-spiral-card-active {
+      border-color: rgba(201, 185, 145, 0.5);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(201, 185, 145, 0.1);
+    }
+    
+    .epc-spiral-card-active::before {
+      opacity: 1;
+    }
+    
+    .epc-spiral-card:hover {
+      border-color: rgba(201, 185, 145, 0.6);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(201, 185, 145, 0.15);
+    }
+    
+    /* Card Content (reuse existing styles but adjust) */
+    .epc-spiral-card .epc-blog-card-content {
+      padding: 35px 30px;
+    }
+    
+    .epc-spiral-card .epc-blog-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: #fff;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+    
+    .epc-spiral-card-active .epc-blog-card-title {
+      color: #C9B991;
+    }
+    
+    .epc-spiral-card .epc-blog-card-category {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9B991;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    
+    .epc-spiral-card .epc-blog-card-excerpt {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+    
+    .epc-spiral-card-active .epc-blog-card-excerpt {
+      color: rgba(255, 255, 255, 0.85);
+    }
+    
+    .epc-spiral-card .epc-blog-card-link {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9B991;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+      font-weight: 400;
+      display: inline-block;
+    }
+    
+    .epc-spiral-card:hover .epc-blog-card-link {
+      border-bottom-color: #C9B991;
+      transform: translateX(4px);
+    }
+    
+    /* Category Markers */
+    .epc-spiral-category-marker {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(201, 185, 145, 0.4);
+      font-weight: 300;
+      pointer-events: none;
+      z-index: 100;
+    }
+    
+    /* Mobile: Simplified Stack Layout */
+    @media (max-width: 768px) {
+      .epc-spiral-wrapper {
+        min-height: auto;
+      }
+      
+      .epc-spiral-container {
+        height: auto;
+        perspective: none;
+      }
+      
+      .epc-spiral-logo {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        padding: 60px 20px 40px;
+      }
+      
+      .epc-spiral-logo-text {
+        font-size: 64px;
+      }
+      
+      .epc-spiral-cards-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding: 0 20px 60px;
+      }
+      
+      .epc-spiral-card {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        max-width: 100%;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        margin: 0;
+      }
+      
+      .epc-spiral-path,
+      .epc-spiral-constellation {
+        display: none;
+      }
+    }
+    
+    /* Existing blog card styles for compatibility */
+    .epc-blog-card {
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(201, 185, 145, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .epc-blog-card-image {
+      width: 100%;
+      height: 280px;
+      background: #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .epc-blog-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .epc-blog-card:hover .epc-blog-card-image img {
+      transform: scale(1.05);
+    }
+    
+    .epc-blog-card-content {
+      padding: 35px 30px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    
+    .epc-blog-card-category {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9B991;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    
+    .epc-blog-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 400;
+      line-height: 1.3;
+      color: #fff;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+    
+    .epc-blog-card-excerpt {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 25px;
+      font-weight: 300;
+      flex-grow: 1;
+    }
+    
+    .epc-blog-card-meta {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+    
+    .epc-blog-card-link {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #C9B991;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+      font-weight: 400;
+      align-self: flex-start;
+    }
+    
+    .epc-blog-card-link:hover {
+      border-bottom-color: #C9B991;
+    }
+    
+    .epc-featured-post {
+      width: 480px;
+    }
+    
+    .epc-featured-post .epc-blog-card-image {
+      height: 320px;
+    }
+    
+    .epc-featured-post .epc-blog-card-title {
+      font-size: 32px;
     }
     
     .epc-blog-card {
@@ -933,6 +1314,7 @@
     }
   </style>
 
+  <script src="assets/js/spiral-journal.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>
