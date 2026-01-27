@@ -44,66 +44,81 @@
     const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.3) / totalScrollHeight));
     
     // Calculate rotation offset - cards orbit as you scroll
-    const orbitRotation = scrollProgress * Math.PI * 2; // Full rotation as you scroll
+    const orbitRotation = scrollProgress * Math.PI * 2;
+    
+    // Responsive radius - adapts to viewport size
+    const baseRadius = Math.min(
+      viewportWidth * 0.35, // 35% of viewport
+      600 // Max radius
+    );
     
     journalBlocks.forEach((block, index) => {
-      // Calculate position in spiral (0 to 1) - each card gets a position around the circle
+      // Calculate position in spiral (0 to 1)
       const spiralPosition = index / journalBlocks.length;
       
-      // Add orbit rotation so cards rotate around center as you scroll
+      // Add orbit rotation
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
-      // Spiral radius - much larger radius for better spacing
-      const baseRadius = 700; // Large radius for wide spacing
+      // Spiral radius
       const radius = baseRadius;
       
-      // Calculate X and Y positions in spiral (relative to center)
+      // Calculate X and Y positions in spiral
       const xOffset = Math.cos(angle) * radius;
-      const yOffset = Math.sin(angle) * radius * 0.3; // Less Y movement for flatter spiral
+      const yOffset = Math.sin(angle) * radius * 0.25; // Flatter spiral
       
-      // Vertical distribution - each card gets a vertical offset based on its index
-      // This creates a downward spiral effect
-      const verticalSpacing = 200; // Space between cards vertically
-      const cardVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2); // Center the distribution
+      // Vertical distribution - better spacing
+      const verticalSpacing = 300; // Increased spacing
+      const cardVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2);
       
-      // Vertical scroll offset - cards move down as you scroll, but stop before CTA
-      const maxVerticalOffset = ctaTop - center.y - 200; // Stop 200px before CTA
+      // Vertical scroll offset
+      const maxVerticalOffset = ctaTop - center.y - 250;
       const scrollVerticalOffset = Math.min(
-        scrollProgress * viewportHeight * 0.4,
+        scrollProgress * viewportHeight * 0.35,
         maxVerticalOffset
       );
       
       // Calculate final position relative to viewport center
-      const finalX = center.x + xOffset - 140; // Subtract half block width (280px / 2)
-      const finalY = center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - 100; // Center Y + spiral offset + card vertical spacing + scroll offset - half block height
+      const blockWidth = 280;
+      const blockHeight = 200; // Approximate
+      const finalX = center.x + xOffset - (blockWidth / 2);
+      const finalY = center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - (blockHeight / 2);
       
       // Ensure cards don't go below CTA
       const ctaRect = ctaSection ? ctaSection.getBoundingClientRect() : null;
-      const maxY = ctaRect ? ctaRect.top - 150 : window.innerHeight * 0.8; // 150px buffer above CTA
+      const maxY = ctaRect ? ctaRect.top - 180 : window.innerHeight * 0.8;
       const constrainedY = Math.min(finalY, maxY);
       
-      // Calculate opacity based on position in orbit
-      // Cards fade: 0 opacity -> 1 opacity (at center/front) -> 0 opacity
-      // Front position is when angle is closest to 0 or 2π
+      // Calculate opacity - SOFTER FADE
       const normalizedAngle = ((angle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
       const distanceFromFront = Math.min(normalizedAngle, Math.PI * 2 - normalizedAngle);
       
-      // Opacity curve: 0 at back (π), 1 at front (0 or 2π)
-      // Use a smooth curve that peaks at front
-      const normalizedDistance = distanceFromFront / Math.PI; // 0 to 1
-      const opacity = Math.max(0, Math.min(1, 1 - (normalizedDistance * 2))); // Fade from 1 at front to 0 at back
+      // Softer opacity curve with minimum visibility
+      const normalizedDistance = distanceFromFront / Math.PI;
+      const opacity = Math.max(
+        0.2, // Minimum 20% opacity (never fully invisible)
+        Math.min(1, 1 - (normalizedDistance * 1.1)) // Softer fade
+      );
       
-      // Apply simple 2D positioning (no 3D transforms that break clickability)
+      // Constrain cards to viewport bounds
+      const minX = 20; // 20px padding from left
+      const maxX = viewportWidth - blockWidth - 20; // 20px padding from right
+      const constrainedX = Math.max(minX, Math.min(maxX, finalX));
+      
+      // Apply positioning
       block.style.position = 'absolute';
-      block.style.left = `${finalX}px`;
+      block.style.left = `${constrainedX}px`;
       block.style.top = `${constrainedY}px`;
       block.style.opacity = opacity;
-      block.style.transform = 'none'; // No 3D transforms
-      block.style.zIndex = opacity > 0.1 ? 10 : 1; // Higher z-index when visible
+      block.style.transform = 'none';
+      block.style.zIndex = Math.round(opacity * 10) + 5; // Z-index based on opacity
       
-      // Ensure block is visible and clickable
-      block.style.visibility = opacity > 0.05 ? 'visible' : 'hidden';
-      block.style.pointerEvents = opacity > 0.05 ? 'auto' : 'none'; // Only clickable when visible
+      // Visibility and clickability
+      const isVisible = opacity > 0.15;
+      block.style.visibility = isVisible ? 'visible' : 'hidden';
+      block.style.pointerEvents = isVisible ? 'auto' : 'none';
+      
+      // Smooth transition for opacity
+      block.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     });
   }
 
@@ -117,7 +132,7 @@
   // Initialize
   setTimeout(() => {
     updateBlockPositions();
-  }, 200); // Delay to ensure DOM and 3D scene are ready
+  }, 200);
   
   window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('resize', () => {
