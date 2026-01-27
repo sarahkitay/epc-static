@@ -1,4 +1,4 @@
-// Journal Spiral - Cards orbit around center 3D figure with opacity fade and vertical spacing
+// Journal Spiral - True orbital experience: cards spiral around figure as you scroll
 (function() {
   'use strict';
 
@@ -38,49 +38,57 @@
       ctaTop = ctaRect.top + scrollTop;
     }
     
-    // Total scroll range - start orbit later
+    // Total scroll range - cards orbit as you scroll through this range
     const maxScrollHeight = ctaTop - containerTop - viewportHeight * 0.2;
     const totalScrollHeight = Math.max(1, maxScrollHeight);
-    const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.5) / totalScrollHeight));
     
-    // Calculate rotation offset
-    const orbitRotation = scrollProgress * Math.PI * 2;
+    // Scroll progress: 0 = start, 1 = end
+    // Cards start spread out and orbit as you scroll
+    const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.4) / totalScrollHeight));
     
-    // Responsive radius
+    // Responsive radius - adapts to viewport size
     const baseRadius = Math.min(
-      viewportWidth * 0.35,
-      600
+      viewportWidth * 0.32, // 32% of viewport for better spacing
+      550 // Max radius
     );
     
     journalBlocks.forEach((block, index) => {
-      const spiralPosition = index / journalBlocks.length;
-      const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
-      const radius = baseRadius;
+      // Each card starts at a different angle around the circle
+      const baseAngle = (index / journalBlocks.length) * Math.PI * 2;
       
-      // CIRCULAR ORBIT - More Y movement
+      // As you scroll, all cards rotate around the center (orbital motion)
+      // Each card also moves forward in the spiral (downward)
+      const orbitRotation = scrollProgress * Math.PI * 2; // Full rotation as you scroll
+      const spiralAdvance = scrollProgress; // How far down the spiral (0 to 1)
+      
+      // Combine base angle with orbital rotation
+      const angle = baseAngle + orbitRotation;
+      
+      // Spiral radius - starts larger, gets slightly smaller as you go down
+      const radiusVariation = 1 - (spiralAdvance * 0.2); // Radius decreases 20% as you scroll
+      const radius = baseRadius * radiusVariation;
+      
+      // TRUE CIRCULAR ORBIT - equal X and Y movement
       const xOffset = Math.cos(angle) * radius;
-      const yOffset = Math.sin(angle) * radius * 0.6; // Increased for circular feel
+      const yOffset = Math.sin(angle) * radius * 0.7; // Slight vertical compression for better view
       
-      // Vertical distribution
-      const verticalSpacing = 300;
-      const cardVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2);
+      // Vertical spiral movement - cards move down as they orbit
+      // Each card starts at a different vertical position
+      const verticalSpacing = 250; // Space between cards vertically
+      const startVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2);
       
-      // Vertical scroll offset
-      const maxVerticalOffset = ctaTop - center.y - 250;
-      const scrollVerticalOffset = Math.min(
-        scrollProgress * viewportHeight * 0.35,
-        maxVerticalOffset
-      );
+      // Cards move down together as you scroll
+      const scrollVerticalMovement = scrollProgress * viewportHeight * 0.4;
       
-      // Calculate final position WITH HEADER PROTECTION
+      // Calculate final position
       const blockWidth = 280;
       const blockHeight = 200;
-      const headerOffset = 120; // Your header height
+      const headerOffset = 120;
       
       const finalX = center.x + xOffset - (blockWidth / 2);
       const finalY = Math.max(
-        headerOffset + 80, // Never overlap header
-        center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - (blockHeight / 2)
+        headerOffset + 100, // Never overlap header
+        center.y + yOffset + startVerticalOffset + scrollVerticalMovement - (blockHeight / 2)
       );
       
       // Constrain to CTA
@@ -88,13 +96,16 @@
       const maxY = ctaRect ? ctaRect.top - 180 : window.innerHeight * 0.8;
       const constrainedY = Math.min(finalY, maxY);
       
-      // Calculate opacity
+      // Opacity based on position in orbit
+      // Cards fade as they move away from front position
       const normalizedAngle = ((angle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
       const distanceFromFront = Math.min(normalizedAngle, Math.PI * 2 - normalizedAngle);
+      
+      // Softer fade - cards stay visible longer
       const normalizedDistance = distanceFromFront / Math.PI;
       const opacity = Math.max(
-        0.2,
-        Math.min(1, 1 - (normalizedDistance * 1.1))
+        0.25, // Minimum 25% opacity
+        Math.min(1, 1 - (normalizedDistance * 0.9)) // Softer fade curve
       );
       
       // Constrain X to viewport
@@ -110,10 +121,13 @@
       block.style.transform = 'none';
       block.style.zIndex = Math.round(opacity * 10) + 5;
       
-      const isVisible = opacity > 0.15;
+      // Visibility and clickability
+      const isVisible = opacity > 0.2;
       block.style.visibility = isVisible ? 'visible' : 'hidden';
       block.style.pointerEvents = isVisible ? 'auto' : 'none';
-      block.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      
+      // Smooth transitions
+      block.style.transition = 'opacity 0.4s ease, left 0.1s linear, top 0.1s linear';
     });
   }
 
