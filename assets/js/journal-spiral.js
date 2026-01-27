@@ -29,54 +29,49 @@
     const center = getViewportCenter();
     
     // Total scroll range for the journal
-    const totalScrollHeight = containerRect.height - viewportHeight;
-    const scrollProgress = Math.max(0, Math.min(1, scrollTop / totalScrollHeight));
+    const totalScrollHeight = Math.max(1, containerRect.height - viewportHeight);
+    const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.3) / totalScrollHeight));
     
     journalBlocks.forEach((block, index) => {
-      // Calculate position in spiral (0 to 1)
+      // Calculate position in spiral (0 to 1) - each card gets a position around the circle
       const spiralPosition = index / journalBlocks.length;
       
       // Combine scroll progress with spiral position for dynamic movement
-      const combinedProgress = (spiralPosition + scrollProgress * 0.3) % 1;
+      // As you scroll, the spiral rotates
+      const combinedProgress = (spiralPosition + scrollProgress * 0.5) % 1;
       
       // Spiral angle (full circle)
       const angle = combinedProgress * Math.PI * 2;
       
-      // Spiral radius - increases as you scroll down
-      const baseRadius = 250; // Base radius in pixels
-      const radiusVariation = scrollProgress * 100; // Radius increases with scroll
+      // Spiral radius - starts smaller, increases as you scroll down
+      const baseRadius = 200; // Base radius in pixels
+      const radiusVariation = scrollProgress * 150; // Radius increases with scroll
       const radius = baseRadius + radiusVariation;
       
-      // Vertical offset in spiral (cards go down as they spiral)
-      const verticalOffset = scrollProgress * viewportHeight * 0.5;
-      
-      // Calculate X and Y positions in spiral
+      // Calculate X and Y positions in spiral (relative to center)
       const xOffset = Math.cos(angle) * radius;
-      const yOffset = Math.sin(angle) * radius * 0.3 + verticalOffset; // Less Y movement for flatter spiral
+      const yOffset = Math.sin(angle) * radius * 0.4; // Less Y movement for flatter spiral
       
-      // Z depth - cards closer to center are in front
-      const distanceFromCenter = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
-      const maxDistance = Math.sqrt(center.x * center.x + center.y * center.y) + radius;
-      const zDistance = -300 + (distanceFromCenter / maxDistance) * 200; // Range: -300 to -100
-      
-      // Scale - cards closer to center are larger
-      const scale = Math.max(0.5, Math.min(1.1, 1.0 - (distanceFromCenter / maxDistance) * 0.5));
-      
-      // Opacity - cards closer to center are more visible
-      const opacity = Math.max(0.4, Math.min(1, 1.0 - (distanceFromCenter / maxDistance) * 0.6));
-      
-      // Rotation - cards face the center
-      const rotationY = angle * (180 / Math.PI); // Convert to degrees
-      
-      // Get the block's original top position
-      const blockStyle = window.getComputedStyle(block);
-      const topValue = blockStyle.top;
-      const topVh = parseFloat(topValue);
-      const originalTop = (topVh / 100) * viewportHeight;
+      // Vertical scroll offset - cards move down as you scroll
+      const verticalScrollOffset = scrollProgress * viewportHeight * 0.3;
       
       // Calculate final position relative to viewport center
       const finalX = center.x + xOffset - 140; // Subtract half block width (280px / 2)
-      const finalY = originalTop + yOffset;
+      const finalY = center.y + yOffset + verticalScrollOffset - 100; // Center Y + spiral offset + scroll offset - half block height
+      
+      // Z depth - cards closer to center are in front
+      const distanceFromCenter = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
+      const maxDistance = radius + 50;
+      const zDistance = -400 + (distanceFromCenter / maxDistance) * 300; // Range: -400 to -100
+      
+      // Scale - cards closer to center are larger
+      const scale = Math.max(0.6, Math.min(1.2, 1.0 - (distanceFromCenter / maxDistance) * 0.4));
+      
+      // Opacity - cards closer to center are more visible
+      const opacity = Math.max(0.5, Math.min(1, 1.0 - (distanceFromCenter / maxDistance) * 0.5));
+      
+      // Rotation - cards face the center
+      const rotationY = angle * (180 / Math.PI); // Convert to degrees
       
       // Apply 3D transform
       block.style.transform = `
@@ -85,10 +80,13 @@
         rotateY(${rotationY}deg)
       `;
       block.style.opacity = opacity;
-      block.style.zIndex = Math.round(1000 + (zDistance + 300)); // Higher z-index for front blocks
+      block.style.zIndex = Math.round(1000 + (zDistance + 400)); // Higher z-index for front blocks
+      
+      // Ensure block is visible
+      block.style.visibility = 'visible';
       
       // Add active class to blocks near center
-      if (distanceFromCenter < radius * 0.5) {
+      if (distanceFromCenter < radius * 0.6) {
         block.classList.add('journal-block-active');
       } else {
         block.classList.remove('journal-block-active');
@@ -106,7 +104,7 @@
   // Initialize
   setTimeout(() => {
     updateBlockPositions();
-  }, 100); // Small delay to ensure DOM is ready
+  }, 200); // Delay to ensure DOM and 3D scene are ready
   
   window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('resize', () => {

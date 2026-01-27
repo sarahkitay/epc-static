@@ -421,7 +421,7 @@
 
     /* Journal Blocks - 3D Spiral Effect */
     .journal-block {
-      position: absolute;
+      position: fixed; /* Changed from absolute to fixed so they're positioned relative to viewport */
       width: 280px;
       padding: 30px;
       background: rgba(15, 15, 15, 0.85);
@@ -435,6 +435,9 @@
       display: block;
       transform-style: preserve-3d;
       will-change: transform, opacity;
+      visibility: visible; /* Ensure blocks are visible */
+      top: 0; /* Reset top/left so JavaScript can position them */
+      left: 0;
     }
 
     .journal-block:hover {
