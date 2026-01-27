@@ -53,7 +53,7 @@ function checkAuth() {
   }
 
   const session = sessionStorage.getItem(SESSION_KEY);
-  const parentSession = sessionStorage.getItem('epc_parent_session');
+  const parentSession = sessionStorage.getItem(PARENT_SESSION_KEY);
   
   console.log('Auth check - Path:', pathname, 'Session:', session, 'Parent:', parentSession);
   
@@ -294,7 +294,7 @@ async function initDashboard() {
   
   // Check authentication (but don't redirect if we're already here)
   const session = sessionStorage.getItem(SESSION_KEY);
-  const parentSession = sessionStorage.getItem('epc_parent_session');
+  const parentSession = sessionStorage.getItem(PARENT_SESSION_KEY);
   console.log('Session check - Staff:', session, 'Parent:', parentSession);
   
   if (!session && !parentSession) {

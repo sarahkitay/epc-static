@@ -216,8 +216,8 @@
               timestamp: Date.now()
             }));
             
-            // Redirect to parent view
-            window.location.href = `parent-view.html?id=${client.id}`;
+            // Redirect to parent view (replace avoids back-button stacking)
+            window.location.replace(`parent-view.html?id=${client.id}`);
           } else {
             errorMessage.classList.add('show');
             loginBtn.disabled = false;
@@ -239,12 +239,12 @@
         const session = JSON.parse(parentSession);
         // Check if session is still valid (24 hours)
         if (Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
-          window.location.href = `parent-view.html?id=${session.clientId}`;
+          window.location.replace(`parent-view.html?id=${session.clientId}`);
         } else {
           sessionStorage.removeItem('epc_secure_session_v1_parent');
         }
       } catch (e) {
-        sessionStorage.removeItem('parentSession');
+        sessionStorage.removeItem('epc_secure_session_v1_parent');
       }
     }
     

@@ -105,6 +105,35 @@
       color: var(--epc-ink);
       line-height: 1.6;
     }
+    .purchase-package-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .package-option-btn {
+      padding: 12px 20px;
+      background: rgba(201,178,127,0.1);
+      border: 1px solid var(--epc-line);
+      border-radius: 6px;
+      color: var(--epc-ink);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .package-option-btn:hover {
+      background: rgba(201,178,127,0.15);
+      border-color: var(--epc-gold);
+    }
+    .package-option-btn.selected {
+      border-color: var(--epc-gold);
+      background: rgba(201,178,127,0.12);
+    }
+    #squareNotConfigured code {
+      background: rgba(0,0,0,0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
     @media (max-width: 768px) {
       .parent-view-header-content {
         padding: 0 20px;
@@ -173,6 +202,32 @@
           <p style="color: var(--epc-ink-dim);">Loading notes...</p>
         </div>
       </div>
+
+      <!-- Purchase a Package (Square – outline until credentials added) -->
+      <div class="parent-info-card" id="purchasePackageCard">
+        <h3>Purchase a Package</h3>
+        <p style="color: var(--epc-ink-dim); font-size: 13px; margin-bottom: 20px;">Buy session packages for your child. Payment is processed securely via Square.</p>
+        <div class="purchase-package-options" id="packageOptions">
+          <!-- Package buttons: name, sessions, amount (cents). Edit amounts when Square is set up. -->
+          <button type="button" class="package-option-btn" data-name="5 Session Package" data-sessions="5" data-amount="25000" data-display="$250">5 Sessions — $250</button>
+          <button type="button" class="package-option-btn" data-name="10 Session Package" data-sessions="10" data-amount="45000" data-display="$450">10 Sessions — $450</button>
+          <button type="button" class="package-option-btn" data-name="20 Session Package" data-sessions="20" data-amount="80000" data-display="$800">20 Sessions — $800</button>
+        </div>
+        <div id="packageSelectionSummary" style="display: none; margin: 20px 0; padding: 16px; background: rgba(201,178,127,0.08); border-radius: 6px;">
+          <p style="margin: 0 0 8px 0;"><strong id="selectedPackageName"></strong></p>
+          <p style="margin: 0; color: var(--epc-gold);" id="selectedPackageAmount"></p>
+        </div>
+        <div id="squarePaymentContainer" style="display: none;">
+          <div id="square-card-container" style="min-height: 120px; margin-bottom: 16px;"></div>
+          <button type="button" class="btn-primary" id="squarePayBtn" disabled>Pay with Square</button>
+        </div>
+        <div id="squareNotConfigured" style="padding: 20px; background: rgba(201,178,127,0.06); border: 1px dashed var(--epc-line); border-radius: 6px; color: var(--epc-ink-dim); font-size: 13px;">
+          <p style="margin: 0;"><strong>Square payment</strong> will appear here once your Square account is connected. Add <code>SQUARE_APPLICATION_ID</code>, <code>SQUARE_LOCATION_ID</code>, and <code>SQUARE_ACCESS_TOKEN</code> in your project’s environment variables to enable payments.</p>
+        </div>
+        <div id="squarePaymentSuccess" style="display: none; padding: 20px; background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); border-radius: 6px; color: #4CAF50;">
+          <p style="margin: 0;">Payment received. Your trainer will add the package to your account shortly.</p>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -199,7 +254,7 @@
         }
         return session;
       } catch (e) {
-        sessionStorage.removeItem('parentSession');
+        sessionStorage.removeItem('epc_secure_session_v1_parent');
         window.location.href = 'parent-portal.html';
         return null;
       }
@@ -221,20 +276,94 @@
 
       await initDB();
 
-      // Load and display client data
-      await loadClientData();
+      // Load and display client data; stop if client not found (shows "log in again" inline)
+      const loaded = await loadClientData();
+      if (!loaded) return;
       await loadAssessments();
       await loadPrograms();
       await loadNotes();
+      initPurchasePackage();
+    }
+
+    // --- Purchase a Package (Square outline – wire SDK when credentials added) ---
+    let selectedPackage = null;
+
+    async function initPurchasePackage() {
+      const card = document.getElementById('purchasePackageCard');
+      if (!card) return;
+
+      const options = card.querySelectorAll('.package-option-btn');
+      const summary = document.getElementById('packageSelectionSummary');
+      const summaryName = document.getElementById('selectedPackageName');
+      const summaryAmount = document.getElementById('selectedPackageAmount');
+      const squarePaymentContainer = document.getElementById('squarePaymentContainer');
+      const squareNotConfigured = document.getElementById('squareNotConfigured');
+      const squarePaymentSuccess = document.getElementById('squarePaymentSuccess');
+
+      // Check if Square is configured (GET /api/square-config)
+      let squareConfigured = false;
+      try {
+        const r = await fetch('/api/square-config');
+        if (r.ok) {
+          const cfg = await r.json();
+          squareConfigured = !!cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId));
+        }
+      } catch (e) {
+        console.warn('Square config check failed:', e);
+      }
+
+      if (!squareConfigured) {
+        if (squareNotConfigured) squareNotConfigured.style.display = 'block';
+        if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
+      } else {
+        if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+        // When Square is configured: show card form and Pay button here.
+        // For now we only show selection; actual Square SDK + /api/create-square-payment will be wired when you add credentials.
+      }
+
+      options.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          options.forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedPackage = {
+            name: btn.dataset.name,
+            sessions: parseInt(btn.dataset.sessions, 10),
+            amount: parseInt(btn.dataset.amount, 10),
+            display: btn.dataset.display
+          };
+          if (summary && summaryName && summaryAmount) {
+            summary.style.display = 'block';
+            summaryName.textContent = selectedPackage.name;
+            summaryAmount.textContent = selectedPackage.display;
+          }
+          if (squareConfigured && squarePaymentContainer) {
+            squarePaymentContainer.style.display = 'block';
+            // TODO: initialize Square card form here when SQUARE_APPLICATION_ID + SQUARE_LOCATION_ID are set
+          }
+        });
+      });
+    }
+
+    function showSessionExpiredState() {
+      sessionStorage.removeItem('epc_secure_session_v1_parent');
+      const main = document.querySelector('.parent-view-content');
+      if (main) {
+        main.innerHTML = `
+          <div class="parent-info-card" style="text-align: center; max-width: 480px; margin: 40px auto;">
+            <h3 style="margin-bottom: 16px;">Session expired or client data unavailable</h3>
+            <p style="color: var(--epc-ink-dim); margin-bottom: 24px;">This device may not have the client data, or your session has expired. Please log in again from the device where you registered.</p>
+            <a href="parent-portal.html" class="btn-primary" style="display: inline-block; text-decoration: none; text-align: center;">Log in again</a>
+          </div>
+        `;
+      }
     }
 
     async function loadClientData() {
       try {
         currentClient = await getClient(currentClientId);
         if (!currentClient) {
-          alert('Client not found.');
-          window.location.href = 'parent-portal.html';
-          return;
+          showSessionExpiredState();
+          return false;
         }
 
         document.getElementById('clientNameTitle').textContent = currentClient.name;
@@ -258,9 +387,11 @@
             <span class="info-value">${currentClient.emergencyContact || 'N/A'}</span>
           </div>
         `;
+        return true;
       } catch (error) {
         console.error('Error loading client:', error);
-        alert('Error loading client data.');
+        showSessionExpiredState();
+        return false;
       }
     }
 
