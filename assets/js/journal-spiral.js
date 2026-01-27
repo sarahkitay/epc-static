@@ -1,4 +1,4 @@
-// Journal Spiral - Cards orbit around center 3D figure with opacity fade
+// Journal Spiral - Cards orbit around center 3D figure with opacity fade and vertical spacing
 (function() {
   'use strict';
 
@@ -48,30 +48,34 @@
     
     journalBlocks.forEach((block, index) => {
       // Calculate position in spiral (0 to 1) - each card gets a position around the circle
-      // Add spacing between cards
       const spiralPosition = index / journalBlocks.length;
       
       // Add orbit rotation so cards rotate around center as you scroll
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
-      // Spiral radius - much larger radius to space cards out significantly
-      const baseRadius = 600; // Much larger radius for better spacing
+      // Spiral radius - much larger radius for better spacing
+      const baseRadius = 700; // Large radius for wide spacing
       const radius = baseRadius;
       
       // Calculate X and Y positions in spiral (relative to center)
       const xOffset = Math.cos(angle) * radius;
       const yOffset = Math.sin(angle) * radius * 0.3; // Less Y movement for flatter spiral
       
+      // Vertical distribution - each card gets a vertical offset based on its index
+      // This creates a downward spiral effect
+      const verticalSpacing = 200; // Space between cards vertically
+      const cardVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2); // Center the distribution
+      
       // Vertical scroll offset - cards move down as you scroll, but stop before CTA
       const maxVerticalOffset = ctaTop - center.y - 200; // Stop 200px before CTA
-      const verticalScrollOffset = Math.min(
-        scrollProgress * viewportHeight * 0.3,
+      const scrollVerticalOffset = Math.min(
+        scrollProgress * viewportHeight * 0.4,
         maxVerticalOffset
       );
       
       // Calculate final position relative to viewport center
       const finalX = center.x + xOffset - 140; // Subtract half block width (280px / 2)
-      const finalY = center.y + yOffset + verticalScrollOffset - 100; // Center Y + spiral offset + scroll offset - half block height
+      const finalY = center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - 100; // Center Y + spiral offset + card vertical spacing + scroll offset - half block height
       
       // Ensure cards don't go below CTA
       const ctaRect = ctaSection ? ctaSection.getBoundingClientRect() : null;
