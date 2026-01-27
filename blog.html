@@ -386,8 +386,14 @@
     /* Stop 3D figure before footer - but allow full height */
     @media (min-height: 600px) {
       #canvas-container {
-        max-height: calc(100vh - 150px); /* Stop before footer but show full figure */
+        max-height: calc(100vh - 100px); /* More space for footer, but show full figure */
       }
+    }
+    
+    /* Ensure canvas doesn't clip content */
+    #canvas-container canvas {
+      max-width: 100vw;
+      max-height: 100vh;
     }
     
     /* Stop 3D figure before footer */

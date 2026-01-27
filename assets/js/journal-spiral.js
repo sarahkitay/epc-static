@@ -54,8 +54,8 @@
       // Add orbit rotation so cards rotate around center as you scroll
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
-      // Spiral radius - larger radius to space cards out more
-      const baseRadius = 400; // Increased radius for better spacing
+      // Spiral radius - much larger radius to space cards out significantly
+      const baseRadius = 600; // Much larger radius for better spacing
       const radius = baseRadius;
       
       // Calculate X and Y positions in spiral (relative to center)

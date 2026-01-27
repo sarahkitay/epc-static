@@ -33,10 +33,10 @@
       50,
       window.innerWidth / window.innerHeight,
       0.1,
-      2000
+      5000
     );
-    // Position camera to see full figure - further back and centered
-    camera.position.set(0, 0, 300);
+    // Position camera much further back to see full figure
+    camera.position.set(0, 0, 500);
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
@@ -104,22 +104,23 @@
           // Scale up the model to fit viewport height while maintaining aspect ratio
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          // Scale to fit ~80% of viewport height, ensuring full figure is visible
+          // Scale to fit ~70% of viewport height, ensuring full figure is visible with margin
           const viewportHeight = window.innerHeight;
-          const targetHeight = viewportHeight * 0.8;
+          const targetHeight = viewportHeight * 0.7; // Smaller scale to ensure nothing is cut off
           const scale = targetHeight / maxDim;
           figureModel.scale.multiplyScalar(scale);
           
           figureGroup.add(figureModel);
           figureGroup.position.set(0, 0, 0); // Centered at origin
           
-          // Adjust camera to ensure full figure is visible
+          // Adjust camera to ensure full figure is visible with plenty of margin
           const newBox = new THREE.Box3().setFromObject(figureGroup);
           const newSize = newBox.getSize(new THREE.Vector3());
           const maxSize = Math.max(newSize.x, newSize.y, newSize.z);
-          // Set camera distance to see full figure with some margin
-          const distance = maxSize * 2;
-          camera.position.z = Math.max(300, distance);
+          // Set camera distance to see full figure with generous margin (3x the size)
+          const distance = maxSize * 3;
+          camera.position.z = Math.max(500, distance);
+          camera.updateProjectionMatrix();
           
           console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale, 'Camera Z:', camera.position.z);
         },
@@ -171,8 +172,9 @@
         const box = new THREE.Box3().setFromObject(figureGroup);
         const size = box.getSize(new THREE.Vector3());
         const maxSize = Math.max(size.x, size.y, size.z);
-        const distance = maxSize * 2;
-        camera.position.z = Math.max(300, distance);
+        // Use 3x the size for generous margin to ensure nothing is cut off
+        const distance = maxSize * 3;
+        camera.position.z = Math.max(500, distance);
         camera.updateProjectionMatrix();
       }
     });
