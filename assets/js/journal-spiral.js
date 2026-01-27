@@ -1,4 +1,4 @@
-// Journal Spiral - Cards orbit around center 3D figure, one faces front at a time
+// Journal Spiral - Cards orbit around center 3D figure with opacity fade
 (function() {
   'use strict';
 
@@ -13,15 +13,7 @@
 
   // Get CTA section to ensure cards stay above it
   const ctaSection = document.querySelector('.epc-blog-cta');
-  let ctaTop = window.innerHeight * 0.8; // Default fallback
   
-  function updateCTAPosition() {
-    if (ctaSection) {
-      const rect = ctaSection.getBoundingClientRect();
-      ctaTop = rect.top + window.pageYOffset;
-    }
-  }
-
   // Get viewport center (where the 3D figure is)
   function getViewportCenter() {
     return {
@@ -32,8 +24,6 @@
 
   // Calculate spiral position for each block
   function updateBlockPositions() {
-    updateCTAPosition(); // Update CTA position
-    
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -41,14 +31,17 @@
     const containerTop = containerRect.top + scrollTop;
     const center = getViewportCenter();
     
+    // Get CTA position
+    let ctaTop = window.innerHeight * 0.8;
+    if (ctaSection) {
+      const ctaRect = ctaSection.getBoundingClientRect();
+      ctaTop = ctaRect.top + scrollTop;
+    }
+    
     // Total scroll range for the journal - stop before CTA
-    const maxScrollHeight = ctaTop - containerTop - viewportHeight * 0.2; // Stop before CTA
+    const maxScrollHeight = ctaTop - containerTop - viewportHeight * 0.2;
     const totalScrollHeight = Math.max(1, maxScrollHeight);
     const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.3) / totalScrollHeight));
-    
-    // Calculate which card should be "front" based on scroll
-    // As you scroll, different cards come to front
-    const frontCardIndex = Math.floor(scrollProgress * journalBlocks.length);
     
     // Calculate rotation offset - cards orbit as you scroll
     const orbitRotation = scrollProgress * Math.PI * 2; // Full rotation as you scroll
@@ -61,17 +54,17 @@
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
       // Spiral radius - consistent radius for all cards
-      const baseRadius = 280; // Base radius in pixels
+      const baseRadius = 300; // Base radius in pixels
       const radius = baseRadius;
       
       // Calculate X and Y positions in spiral (relative to center)
       const xOffset = Math.cos(angle) * radius;
-      const yOffset = Math.sin(angle) * radius * 0.4; // Less Y movement for flatter spiral
+      const yOffset = Math.sin(angle) * radius * 0.3; // Less Y movement for flatter spiral
       
       // Vertical scroll offset - cards move down as you scroll, but stop before CTA
       const maxVerticalOffset = ctaTop - center.y - 200; // Stop 200px before CTA
       const verticalScrollOffset = Math.min(
-        scrollProgress * viewportHeight * 0.4,
+        scrollProgress * viewportHeight * 0.3,
         maxVerticalOffset
       );
       
@@ -84,72 +77,28 @@
       const maxY = ctaRect ? ctaRect.top - 150 : window.innerHeight * 0.8; // 150px buffer above CTA
       const constrainedY = Math.min(finalY, maxY);
       
-      // Determine if this is the "front" card (the one that should face forward)
-      // Front card is the one closest to the front position (angle closest to 0 or 2π)
+      // Calculate opacity based on position in orbit
+      // Cards fade: 0 opacity -> 1 opacity (at center/front) -> 0 opacity
+      // Front position is when angle is closest to 0 or 2π
       const normalizedAngle = ((angle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
       const distanceFromFront = Math.min(normalizedAngle, Math.PI * 2 - normalizedAngle);
-      const isFrontCard = distanceFromFront < (Math.PI / 4) || distanceFromFront > (Math.PI * 2 - Math.PI / 4); // Within 45 degrees of front
       
-      // Distance from center for depth calculation
-      const distanceFromCenter = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
+      // Opacity curve: 0 at back (π), 1 at front (0 or 2π)
+      // Use a smooth curve that peaks at front
+      const normalizedDistance = distanceFromFront / Math.PI; // 0 to 1
+      const opacity = Math.max(0, Math.min(1, 1 - (normalizedDistance * 2))); // Fade from 1 at front to 0 at back
       
-      // Z depth - front card is closest, others are further back based on angle from front
-      let zDistance;
-      if (isFrontCard) {
-        zDistance = 50; // Front card is at front
-      } else {
-        // Other cards are behind, based on angle from front
-        zDistance = -150 - (distanceFromFront / Math.PI * 200); // Range: -150 to -350
-      }
-      
-      // Scale - front card is largest, others scale down based on angle from front
-      let scale;
-      if (isFrontCard) {
-        scale = 1.15; // Front card is largest
-      } else {
-        scale = 0.8 + (1 - distanceFromFront / Math.PI) * 0.25; // Range: 0.8 to 1.05
-      }
-      
-      // Opacity - front card is fully opaque, others are readable but less prominent
-      let opacity;
-      if (isFrontCard) {
-        opacity = 1.0; // Front card is fully visible
-      } else {
-        opacity = 0.6 + (1 - distanceFromFront / Math.PI) * 0.3; // Range: 0.6 to 0.9 (all readable)
-      }
-      
-      // Rotation - front card faces forward, others face center
-      let rotationY;
-      if (isFrontCard) {
-        rotationY = 0; // Front card faces forward
-      } else {
-        // Other cards rotate to face center
-        // Calculate angle to center from card position
-        const angleToCenter = Math.atan2(-yOffset, -xOffset) * (180 / Math.PI);
-        rotationY = angleToCenter + 180; // Face center
-      }
-      
-      // Apply 3D transform
-      block.style.transform = `
-        translate3d(${finalX}px, ${constrainedY}px, ${zDistance}px)
-        scale(${scale})
-        rotateY(${rotationY}deg)
-      `;
+      // Apply simple 2D positioning (no 3D transforms that break clickability)
+      block.style.position = 'absolute';
+      block.style.left = `${finalX}px`;
+      block.style.top = `${constrainedY}px`;
       block.style.opacity = opacity;
-      block.style.zIndex = Math.round(1000 + (zDistance + 400)); // Higher z-index for front blocks
+      block.style.transform = 'none'; // No 3D transforms
+      block.style.zIndex = opacity > 0.1 ? 10 : 1; // Higher z-index when visible
       
-      // Ensure block is visible
-      block.style.visibility = 'visible';
-      
-      // Ensure entire card is clickable (pointer-events)
-      block.style.pointerEvents = 'auto';
-      
-      // Add active class to front card
-      if (isFrontCard) {
-        block.classList.add('journal-block-active');
-      } else {
-        block.classList.remove('journal-block-active');
-      }
+      // Ensure block is visible and clickable
+      block.style.visibility = opacity > 0.05 ? 'visible' : 'hidden';
+      block.style.pointerEvents = opacity > 0.05 ? 'auto' : 'none'; // Only clickable when visible
     });
   }
 

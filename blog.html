@@ -374,14 +374,27 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: calc(100vh - 200px); /* Stop before footer */
-      max-height: calc(100vh - 200px);
+      height: 100vh;
       z-index: 1;
       pointer-events: none;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden; /* Prevent figure from going past container */
+    }
+    
+    /* Stop 3D figure before footer */
+    @media (min-height: 600px) {
+      #canvas-container {
+        max-height: calc(100vh - 200px); /* Stop before footer */
+      }
+    }
+    
+    /* Stop 3D figure before footer */
+    @media (min-height: 600px) {
+      #canvas-container {
+        max-height: calc(100vh - 200px); /* Stop before footer */
+      }
     }
 
     /* Journal Content */
@@ -421,50 +434,66 @@
       50% { transform: translateX(-50%) translateY(10px); }
     }
 
-    /* Journal Blocks - 3D Spiral Effect */
+    /* Journal Blocks - HTML Overlays */
     .journal-block {
-      position: fixed; /* Changed from absolute to fixed so they're positioned relative to viewport */
+      position: absolute;
       width: 280px;
-      padding: 30px;
-      background: rgba(15, 15, 15, 0.85);
-      border: 1px solid rgba(201, 178, 127, 0.2);
-      border-radius: 8px;
+      padding: 24px;
+      background: rgba(15, 15, 15, 0.9);
+      border: 1px solid rgba(201, 178, 127, 0.25);
+      border-radius: 6px;
       cursor: pointer;
-      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
       backdrop-filter: blur(10px);
+      z-index: 10; /* Above canvas */
       text-decoration: none;
       color: inherit;
       display: block;
-      transform-style: preserve-3d;
-      will-change: transform, opacity;
-      visibility: visible; /* Ensure blocks are visible */
-      top: 0; /* Reset top/left so JavaScript can position them */
-      left: 0;
-      pointer-events: auto; /* Ensure entire card is clickable */
     }
     
-    /* Make sure all child elements don't block pointer events */
-    .journal-block * {
-      pointer-events: none; /* Child elements don't block clicks */
-    }
-    
-    /* But allow links and buttons to be clickable */
-    .journal-block a,
-    .journal-block button {
-      pointer-events: auto;
-    }
-
     .journal-block:hover {
       border-color: rgba(201, 178, 127, 0.6);
       background: rgba(20, 20, 20, 0.95);
-      box-shadow: 0 10px 30px rgba(201, 178, 127, 0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(201, 178, 127, 0.15);
     }
-
-    .journal-block-active {
-      border-color: rgba(201, 178, 127, 0.7);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(201, 178, 127, 0.3);
-      background: rgba(20, 20, 20, 0.95);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(201, 178, 127, 0.15);
+    
+    .journal-block .date {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(201, 178, 127, 0.8);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .journal-block h3 {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      line-height: 1.35;
+      color: #F2EDE6;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+    
+    .journal-block p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(242, 237, 230, 0.65);
+      margin: 0;
+    }
+    
+    .journal-block .category {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 10px;
+      background: rgba(201, 178, 127, 0.12);
+      border: 1px solid rgba(201, 178, 127, 0.25);
+      border-radius: 3px;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(201, 178, 127, 0.9);
     }
 
     .journal-block .date {

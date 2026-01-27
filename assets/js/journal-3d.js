@@ -37,6 +37,9 @@
     );
     // Position camera closer and higher to see the figure better
     camera.position.set(0, 0, 200);
+    
+    // Limit camera movement to stop before footer
+    const maxCameraY = window.innerHeight - 200; // Stop 200px before footer
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
