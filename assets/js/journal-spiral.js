@@ -38,36 +38,31 @@
       ctaTop = ctaRect.top + scrollTop;
     }
     
-    // Total scroll range for the journal - stop before CTA
+    // Total scroll range - start orbit later
     const maxScrollHeight = ctaTop - containerTop - viewportHeight * 0.2;
     const totalScrollHeight = Math.max(1, maxScrollHeight);
-    const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.3) / totalScrollHeight));
+    const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.5) / totalScrollHeight));
     
-    // Calculate rotation offset - cards orbit as you scroll
+    // Calculate rotation offset
     const orbitRotation = scrollProgress * Math.PI * 2;
     
-    // Responsive radius - adapts to viewport size
+    // Responsive radius
     const baseRadius = Math.min(
-      viewportWidth * 0.35, // 35% of viewport
-      600 // Max radius
+      viewportWidth * 0.35,
+      600
     );
     
     journalBlocks.forEach((block, index) => {
-      // Calculate position in spiral (0 to 1)
       const spiralPosition = index / journalBlocks.length;
-      
-      // Add orbit rotation
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
-      
-      // Spiral radius
       const radius = baseRadius;
       
-      // Calculate X and Y positions in spiral
+      // CIRCULAR ORBIT - More Y movement
       const xOffset = Math.cos(angle) * radius;
-      const yOffset = Math.sin(angle) * radius * 0.25; // Flatter spiral
+      const yOffset = Math.sin(angle) * radius * 0.6; // Increased for circular feel
       
-      // Vertical distribution - better spacing
-      const verticalSpacing = 300; // Increased spacing
+      // Vertical distribution
+      const verticalSpacing = 300;
       const cardVerticalOffset = (index * verticalSpacing) - ((journalBlocks.length * verticalSpacing) / 2);
       
       // Vertical scroll offset
@@ -77,31 +72,34 @@
         maxVerticalOffset
       );
       
-      // Calculate final position relative to viewport center
+      // Calculate final position WITH HEADER PROTECTION
       const blockWidth = 280;
-      const blockHeight = 200; // Approximate
-      const finalX = center.x + xOffset - (blockWidth / 2);
-      const finalY = center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - (blockHeight / 2);
+      const blockHeight = 200;
+      const headerOffset = 120; // Your header height
       
-      // Ensure cards don't go below CTA
+      const finalX = center.x + xOffset - (blockWidth / 2);
+      const finalY = Math.max(
+        headerOffset + 80, // Never overlap header
+        center.y + yOffset + cardVerticalOffset + scrollVerticalOffset - (blockHeight / 2)
+      );
+      
+      // Constrain to CTA
       const ctaRect = ctaSection ? ctaSection.getBoundingClientRect() : null;
       const maxY = ctaRect ? ctaRect.top - 180 : window.innerHeight * 0.8;
       const constrainedY = Math.min(finalY, maxY);
       
-      // Calculate opacity - SOFTER FADE
+      // Calculate opacity
       const normalizedAngle = ((angle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
       const distanceFromFront = Math.min(normalizedAngle, Math.PI * 2 - normalizedAngle);
-      
-      // Softer opacity curve with minimum visibility
       const normalizedDistance = distanceFromFront / Math.PI;
       const opacity = Math.max(
-        0.2, // Minimum 20% opacity (never fully invisible)
-        Math.min(1, 1 - (normalizedDistance * 1.1)) // Softer fade
+        0.2,
+        Math.min(1, 1 - (normalizedDistance * 1.1))
       );
       
-      // Constrain cards to viewport bounds
-      const minX = 20; // 20px padding from left
-      const maxX = viewportWidth - blockWidth - 20; // 20px padding from right
+      // Constrain X to viewport
+      const minX = 20;
+      const maxX = viewportWidth - blockWidth - 20;
       const constrainedX = Math.max(minX, Math.min(maxX, finalX));
       
       // Apply positioning
@@ -110,14 +108,11 @@
       block.style.top = `${constrainedY}px`;
       block.style.opacity = opacity;
       block.style.transform = 'none';
-      block.style.zIndex = Math.round(opacity * 10) + 5; // Z-index based on opacity
+      block.style.zIndex = Math.round(opacity * 10) + 5;
       
-      // Visibility and clickability
       const isVisible = opacity > 0.15;
       block.style.visibility = isVisible ? 'visible' : 'hidden';
       block.style.pointerEvents = isVisible ? 'auto' : 'none';
-      
-      // Smooth transition for opacity
       block.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     });
   }
