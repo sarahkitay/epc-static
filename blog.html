@@ -39,6 +39,18 @@
   </nav>
 
   <main id="main">
+    <div class="epc-blog-overview">
+      <!-- Header Section -->
+      <div class="epc-page-header">
+        <nav class="epc-breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="epc-breadcrumbs-separator">/</span>
+          <span>Journal</span>
+        </nav>
+        <h1 class="epc-page-title">Journal</h1>
+        <p class="epc-page-subtitle">Movement • Recovery • Performance</p>
+      </div>
+
     <!-- 3D Canvas Container -->
     <div id="canvas-container"></div>
 
@@ -46,8 +58,6 @@
     <div class="journal-container">
       <!-- Intro Section -->
       <div class="intro-section">
-        <h1>Training Notes & Insights</h1>
-        <p>Evidence-based perspectives on training, recovery, and performance optimization.</p>
         <div class="scroll-indicator">Scroll to explore</div>
       </div>
 
@@ -279,24 +289,8 @@
       <a href="tel:8186460040" class="epc-blog-cta-button">Call (818) 646-0040</a>
       <a href="contact.html" class="epc-blog-cta-button">Book Consultation</a>
     </div>
+    </div>
   </main>
-        
-        <!-- Performance Care vs PT -->
-        
-        
-        <!-- Performance Pyramid -->
-        
-        
-        <!-- Pre-Surgery PT -->
-        
-        
-        <!-- What PT Looks Like After Surgery -->
-        
-        
-        <!-- Preventative Care -->
-        
-        
-        <!-- Movement Patterns -->
         
         
         <!-- How to Squat -->
@@ -308,29 +302,6 @@
         <!-- EMSculpt -->
         
         
-        <!-- Shockwave Therapy -->
-        
-        
-        <!-- Proteus System -->
-        
-        
-        <!-- Custom Insoles -->
-        
-        
-        <!-- Stability Before Strength -->
-
-    </div>
-      
-      <!-- CTA Section -->
-      <div class="epc-blog-cta">
-        <h2 class="epc-blog-cta-title">Ready to Move Better?</h2>
-        <p class="epc-blog-cta-text">
-          Whether you're recovering from surgery, preventing injury, or optimizing performance,<br>our team at Elite Performance Clinic is here to guide you.
-        </p>
-        <a href="tel:8186460040" class="epc-blog-cta-button">Call (818) 646-0040</a>
-        <a href="contact.html" class="epc-blog-cta-button">Book Consultation</a>
-      </div>
-      
     </div>
   </main>
 
@@ -412,31 +383,19 @@
     .journal-container {
       position: relative;
       z-index: 2;
-      min-height: 400vh;
-      padding-top: 100px;
+      min-height: 1520vh; /* Last block at 1500vh + 20vh buffer */
+      padding-top: 40px;
+      padding-bottom: 50px; /* Space before CTA */
+      perspective: 2000px;
+      perspective-origin: center center;
+      transform-style: preserve-3d;
     }
 
     /* Intro Section */
     .intro-section {
       text-align: center;
-      padding: 10vh 50px 30vh;
+      padding: 20px 50px 40px;
       position: relative;
-    }
-
-    .intro-section h1 {
-      font-family: Georgia, serif;
-      font-size: 56px;
-      line-height: 1.2;
-      color: #F2EDE6;
-      margin-bottom: 20px;
-    }
-
-    .intro-section p {
-      font-size: 18px;
-      color: rgba(242, 237, 230, 0.7);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
     }
 
     /* Scroll indicator */
@@ -457,7 +416,7 @@
       50% { transform: translateX(-50%) translateY(10px); }
     }
 
-    /* Journal Blocks */
+    /* Journal Blocks - 3D Spiral Effect */
     .journal-block {
       position: absolute;
       width: 280px;
@@ -471,13 +430,24 @@
       text-decoration: none;
       color: inherit;
       display: block;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
     }
 
     .journal-block:hover {
       border-color: rgba(201, 178, 127, 0.6);
       background: rgba(20, 20, 20, 0.95);
-      transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(201, 178, 127, 0.2);
+    }
+
+    .journal-block-active {
+      border-color: rgba(201, 178, 127, 0.5);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(201, 178, 127, 0.15);
+    }
+
+    .journal-block-active {
+      border-color: rgba(201, 178, 127, 0.5);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(201, 178, 127, 0.15);
     }
 
     .journal-block .date {
@@ -545,13 +515,15 @@
       }
     }
 
-    /* Legacy styles for compatibility */
+    /* Blog Overview Container */
     .epc-blog-overview {
-    
-    /* Remove top padding from page header */
-    .epc-page-header {
-      padding-top: 0 !important;
-      margin-bottom: 0 !important;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #070707;
+      color: #F2EDE6;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
     
     /* Spiral Wrapper */
@@ -1155,6 +1127,7 @@
   </style>
 
   <script src="assets/js/journal-3d.js" defer></script>
+  <script src="assets/js/journal-spiral.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>
