@@ -33,18 +33,18 @@
     const scrollProgress = Math.max(0, Math.min(1, (scrollTop - containerTop + viewportHeight * 0.3) / totalScrollHeight));
     
     // Calculate which card should be "front" based on scroll
+    // As you scroll, different cards come to front
     const frontCardIndex = Math.floor(scrollProgress * journalBlocks.length);
+    
+    // Calculate rotation offset - cards orbit as you scroll
+    const orbitRotation = scrollProgress * Math.PI * 2; // Full rotation as you scroll
     
     journalBlocks.forEach((block, index) => {
       // Calculate position in spiral (0 to 1) - each card gets a position around the circle
       const spiralPosition = index / journalBlocks.length;
       
-      // Add scroll rotation so cards orbit as you scroll
-      const scrollRotation = scrollProgress * 0.5; // Half rotation as you scroll through all cards
-      const combinedProgress = (spiralPosition + scrollRotation) % 1;
-      
-      // Spiral angle (full circle)
-      const angle = combinedProgress * Math.PI * 2;
+      // Add orbit rotation so cards rotate around center as you scroll
+      const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
       // Spiral radius - consistent radius for all cards
       const baseRadius = 280; // Base radius in pixels
@@ -61,34 +61,30 @@
       const finalX = center.x + xOffset - 140; // Subtract half block width (280px / 2)
       const finalY = center.y + yOffset + verticalScrollOffset - 100; // Center Y + spiral offset + scroll offset - half block height
       
-      // Determine if this is the "front" card
-      const isFrontCard = index === frontCardIndex || 
-                         (index === frontCardIndex + 1 && scrollProgress * journalBlocks.length % 1 > 0.7) ||
-                         (index === frontCardIndex - 1 && scrollProgress * journalBlocks.length % 1 < 0.3);
+      // Determine if this is the "front" card (the one that should face forward)
+      // Front card is the one closest to the front position (angle closest to 0 or 2π)
+      const normalizedAngle = ((angle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
+      const distanceFromFront = Math.min(normalizedAngle, Math.PI * 2 - normalizedAngle);
+      const isFrontCard = distanceFromFront < (Math.PI / 4) || distanceFromFront > (Math.PI * 2 - Math.PI / 4); // Within 45 degrees of front
       
       // Distance from center for depth calculation
       const distanceFromCenter = Math.sqrt(xOffset * xOffset + yOffset * yOffset);
-      const maxDistance = radius + 50;
       
-      // Z depth - front card is closest, others are further back
+      // Z depth - front card is closest, others are further back based on angle from front
       let zDistance;
       if (isFrontCard) {
-        zDistance = 0; // Front card is at front
+        zDistance = 50; // Front card is at front
       } else {
-        // Other cards are behind, based on distance from front position
-        const angleDiff = Math.abs(angle - (frontCardIndex / journalBlocks.length * Math.PI * 2));
-        const normalizedAngleDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff) / Math.PI; // 0 to 1
-        zDistance = -200 - (normalizedAngleDiff * 150); // Range: -200 to -350
+        // Other cards are behind, based on angle from front
+        zDistance = -150 - (distanceFromFront / Math.PI * 200); // Range: -150 to -350
       }
       
-      // Scale - front card is largest, others scale down
+      // Scale - front card is largest, others scale down based on angle from front
       let scale;
       if (isFrontCard) {
-        scale = 1.1; // Front card is largest
+        scale = 1.15; // Front card is largest
       } else {
-        const angleDiff = Math.abs(angle - (frontCardIndex / journalBlocks.length * Math.PI * 2));
-        const normalizedAngleDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff) / Math.PI; // 0 to 1
-        scale = 0.75 + (normalizedAngleDiff * 0.25); // Range: 0.75 to 1.0
+        scale = 0.8 + (1 - distanceFromFront / Math.PI) * 0.25; // Range: 0.8 to 1.05
       }
       
       // Opacity - front card is fully opaque, others are readable but less prominent
@@ -96,18 +92,18 @@
       if (isFrontCard) {
         opacity = 1.0; // Front card is fully visible
       } else {
-        const angleDiff = Math.abs(angle - (frontCardIndex / journalBlocks.length * Math.PI * 2));
-        const normalizedAngleDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff) / Math.PI; // 0 to 1
-        opacity = 0.7 - (normalizedAngleDiff * 0.3); // Range: 0.7 to 0.4 (still readable)
+        opacity = 0.6 + (1 - distanceFromFront / Math.PI) * 0.3; // Range: 0.6 to 0.9 (all readable)
       }
       
-      // Rotation - cards face the center, front card faces forward
+      // Rotation - front card faces forward, others face center
       let rotationY;
       if (isFrontCard) {
         rotationY = 0; // Front card faces forward
       } else {
         // Other cards rotate to face center
-        rotationY = angle * (180 / Math.PI) + 180; // Face center (add 180 to face inward)
+        // Calculate angle to center from card position
+        const angleToCenter = Math.atan2(-yOffset, -xOffset) * (180 / Math.PI);
+        rotationY = angleToCenter + 180; // Face center
       }
       
       // Apply 3D transform
@@ -121,6 +117,9 @@
       
       // Ensure block is visible
       block.style.visibility = 'visible';
+      
+      // Ensure entire card is clickable (pointer-events)
+      block.style.pointerEvents = 'auto';
       
       // Add active class to front card
       if (isFrontCard) {

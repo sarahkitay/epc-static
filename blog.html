@@ -438,6 +438,18 @@
       visibility: visible; /* Ensure blocks are visible */
       top: 0; /* Reset top/left so JavaScript can position them */
       left: 0;
+      pointer-events: auto; /* Ensure entire card is clickable */
+    }
+    
+    /* Make sure all child elements don't block pointer events */
+    .journal-block * {
+      pointer-events: none; /* Child elements don't block clicks */
+    }
+    
+    /* But allow links and buttons to be clickable */
+    .journal-block a,
+    .journal-block button {
+      pointer-events: auto;
     }
 
     .journal-block:hover {
