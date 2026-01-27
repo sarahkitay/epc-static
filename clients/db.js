@@ -184,8 +184,11 @@ async function resetDatabase() {
   });
 }
 
-// Repair database - checks health and fixes issues
+// Repair database - checks health and fixes issues (non-blocking)
 async function repairDatabase() {
+  // Yield to browser at start
+  await new Promise(resolve => setTimeout(resolve, 0));
+  
   try {
     console.log('🔧 Starting database repair...');
     
@@ -199,6 +202,9 @@ async function repairDatabase() {
       db = null;
     }
     
+    // Yield before heavy operation
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
     // Try to open and verify
     console.log('Initializing database...');
     const testDB = await initDB();
@@ -206,6 +212,9 @@ async function repairDatabase() {
     if (!testDB) {
       throw new Error('Database initialization returned null');
     }
+    
+    // Yield again
+    await new Promise(resolve => setTimeout(resolve, 0));
     
     // Verify stores exist
     const requiredStores = ['clients', 'assessments', 'programs', 'programPhotos', 'progressNotes', 'ptNotes'];
@@ -217,6 +226,10 @@ async function repairDatabase() {
       testDB.close();
       const DB_VERSION_NEW = DB_VERSION + 1;
       console.log(`Upgrading database to version ${DB_VERSION_NEW}...`);
+      
+      // Yield before upgrade
+      await new Promise(resolve => setTimeout(resolve, 0));
+      
       const upgradeRequest = indexedDB.open(DB_NAME, DB_VERSION_NEW);
       await new Promise((resolve, reject) => {
         upgradeRequest.onupgradeneeded = (event) => {
@@ -231,6 +244,9 @@ async function repairDatabase() {
         upgradeRequest.onerror = () => reject(upgradeRequest.error);
       });
     }
+    
+    // Yield before read test
+    await new Promise(resolve => setTimeout(resolve, 0));
     
     // Test read operation
     console.log('Testing database read operation...');
@@ -253,18 +269,9 @@ async function repairDatabase() {
     return true;
   } catch (error) {
     console.error('❌ Database repair failed:', error);
-    // Last resort: reset database
-    console.log('⚠️ Attempting full database reset (this will delete all data)...');
-    const shouldReset = confirm('Database repair failed. Would you like to reset the database?\n\nWARNING: This will delete all existing data. Only do this if you have no important data or have backed it up.');
-    
-    if (shouldReset) {
-      await resetDatabase();
-      await initDB();
-      console.log('✅ Database reset and reinitialized');
-      return true;
-    } else {
-      throw new Error('Database repair cancelled by user');
-    }
+    // Don't use confirm() here - let the caller handle user interaction
+    // This prevents blocking the UI thread
+    throw error;
   }
 }
 

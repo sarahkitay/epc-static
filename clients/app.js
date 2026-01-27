@@ -319,33 +319,53 @@ async function initDashboard() {
   const clientsGrid = document.getElementById('clientsGrid');
   const emptyState = document.getElementById('emptyState');
 
-  // Repair database button
+  // Repair database button - optimized for non-blocking UI
   if (repairDbBtn) {
-    repairDbBtn.addEventListener('click', async () => {
+    repairDbBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
       if (!confirm('Repair database? This will check and fix any database issues. Your data should be safe.')) {
         return;
       }
       
+      // Update UI immediately
       repairDbBtn.disabled = true;
       repairDbBtn.textContent = 'Repairing...';
       
+      // Yield to browser to update UI before heavy work
+      await new Promise(resolve => setTimeout(resolve, 0));
+      
       try {
         if (typeof window.repairDatabase === 'function') {
+          // Run repair in chunks to avoid blocking
           await window.repairDatabase();
+          
+          // Yield again before reloading
+          await new Promise(resolve => setTimeout(resolve, 0));
+          
           // Reload clients after repair
           await loadClients();
-          alert('Database repaired successfully!');
+          
+          // Show success message non-blocking
+          repairDbBtn.textContent = '✅ Repaired!';
+          setTimeout(() => {
+            repairDbBtn.textContent = '🔧 Repair DB';
+            repairDbBtn.disabled = false;
+          }, 2000);
         } else {
           throw new Error('Repair function not available');
         }
       } catch (error) {
         console.error('Repair error:', error);
+        repairDbBtn.textContent = '❌ Failed';
+        setTimeout(() => {
+          repairDbBtn.textContent = '🔧 Repair DB';
+          repairDbBtn.disabled = false;
+        }, 2000);
         alert(`Repair failed: ${error.message}\n\nPlease refresh the page or check the console.`);
-      } finally {
-        repairDbBtn.disabled = false;
-        repairDbBtn.textContent = '🔧 Repair DB';
       }
-    });
+    }, { passive: true });
   }
 
   // Log Firebase connection status on dashboard load
@@ -403,11 +423,20 @@ async function initDashboard() {
       if (confirm(errorMsg)) {
         try {
           if (typeof window.repairDatabase === 'function') {
+            // Yield before repair
+            await new Promise(resolve => setTimeout(resolve, 0));
             await window.repairDatabase();
+            // Yield before retry
+            await new Promise(resolve => setTimeout(resolve, 0));
             // Retry loading
             allClients = await getAllClients();
             renderClients(allClients);
-            alert('Database repaired successfully! Clients reloaded.');
+            // Non-blocking success indicator
+            const successMsg = document.createElement('div');
+            successMsg.textContent = '✅ Database repaired successfully!';
+            successMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 12px 20px; border-radius: 4px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
+            document.body.appendChild(successMsg);
+            setTimeout(() => successMsg.remove(), 3000);
           } else {
             alert('Repair function not available. Please refresh the page.');
           }
