@@ -39,632 +39,287 @@
   </nav>
 
   <main id="main">
-    <div class="epc-blog-overview">
-      <!-- Hero Section -->
-      <div class="epc-page-header">
-        <nav class="epc-breadcrumbs" aria-label="Breadcrumb">
-          <a href="/">Home</a>
-          <span class="epc-breadcrumbs-separator">/</span>
-          <span>Journal</span>
-        </nav>
-        <h1 class="epc-page-title">Journal</h1>
-        <p class="epc-page-subtitle">Movement • Recovery • Performance</p>
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Journal Content -->
+    <div class="journal-container">
+      <!-- Intro Section -->
+      <div class="intro-section">
+        <h1>Training Notes & Insights</h1>
+        <p>Evidence-based perspectives on training, recovery, and performance optimization.</p>
+        <div class="scroll-indicator">Scroll to explore</div>
       </div>
-      
-      <!-- Spiral Journal Container -->
-      <div class="epc-spiral-wrapper">
-        <div class="epc-spiral-container" id="spiralContainer">
-          <!-- Center Logo Anchor / 3D Figure Container -->
-          <div class="epc-spiral-logo" id="epc-3d-figure-container">
-            <!-- 3D Figure will render here via Three.js -->
-            <!-- Fallback: Static logo if 3D fails or on mobile -->
-            <div class="epc-spiral-logo-fallback">
-              <span class="epc-spiral-logo-text">EPC</span>
-              <p class="epc-spiral-logo-subtitle">Journal</p>
-            </div>
-          </div>
-          
-          <!-- Spiral Path (subtle visual guide) -->
-          <svg class="epc-spiral-path" viewBox="0 0 2000 4000" preserveAspectRatio="xMidYMin meet">
-            <path d="M 1000 200 Q 1200 400 1000 600 T 1000 1000 T 1000 1400 T 1000 1800" 
-                  fill="none" 
-                  stroke="rgba(201, 185, 145, 0.08)" 
-                  stroke-width="1" 
-                  stroke-dasharray="2,8"/>
-          </svg>
-          
-          <!-- Constellation Services (background) -->
-          <div class="epc-spiral-constellation">
-            <span class="epc-constellation-label" style="top: 10%; left: 15%;">PT</span>
-            <span class="epc-constellation-label" style="top: 20%; right: 12%;">Performance</span>
-            <span class="epc-constellation-label" style="top: 35%; left: 8%;">EMSculpt</span>
-            <span class="epc-constellation-label" style="top: 50%; right: 18%;">Shockwave</span>
-            <span class="epc-constellation-label" style="top: 65%; left: 12%;">Recovery</span>
-            <span class="epc-constellation-label" style="top: 80%; right: 10%;">Proteus</span>
-          </div>
-          
-          <!-- Blog Cards in Spiral -->
-          <div class="epc-spiral-cards-wrapper">
-        
-        <!-- FEATURED - The 2026 Challenge -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Challenge">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ebd4c019-d23b-4608-8f0b-dc060cb00526/tempImage6pAGRP.jpg?content-type=image%2Fjpeg" alt="The 2026 Challenge" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Challenge</div>
-            <h2 class="epc-blog-card-title">The 2026 Challenge: Why Most New Year Resolutions Fail (And How to Actually Follow Through)</h2>
-            <p class="epc-blog-card-meta">January 2026 • 14 min read</p>
-            <p class="epc-blog-card-excerpt">
-              80% of New Year resolutions fail by mid-February. The 2026 Challenge provides structure, accountability, and expert guidance for 4 weeks-with the incentive to earn 2 additional free weeks by completing the program. Registration closes January 10th.
-            </p>
-            <a href="blog/newyear.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Performance Testing Guide -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Sports performance testing" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">The Complete Guide to Sports Performance Testing: What Gets Measured, What It Means</h2>
-            <p class="epc-blog-card-meta">December 2025 • 12 min read</p>
-            <p class="epc-blog-card-excerpt">
-              89% of elite athletes undergo regular performance testing-but most don't know what's being measured or why. Learn the five testing categories, how to interpret results, and what testing reveals about your training.
-            </p>
-            <a href="blog/performance-testing.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- ACL Prevention Protocol -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/4e1775b5-b0d2-4004-83e8-2e3588102d67/a-39.jpg?content-type=image%2Fjpeg" alt="ACL injury prevention" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">ACL Injury Prevention Protocol for Youth Athletes</h2>
-            <p class="epc-blog-card-meta">December 2025 • 10 min read</p>
-            <p class="epc-blog-card-excerpt">
-              ACL tears are devastating and largely preventable. Learn the evidence-based screening, training protocols, and warning signs that keep young athletes on the field.
-            </p>
-            <a href="blog/acl-prevention.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Return to Play Criteria -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ab84c29c-57d1-4cca-8dd0-dfaecc7a8879/EPC-68.JPEG?content-type=image%2Fjpeg" alt="Return to play assessment" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">Return to Play Criteria: When Athletes Are Actually Ready</h2>
-            <p class="epc-blog-card-meta">December 2025 • 11 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Time alone doesn't determine readiness. Learn the objective criteria, functional testing, and psychological factors that determine safe return to sport after injury.
-            </p>
-            <a href="blog/return-to-play.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+
+      <!-- Journal Blocks -->
+        <a href="blog/newyear.html" class="journal-block" style="top: 100vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>The 2026 Challenge: Why Most New Year Resolutions Fail (And How to Actually Follow Through)</h3>
+            <p>80% of New Year resolutions fail by mid-February. The 2026 Challenge provides structure, accountability, and expert guid...</p>
+            <span class="category">Challenge</span>
+        </a>
+        <a href="blog/performance-testing.html" class="journal-block" style="top: 140vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>The Complete Guide to Sports Performance Testing: What Gets Measured, What It Means</h3>
+            <p>89% of elite athletes undergo regular performance testing-but most don't know what's being measured or why. Learn the fi...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/acl-prevention.html" class="journal-block" style="top: 180vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>ACL Injury Prevention Protocol for Youth Athletes</h3>
+            <p>ACL tears are devastating and largely preventable. Learn the evidence-based screening, training protocols, and warning s...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/return-to-play.html" class="journal-block" style="top: 220vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>Return to Play Criteria: When Athletes Are Actually Ready</h3>
+            <p>Time alone doesn't determine readiness. Learn the objective criteria, functional testing, and psychological factors that...</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/performance-clinic-vs-pt.html" class="journal-block" style="top: 260vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>Performance Clinic vs. Physical Therapy: What's the Difference?</h3>
+            <p>Not all rehab is created equal. Learn when you need traditional PT, when performance care is better, and why LA athletes...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/performance-pyramid.html" class="journal-block" style="top: 300vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>The Performance Pyramid: Building Athletic Foundation at Every Age</h3>
+            <p>From youth development to professional athletics, learn the progression model that builds injury-resistant, high-perform...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/pt-before-surgery.html" class="journal-block" style="top: 340vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>5 Signs You Need Physical Therapy Before Surgery (Not After)</h3>
+            <p>Pre-operative physical therapy can dramatically improve your surgical outcome. Learn the signs that indicate you should ...</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/pt-after-surgery.html" class="journal-block" style="top: 380vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>What Physical Therapy Looks Like After Surgery</h3>
+            <p>Understanding the post-operative rehab process helps you set realistic expectations and commit to the work ahead. Here's...</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/preventative-care.html" class="journal-block" style="top: 420vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>Why Preventative Care Beats Reactive Treatment</h3>
+            <p>Most people wait until something hurts to seek help. Learn how preventative care and integrated training can keep you mo...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/movement-patterns.html" class="journal-block" style="top: 460vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>Key Movement Patterns That Prevent Injury</h3>
+            <p>Understanding which movements break down and why certain muscles become insufficient is the key to staying injury-free. ...</p>
+            <span class="category">Movement</span>
+        </a>
+        <a href="blog/squat-for-life.html" class="journal-block" style="top: 500vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>How To Squat For Life</h3>
+            <p>Your squat is more than a gym exercise. Learn proper form, common errors, and corrective strategies to keep you squattin...</p>
+            <span class="category">Movement</span>
+        </a>
+        <a href="blog/contrast-therapy.html" class="journal-block" style="top: 540vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>The Science of Contrast Therapy</h3>
+            <p>Alternating hot and cold exposure isn't just a trend. Learn the therapeutic benefits, optimal protocols, and how often t...</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/emsculpt.html" class="journal-block" style="top: 580vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>What Is EMSculpt and Why It Works</h3>
+            <p>EMSculpt uses electromagnetic technology to build muscle and burn fat. Discover the science, benefits, and therapeutic a...</p>
+            <span class="category">Technology</span>
+        </a>
+        <a href="blog/shockwave-therapy.html" class="journal-block" style="top: 620vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>Shockwave Therapy: What It Is and How It Heals</h3>
+            <p>Piezoelectric shockwave therapy accelerates healing in chronic tendon and soft tissue conditions. Learn how this technol...</p>
+            <span class="category">Technology</span>
+        </a>
+        <a href="blog/proteus.html" class="journal-block" style="top: 660vh; left: 15%;">
+            <div class="date">December 2025</div>
+            <h3>The Proteus: Next-Generation Power Assessment</h3>
+            <p>The Proteus system is one of the rarest pieces of equipment in performance training. Discover how it measures true power...</p>
+            <span class="category">Technology</span>
+        </a>
+        <a href="blog/custom-insoles.html" class="journal-block" style="top: 700vh; right: 20%;">
+            <div class="date">December 2025</div>
+            <h3>Why Custom Insoles Matter: The Pedics Difference</h3>
+            <p>Your feet are the foundation of all movement. Learn why Pedics' comprehensive assessment and custom insoles are elite-le...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/stability-before-strength.html" class="journal-block" style="top: 740vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>Stability Before Strength: What Actually Prevents Injury</h3>
+            <p>If your joints don't feel solid, your body won't let you produce power. Strength is built on control: position, bracing,...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/rotation-anti-rotation.html" class="journal-block" style="top: 780vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Rotation and Anti-Rotation: The Missing Sixth Pattern</h3>
+            <p>Rotation is athletic. Anti rotation is protective. You need both for a strong, pain free core.</p>
+            <span class="category">Movement</span>
+        </a>
+        <a href="blog/training-programs-stall.html" class="journal-block" style="top: 820vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>Why Most Training Programs Stall at 6–8 Weeks</h3>
+            <p>You start a new program, see great progress for 6–8 weeks, then everything plateaus. Learn why it happens and how to bre...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/better-progressions.html" class="journal-block" style="top: 860vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>You Don't Need More Exercises You Need Better Progressions</h3>
+            <p>Quality over quantity: learn how to progress exercises intelligently for sustainable results instead of constantly addin...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/feeling-worked-vs-results.html" class="journal-block" style="top: 900vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>The Difference Between Feeling Worked and Getting Results</h3>
+            <p>Feeling exhausted after a workout doesn't always mean you're making progress. Learn the difference between feeling worke...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/pain-not-badge.html" class="journal-block" style="top: 940vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Why Pain Is Not a Badge of Honor in Training</h3>
+            <p>Pain during training isn't a sign of toughness—it's a warning sign. Learn when to push through and when to back off.</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/build-resilience.html" class="journal-block" style="top: 980vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>How Athletes Actually Build Resilience Not Just Muscle</h3>
+            <p>Resilience isn't just physical—it's mental, emotional, and systematic. Learn how elite athletes build true resilience.</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/first-session-matters.html" class="journal-block" style="top: 1020vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>What We Look for in a First Session (That Most Gyms Miss)</h3>
+            <p>The first session reveals everything. Learn what elite performance clinics assess that most gyms completely miss.</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/carries-underrated.html" class="journal-block" style="top: 1060vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>Why Carries Might Be the Most Underrated Exercise in Training</h3>
+            <p>Carries build strength, stability, and resilience in ways other exercises can't. Learn why they're essential for long-te...</p>
+            <span class="category">Movement</span>
+        </a>
+        <a href="blog/single-leg-work.html" class="journal-block" style="top: 1100vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Single-Leg Work: The Shortcut to Speed and Longevity</h3>
+            <p>Single-leg training builds speed, prevents injury, and extends your athletic lifespan. Learn why it's essential for ever...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/warmup-matters.html" class="journal-block" style="top: 1140vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>Why Your Warm-Up Matters More Than Your Finisher</h3>
+            <p>The warm-up sets the tone for your entire session. Learn why it matters more than your finisher and how to do it right.</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/mobility-vs-stability.html" class="journal-block" style="top: 1180vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Mobility vs Stability: When Each Actually Matters</h3>
+            <p>Mobility and stability are both important, but they're not the same. Learn when you need each and how to develop both.</p>
+            <span class="category">Movement</span>
+        </a>
+        <a href="blog/low-back-training.html" class="journal-block" style="top: 1220vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>If You Feel Training in Your Low Back This Is Why</h3>
+            <p>Feeling training in your low back means something is wrong. Learn why it happens and how to fix it.</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/neck-pain-core.html" class="journal-block" style="top: 1260vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Neck Pain During Core Work Here's the Fix</h3>
+            <p>Neck pain during core work means you're compensating. Learn why it happens and how to fix it.</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/tight-hips-problem.html" class="journal-block" style="top: 1300vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>Why Tight Hips Are Rarely the Real Problem</h3>
+            <p>Tight hips are usually a symptom, not the problem. Learn what's actually causing your hip tightness and how to fix it.</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/train-through-pain.html" class="journal-block" style="top: 1340vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Should You Train Through Pain Here's the Honest Answer</h3>
+            <p>Training through pain is complicated. Learn when it's safe and when it's dangerous.</p>
+            <span class="category">Recovery</span>
+        </a>
+        <a href="blog/decide-client-ready.html" class="journal-block" style="top: 1380vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>How We Decide What a Client Is Ready For</h3>
+            <p>Programming isn't random—it's systematic. Learn how we decide what clients are ready for and why it matters.</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/dont-start-max-effort.html" class="journal-block" style="top: 1420vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>Why We Don't Start With Max Effort</h3>
+            <p>Starting with max effort is a recipe for injury and burnout. Learn why we build gradually and how it leads to better res...</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/evaluation-30-min.html" class="journal-block" style="top: 1460vh; left: 15%;">
+            <div class="date">January 2026</div>
+            <h3>What an Evaluation Actually Tells Us in 30 Minutes</h3>
+            <p>A 30-minute evaluation reveals everything. Learn what we assess and why it matters for your success.</p>
+            <span class="category">Performance</span>
+        </a>
+        <a href="blog/rehab-training-performance.html" class="journal-block" style="top: 1500vh; right: 20%;">
+            <div class="date">January 2026</div>
+            <h3>The Difference Between Rehab, Training, and Performance (And Why It Matters)</h3>
+            <p>Rehab, training, and performance are different. Learn the difference and why it matters for your success.</p>
+            <span class="category">Performance</span>
+        </a>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="epc-blog-cta">
+      <h2 class="epc-blog-cta-title">Ready to Move Better?</h2>
+      <p class="epc-blog-cta-text">
+        Whether you're recovering from surgery, preventing injury, or optimizing performance,<br>our team at Elite Performance Clinic is here to guide you.
+      </p>
+      <a href="tel:8186460040" class="epc-blog-cta-button">Call (818) 646-0040</a>
+      <a href="contact.html" class="epc-blog-cta-button">Book Consultation</a>
+    </div>
+  </main>
         
         <!-- Performance Care vs PT -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/ecf1304f-26c8-4226-b884-807ab80517ba/Screenshot+2025-11-10+at+2.26.29%E2%80%AFPM.png?content-type=image%2Fpng" alt="Performance clinic vs physical therapy" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Performance Clinic vs. Physical Therapy: What's the Difference?</h2>
-            <p class="epc-blog-card-meta">December 2025 • 8 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Not all rehab is created equal. Learn when you need traditional PT, when performance care is better, and why LA athletes are choosing integrated models.
-            </p>
-            <a href="blog/performance-clinic-vs-pt.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Performance Pyramid -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/5479ca3e-3b1a-4a20-b6b7-8c09281bed27/IMG_22824.png?content-type=image%2Fpng" alt="Athletic development progression" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">The Performance Pyramid: Building Athletic Foundation at Every Age</h2>
-            <p class="epc-blog-card-meta">December 2025 • 9 min read</p>
-            <p class="epc-blog-card-excerpt">
-              From youth development to professional athletics, learn the progression model that builds injury-resistant, high-performing athletes at every stage.
-            </p>
-            <a href="blog/performance-pyramid.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Pre-Surgery PT -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/43eb88ea-92b4-4ef1-8f32-3f60201ed48d/IMG_5038.jpg?content-type=image%2Fjpeg" alt="Pre-surgical physical therapy" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">5 Signs You Need Physical Therapy Before Surgery (Not After)</h2>
-            <p class="epc-blog-card-meta">December 2025 • 8 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Pre-operative physical therapy can dramatically improve your surgical outcome. Learn the signs that indicate you should start PT before your procedure, not after.
-            </p>
-            <a href="blog/pt-before-surgery.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- What PT Looks Like After Surgery -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/0907d612-62db-436d-9fcd-6e118b2dc014/epct3.png?content-type=image%2Fpng" alt="Post-surgical recovery" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">What Physical Therapy Looks Like After Surgery</h2>
-            <p class="epc-blog-card-meta">December 2025 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Understanding the post-operative rehab process helps you set realistic expectations and commit to the work ahead. Here's what to expect at each phase.
-            </p>
-            <a href="blog/pt-after-surgery.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Preventative Care -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Preventative care and training" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Why Preventative Care Beats Reactive Treatment</h2>
-            <p class="epc-blog-card-meta">December 2025 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Most people wait until something hurts to seek help. Learn how preventative care and integrated training can keep you moving at your best for life.
-            </p>
-            <a href="blog/preventative-care.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Movement Patterns -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Movement patterns and injury prevention" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Movement</div>
-            <h2 class="epc-blog-card-title">Key Movement Patterns That Prevent Injury</h2>
-            <p class="epc-blog-card-meta">December 2025 • 9 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Understanding which movements break down and why certain muscles become insufficient is the key to staying injury-free. Here's what to watch for.
-            </p>
-            <a href="blog/movement-patterns.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- How to Squat -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/7075fbaa-efac-4533-bd5c-40f425468fee/epcsquat.png?content-type=image%2Fpng" alt="How to squat properly" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Movement</div>
-            <h2 class="epc-blog-card-title">How To Squat For Life</h2>
-            <p class="epc-blog-card-meta">December 2025 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Your squat is more than a gym exercise. Learn proper form, common errors, and corrective strategies to keep you squatting pain-free for decades.
-            </p>
-            <a href="blog/squat-for-life.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Contrast Therapy -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/786f83ff-bd71-4108-9799-61db39b84462/EPC+contrast.png?content-type=image%2Fpng" alt="Contrast therapy benefits" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">The Science of Contrast Therapy</h2>
-            <p class="epc-blog-card-meta">December 2025 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Alternating hot and cold exposure isn't just a trend. Learn the therapeutic benefits, optimal protocols, and how often to use contrast therapy.
-            </p>
-            <a href="blog/contrast-therapy.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- EMSculpt -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/c444f51c-7818-4bfd-8714-f5b8a19e8722/_DSC6077.jpg?content-type=image%2Fjpeg" alt="EMSculpt technology" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Technology</div>
-            <h2 class="epc-blog-card-title">What Is EMSculpt and Why It Works</h2>
-            <p class="epc-blog-card-meta">December 2025 • 5 min read</p>
-            <p class="epc-blog-card-excerpt">
-              EMSculpt uses electromagnetic technology to build muscle and burn fat. Discover the science, benefits, and therapeutic applications of this innovative treatment.
-            </p>
-            <a href="blog/emsculpt.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Shockwave Therapy -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/908d44f6-9764-4dc1-8d52-b7dbaca7e5c6/shockwave.jpg?content-type=image%2Fjpeg" alt="Shockwave therapy" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Technology</div>
-            <h2 class="epc-blog-card-title">Shockwave Therapy: What It Is and How It Heals</h2>
-            <p class="epc-blog-card-meta">December 2025 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Piezoelectric shockwave therapy accelerates healing in chronic tendon and soft tissue conditions. Learn how this technology works and what it treats.
-            </p>
-            <a href="blog/shockwave-therapy.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Proteus System -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Technology">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/51fa2404-9ebe-4bed-a9b9-a3cc5df2ab8d/proteus2.jpg?content-type=image%2Fjpeg" alt="Proteus motion system" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Technology</div>
-            <h2 class="epc-blog-card-title">The Proteus: Next-Generation Power Assessment</h2>
-            <p class="epc-blog-card-meta">December 2025 • 5 min read</p>
-            <p class="epc-blog-card-excerpt">
-              The Proteus system is one of the rarest pieces of equipment in performance training. Discover how it measures true power output in 3D space.
-            </p>
-            <a href="blog/proteus.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Custom Insoles -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/f6afa097-f2d4-4a71-85fd-ecf88eedec63/IMG_6065.jpg?content-type=image%2Fjpeg" alt="Custom insoles and foot assessment" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Why Custom Insoles Matter: The Pedics Difference</h2>
-            <p class="epc-blog-card-meta">December 2025 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Your feet are the foundation of all movement. Learn why Pedics' comprehensive assessment and custom insoles are elite-level performance tools.
-            </p>
-            <a href="blog/custom-insoles.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
+        
         
         <!-- Stability Before Strength -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Stability before strength" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Stability Before Strength: What Actually Prevents Injury</h2>
-            <p class="epc-blog-card-meta">January 2026 • 10 min read</p>
-            <p class="epc-blog-card-excerpt">
-              If your joints don't feel solid, your body won't let you produce power. Strength is built on control: position, bracing, and clean reps.
-            </p>
-            <a href="blog/stability-before-strength.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Rotation and Anti-Rotation -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Rotation and anti-rotation" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Movement</div>
-            <h2 class="epc-blog-card-title">Rotation and Anti-Rotation: The Missing Sixth Pattern</h2>
-            <p class="epc-blog-card-meta">January 2026 • 9 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Rotation is athletic. Anti rotation is protective. You need both for a strong, pain free core.
-            </p>
-            <a href="blog/rotation-anti-rotation.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Training Programs Stall -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Training programs stall" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Why Most Training Programs Stall at 6–8 Weeks</h2>
-            <p class="epc-blog-card-meta">January 2026 • 8 min read</p>
-            <p class="epc-blog-card-excerpt">
-              You start a new program, see great progress for 6–8 weeks, then everything plateaus. Learn why it happens and how to break through.
-            </p>
-            <a href="blog/training-programs-stall.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Better Progressions -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Better progressions" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">You Don't Need More Exercises You Need Better Progressions</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Quality over quantity: learn how to progress exercises intelligently for sustainable results instead of constantly adding new movements.
-            </p>
-            <a href="blog/better-progressions.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Feeling Worked vs Results -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Feeling worked vs results" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">The Difference Between Feeling Worked and Getting Results</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Feeling exhausted after a workout doesn't always mean you're making progress. Learn the difference between feeling worked and actually getting results.
-            </p>
-            <a href="blog/feeling-worked-vs-results.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Pain Not Badge -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Pain not badge" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">Why Pain Is Not a Badge of Honor in Training</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Pain during training isn't a sign of toughness—it's a warning sign. Learn when to push through and when to back off.
-            </p>
-            <a href="blog/pain-not-badge.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Build Resilience -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Build resilience" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">How Athletes Actually Build Resilience Not Just Muscle</h2>
-            <p class="epc-blog-card-meta">January 2026 • 8 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Resilience isn't just physical—it's mental, emotional, and systematic. Learn how elite athletes build true resilience.
-            </p>
-            <a href="blog/build-resilience.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- First Session Matters -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="First session matters" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">What We Look for in a First Session (That Most Gyms Miss)</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              The first session reveals everything. Learn what elite performance clinics assess that most gyms completely miss.
-            </p>
-            <a href="blog/first-session-matters.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Carries Underrated -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Carries underrated" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Movement</div>
-            <h2 class="epc-blog-card-title">Why Carries Might Be the Most Underrated Exercise in Training</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Carries build strength, stability, and resilience in ways other exercises can't. Learn why they're essential for long-term success.
-            </p>
-            <a href="blog/carries-underrated.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Single Leg Work -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Single leg work" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Single-Leg Work: The Shortcut to Speed and Longevity</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Single-leg training builds speed, prevents injury, and extends your athletic lifespan. Learn why it's essential for every athlete.
-            </p>
-            <a href="blog/single-leg-work.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Warmup Matters -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Warmup matters" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Why Your Warm-Up Matters More Than Your Finisher</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              The warm-up sets the tone for your entire session. Learn why it matters more than your finisher and how to do it right.
-            </p>
-            <a href="blog/warmup-matters.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Mobility vs Stability -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Movement">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Mobility vs stability" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Movement</div>
-            <h2 class="epc-blog-card-title">Mobility vs Stability: When Each Actually Matters</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Mobility and stability are both important, but they're not the same. Learn when you need each and how to develop both.
-            </p>
-            <a href="blog/mobility-vs-stability.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Low Back Training -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Low back training" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">If You Feel Training in Your Low Back This Is Why</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Feeling training in your low back means something is wrong. Learn why it happens and how to fix it.
-            </p>
-            <a href="blog/low-back-training.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Neck Pain Core -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Neck pain core" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">Neck Pain During Core Work Here's the Fix</h2>
-            <p class="epc-blog-card-meta">January 2026 • 5 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Neck pain during core work means you're compensating. Learn why it happens and how to fix it.
-            </p>
-            <a href="blog/neck-pain-core.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Tight Hips Problem -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/9c3fe09a-05bd-45d8-a520-218f5f6d8900/epc+photo+train.jpg?content-type=image%2Fjpeg" alt="Tight hips problem" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">Why Tight Hips Are Rarely the Real Problem</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Tight hips are usually a symptom, not the problem. Learn what's actually causing your hip tightness and how to fix it.
-            </p>
-            <a href="blog/tight-hips-problem.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Train Through Pain -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Recovery">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Train through pain" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Recovery</div>
-            <h2 class="epc-blog-card-title">Should You Train Through Pain Here's the Honest Answer</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Training through pain is complicated. Learn when it's safe and when it's dangerous.
-            </p>
-            <a href="blog/train-through-pain.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Decide Client Ready -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Decide client ready" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">How We Decide What a Client Is Ready For</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Programming isn't random—it's systematic. Learn how we decide what clients are ready for and why it matters.
-            </p>
-            <a href="blog/decide-client-ready.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Don't Start Max Effort -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Don't start max effort" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">Why We Don't Start With Max Effort</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Starting with max effort is a recipe for injury and burnout. Learn why we build gradually and how it leads to better results.
-            </p>
-            <a href="blog/dont-start-max-effort.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Evaluation 30 Min -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/3e5684e5-0d8b-4f01-90a0-e6b82d7c64a3/Elite+Performance+Clinic+Image+2830.png?content-type=image%2Fpng" alt="Evaluation 30 min" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">What an Evaluation Actually Tells Us in 30 Minutes</h2>
-            <p class="epc-blog-card-meta">January 2026 • 6 min read</p>
-            <p class="epc-blog-card-excerpt">
-              A 30-minute evaluation reveals everything. Learn what we assess and why it matters for your success.
-            </p>
-            <a href="blog/evaluation-30-min.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-        <!-- Rehab Training Performance -->
-        <article class="epc-blog-card epc-spiral-card" data-category="Performance">
-          <div class="epc-blog-card-image">
-            <img src="https://images.squarespace-cdn.com/content/67464b2fdce7f7325fccfb9a/73e22efd-4490-4f9a-afcb-38baf656694d/EpcGym.webp?content-type=image%2Fwebp" alt="Rehab training performance" />
-          </div>
-          <div class="epc-blog-card-content">
-            <div class="epc-blog-card-category">Performance</div>
-            <h2 class="epc-blog-card-title">The Difference Between Rehab, Training, and Performance (And Why It Matters)</h2>
-            <p class="epc-blog-card-meta">January 2026 • 7 min read</p>
-            <p class="epc-blog-card-excerpt">
-              Rehab, training, and performance are different. Learn the difference and why it matters for your success.
-            </p>
-            <a href="blog/rehab-training-performance.html" class="epc-blog-card-link">Read More →</a>
-          </div>
-        </article>
-        
-          </div>
-        </div>
-      </div>
+
+    </div>
       
       <!-- CTA Section -->
       <div class="epc-blog-cta">
@@ -734,15 +389,169 @@
   </footer>
 
   <style>
-    /* Spiral Journal Layout */
-    .epc-blog-overview {
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #0a0a0a 0%, #000 100%);
-      color: #fff;
-      min-height: 100vh;
+    /* Journal Layout - Clean Design */
+    body {
+      background: #070707;
+      color: #F2EDE6;
+      font-family: system-ui, -apple-system, sans-serif;
       overflow-x: hidden;
+    }
+
+    /* 3D Canvas Container */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Journal Content */
+    .journal-container {
+      position: relative;
+      z-index: 2;
+      min-height: 400vh;
+      padding-top: 100px;
+    }
+
+    /* Intro Section */
+    .intro-section {
+      text-align: center;
+      padding: 10vh 50px 30vh;
+      position: relative;
+    }
+
+    .intro-section h1 {
+      font-family: Georgia, serif;
+      font-size: 56px;
+      line-height: 1.2;
+      color: #F2EDE6;
+      margin-bottom: 20px;
+    }
+
+    .intro-section p {
+      font-size: 18px;
+      color: rgba(242, 237, 230, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(201, 178, 127, 0.6);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* Journal Blocks */
+    .journal-block {
+      position: absolute;
+      width: 280px;
+      padding: 30px;
+      background: rgba(15, 15, 15, 0.85);
+      border: 1px solid rgba(201, 178, 127, 0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .journal-block:hover {
+      border-color: rgba(201, 178, 127, 0.6);
+      background: rgba(20, 20, 20, 0.95);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(201, 178, 127, 0.2);
+    }
+
+    .journal-block .date {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9B27F;
+      margin-bottom: 12px;
+    }
+
+    .journal-block h3 {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      line-height: 1.3;
+      color: #F2EDE6;
+      margin-bottom: 12px;
+    }
+
+    .journal-block p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(242, 237, 230, 0.7);
+      margin-bottom: 16px;
+    }
+
+    .journal-block .category {
+      display: inline-block;
+      padding: 6px 12px;
+      background: rgba(201, 178, 127, 0.15);
+      border: 1px solid rgba(201, 178, 127, 0.3);
+      border-radius: 4px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #C9B27F;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+      .intro-section {
+        padding: 5vh 20px 20vh;
+      }
+
+      .intro-section h1 {
+        font-size: 36px;
+      }
+
+      .journal-block {
+        position: relative !important;
+        width: calc(100% - 40px);
+        max-width: 400px;
+        margin: 0 auto 30px;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+      }
+
+      .journal-container {
+        min-height: auto;
+        padding-top: 80px;
+      }
+
+      #canvas-container {
+        display: none; /* Hide 3D on mobile */
+      }
+    }
+
+    /* Legacy styles for compatibility */
+    .epc-blog-overview {
+    
+    /* Remove top padding from page header */
+    .epc-page-header {
+      padding-top: 0 !important;
+      margin-bottom: 0 !important;
     }
     
     /* Spiral Wrapper */
@@ -751,6 +560,7 @@
       width: 100%;
       min-height: 4000px;
       padding: 0;
+      margin-top: 0;
     }
     
     /* Spiral Container - the 3D space */
@@ -865,6 +675,7 @@
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
+      min-height: 4000px;
     }
     
     /* Spiral Card Styling */
@@ -872,14 +683,17 @@
       position: absolute;
       top: 50%;
       left: 50%;
+      margin-top: -210px; /* Half of card height */
+      margin-left: -210px; /* Half of card width */
       width: 420px;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       border: 1px solid rgba(201, 185, 145, 0.2);
       backdrop-filter: blur(10px);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.1s linear, opacity 0.2s ease, filter 0.2s ease;
       transform-origin: center center;
       will-change: transform, opacity, filter;
       cursor: pointer;
+      pointer-events: auto;
     }
     
     .epc-spiral-card::before {
@@ -1340,8 +1154,7 @@
     }
   </style>
 
-  <script src="assets/js/spiral-journal.js" defer></script>
-  <script src="assets/js/3d-journal-figure.js" defer></script>
+  <script src="assets/js/journal-3d.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>
