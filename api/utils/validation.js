@@ -101,7 +101,7 @@ function validateRequestBody(body, schema) {
   };
 }
 
-module.exports = {
+export {
   validateInput,
   sanitizeForHTML,
   sanitizeForEmail,

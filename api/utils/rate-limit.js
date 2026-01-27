@@ -108,7 +108,7 @@ function rateLimitMiddleware(req, res, maxRequests = 10, windowMs = 60000) {
   return true;
 }
 
-module.exports = {
+export {
   rateLimit,
   getClientIdentifier,
   rateLimitMiddleware

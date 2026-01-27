@@ -3,10 +3,10 @@
  * Validates password and returns session token
  */
 
-const { validateRequestBody, errorResponse, successResponse } = require('./utils/validation');
-const { rateLimitMiddleware } = require('./utils/rate-limit');
-const { validateCSRF, sanitizeError } = require('./utils/security');
-const crypto = require('crypto');
+import { validateRequestBody, errorResponse, successResponse } from './utils/validation.js';
+import { rateLimitMiddleware } from './utils/rate-limit.js';
+import { validateCSRF, sanitizeError } from './utils/security.js';
+import crypto from 'crypto';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

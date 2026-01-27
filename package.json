@@ -1,6 +1,7 @@
 {
   "name": "epc-static",
   "version": "1.0.0",
+  "type": "module",
   "description": "Elite Performance Clinic - Client Management System",
   "scripts": {
     "dev": "npx serve . -l 3000",

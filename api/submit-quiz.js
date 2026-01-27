@@ -1,6 +1,6 @@
-const { validateRequestBody, sanitizeForEmail, MAX_LENGTHS } = require('./utils/validation');
-const { rateLimitMiddleware } = require('./utils/rate-limit');
-const { validateCSRF, sanitizeError, errorResponse, successResponse } = require('./utils/security');
+import { validateRequestBody, sanitizeForEmail, MAX_LENGTHS } from './utils/validation.js';
+import { rateLimitMiddleware } from './utils/rate-limit.js';
+import { validateCSRF, sanitizeError, errorResponse, successResponse } from './utils/security.js';
 
 export default async function handler(req, res) {
   // POST only

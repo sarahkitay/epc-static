@@ -70,7 +70,7 @@ function successResponse(res, data = { success: true }, statusCode = 200) {
   return res.status(statusCode).json(data);
 }
 
-module.exports = {
+export {
   validateCSRF,
   sanitizeError,
   errorResponse,
