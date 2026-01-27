@@ -48,13 +48,14 @@
     
     journalBlocks.forEach((block, index) => {
       // Calculate position in spiral (0 to 1) - each card gets a position around the circle
+      // Add spacing between cards
       const spiralPosition = index / journalBlocks.length;
       
       // Add orbit rotation so cards rotate around center as you scroll
       const angle = (spiralPosition * Math.PI * 2) + orbitRotation;
       
-      // Spiral radius - consistent radius for all cards
-      const baseRadius = 300; // Base radius in pixels
+      // Spiral radius - larger radius to space cards out more
+      const baseRadius = 400; // Increased radius for better spacing
       const radius = baseRadius;
       
       // Calculate X and Y positions in spiral (relative to center)

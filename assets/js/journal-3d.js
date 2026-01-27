@@ -1,4 +1,4 @@
-// 3D Journal Figure - Centered and larger
+// 3D Journal Figure - Centered and larger, full length visible
 (function() {
   'use strict';
 
@@ -35,11 +35,8 @@
       0.1,
       2000
     );
-    // Position camera closer and higher to see the figure better
-    camera.position.set(0, 0, 200);
-    
-    // Limit camera movement to stop before footer
-    const maxCameraY = window.innerHeight - 200; // Stop 200px before footer
+    // Position camera to see full figure - further back and centered
+    camera.position.set(0, 0, 300);
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
@@ -86,7 +83,7 @@
     function tryLoadGLB() {
       if (pathIndex >= glbPaths.length) {
         console.warn('GLB not found, using placeholder');
-        const geometry = new THREE.BoxGeometry(50, 100, 50);
+        const geometry = new THREE.BoxGeometry(50, 150, 50);
         const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
         const placeholder = new THREE.Mesh(geometry, material);
         figureGroup.add(placeholder);
@@ -104,16 +101,27 @@
           const center = box.getCenter(new THREE.Vector3());
           figureModel.position.sub(center);
           
-          // Scale up the model significantly
+          // Scale up the model to fit viewport height while maintaining aspect ratio
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 120 / maxDim; // Make it about 120 units tall
+          // Scale to fit ~80% of viewport height, ensuring full figure is visible
+          const viewportHeight = window.innerHeight;
+          const targetHeight = viewportHeight * 0.8;
+          const scale = targetHeight / maxDim;
           figureModel.scale.multiplyScalar(scale);
           
           figureGroup.add(figureModel);
           figureGroup.position.set(0, 0, 0); // Centered at origin
           
-          console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale);
+          // Adjust camera to ensure full figure is visible
+          const newBox = new THREE.Box3().setFromObject(figureGroup);
+          const newSize = newBox.getSize(new THREE.Vector3());
+          const maxSize = Math.max(newSize.x, newSize.y, newSize.z);
+          // Set camera distance to see full figure with some margin
+          const distance = maxSize * 2;
+          camera.position.z = Math.max(300, distance);
+          
+          console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale, 'Camera Z:', camera.position.z);
         },
         undefined,
         (error) => {
@@ -157,6 +165,16 @@
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+      
+      // Recalculate camera distance if model is loaded
+      if (figureModel) {
+        const box = new THREE.Box3().setFromObject(figureGroup);
+        const size = box.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const distance = maxSize * 2;
+        camera.position.z = Math.max(300, distance);
+        camera.updateProjectionMatrix();
+      }
     });
   `;
   document.head.appendChild(moduleScript);

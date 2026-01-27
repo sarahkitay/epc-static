@@ -380,13 +380,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden; /* Prevent figure from going past container */
+      overflow: visible; /* Allow full figure to be visible */
     }
     
-    /* Stop 3D figure before footer */
+    /* Stop 3D figure before footer - but allow full height */
     @media (min-height: 600px) {
       #canvas-container {
-        max-height: calc(100vh - 200px); /* Stop before footer */
+        max-height: calc(100vh - 150px); /* Stop before footer but show full figure */
       }
     }
     
