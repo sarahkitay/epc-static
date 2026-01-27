@@ -2,7 +2,7 @@
 // Also includes Firebase cloud sync support
 
 const DB_NAME = 'EPC_Client_DB';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Incremented to force upgrade and recreate stores if needed
 
 let db = null;
 let firebaseEnabled = false;
@@ -42,14 +42,25 @@ async function initDB() {
         const retryRequest = indexedDB.open(DB_NAME, DB_VERSION);
         retryRequest.onsuccess = () => {
           db = retryRequest.result;
+          console.log('✅ Database recovered and opened successfully');
           resolve(db);
         };
-        retryRequest.onerror = () => reject(retryRequest.error);
-      }).catch(reject);
+        retryRequest.onerror = () => {
+          console.error('Retry after reset failed:', retryRequest.error);
+          reject(retryRequest.error);
+        };
+        retryRequest.onupgradeneeded = (event) => {
+          createStores(event.target.result);
+        };
+      }).catch((resetError) => {
+        console.error('Database reset failed:', resetError);
+        reject(resetError);
+      });
     };
 
     request.onsuccess = () => {
       db = request.result;
+      console.log('✅ Database opened successfully');
       
       // Handle database connection errors
       db.onerror = (event) => {
@@ -69,21 +80,30 @@ async function initDB() {
         console.warn('Missing stores detected:', missingStores);
         // Close and reopen with version bump to trigger upgrade
         db.close();
-        const upgradeRequest = indexedDB.open(DB_NAME, DB_VERSION + 1);
+        const upgradeVersion = DB_VERSION + 1;
+        console.log(`Upgrading database to version ${upgradeVersion} to create missing stores...`);
+        const upgradeRequest = indexedDB.open(DB_NAME, upgradeVersion);
         upgradeRequest.onupgradeneeded = (event) => {
+          console.log('Creating missing stores...');
           createStores(event.target.result);
         };
         upgradeRequest.onsuccess = () => {
           db = upgradeRequest.result;
+          console.log('✅ Database upgraded successfully');
           resolve(db);
         };
-        upgradeRequest.onerror = () => reject(upgradeRequest.error);
+        upgradeRequest.onerror = () => {
+          console.error('Database upgrade failed:', upgradeRequest.error);
+          reject(upgradeRequest.error);
+        };
       } else {
+        console.log('✅ All required stores exist');
         resolve(db);
       }
     };
 
     request.onupgradeneeded = (event) => {
+      console.log('Database upgrade needed, creating stores...');
       createStores(event.target.result);
     };
   });
@@ -167,37 +187,84 @@ async function resetDatabase() {
 // Repair database - checks health and fixes issues
 async function repairDatabase() {
   try {
-    console.log('Starting database repair...');
+    console.log('🔧 Starting database repair...');
     
     // Close existing connection
     if (db) {
-      db.close();
+      try {
+        db.close();
+      } catch (e) {
+        console.warn('Error closing DB:', e);
+      }
       db = null;
     }
     
     // Try to open and verify
+    console.log('Initializing database...');
     const testDB = await initDB();
     
+    if (!testDB) {
+      throw new Error('Database initialization returned null');
+    }
+    
+    // Verify stores exist
+    const requiredStores = ['clients', 'assessments', 'programs', 'programPhotos', 'progressNotes', 'ptNotes'];
+    const missingStores = requiredStores.filter(store => !testDB.objectStoreNames.contains(store));
+    
+    if (missingStores.length > 0) {
+      console.warn('Missing stores detected:', missingStores);
+      // Force upgrade by incrementing version
+      testDB.close();
+      const DB_VERSION_NEW = DB_VERSION + 1;
+      console.log(`Upgrading database to version ${DB_VERSION_NEW}...`);
+      const upgradeRequest = indexedDB.open(DB_NAME, DB_VERSION_NEW);
+      await new Promise((resolve, reject) => {
+        upgradeRequest.onupgradeneeded = (event) => {
+          console.log('Creating missing stores during upgrade...');
+          createStores(event.target.result);
+        };
+        upgradeRequest.onsuccess = () => {
+          db = upgradeRequest.result;
+          console.log('✅ Database upgraded successfully');
+          resolve();
+        };
+        upgradeRequest.onerror = () => reject(upgradeRequest.error);
+      });
+    }
+    
     // Test read operation
-    const testTransaction = testDB.transaction(['clients'], 'readonly');
+    console.log('Testing database read operation...');
+    const testTransaction = db.transaction(['clients'], 'readonly');
     const testStore = testTransaction.objectStore('clients');
     await new Promise((resolve, reject) => {
       const testRequest = testStore.getAll();
       testRequest.onsuccess = () => {
-        console.log('Database repair successful - found', testRequest.result.length, 'clients');
+        const clients = testRequest.result || [];
+        console.log(`✅ Database repair successful - found ${clients.length} clients`);
         resolve();
       };
-      testRequest.onerror = () => reject(testRequest.error);
+      testRequest.onerror = () => {
+        console.error('Read test failed:', testRequest.error);
+        reject(testRequest.error);
+      };
     });
     
+    console.log('✅ Database repair completed successfully');
     return true;
   } catch (error) {
-    console.error('Database repair failed:', error);
+    console.error('❌ Database repair failed:', error);
     // Last resort: reset database
-    console.log('Attempting full database reset...');
-    await resetDatabase();
-    await initDB();
-    return true;
+    console.log('⚠️ Attempting full database reset (this will delete all data)...');
+    const shouldReset = confirm('Database repair failed. Would you like to reset the database?\n\nWARNING: This will delete all existing data. Only do this if you have no important data or have backed it up.');
+    
+    if (shouldReset) {
+      await resetDatabase();
+      await initDB();
+      console.log('✅ Database reset and reinitialized');
+      return true;
+    } else {
+      throw new Error('Database repair cancelled by user');
+    }
   }
 }
 
@@ -221,37 +288,109 @@ async function syncToCloud(collection, docId, data) {
 
 // ===== CLIENTS =====
 async function addClient(clientData) {
-  const database = await getDB();
-  return new Promise(async (resolve, reject) => {
-    const transaction = database.transaction(['clients'], 'readwrite');
-    const store = transaction.objectStore('clients');
-    const clientWithMeta = {
-      ...clientData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    const request = store.add(clientWithMeta);
+  try {
+    const database = await getDB();
+    if (!database) {
+      throw new Error('Database not initialized');
+    }
+    
+    return new Promise(async (resolve, reject) => {
+      try {
+        const transaction = database.transaction(['clients'], 'readwrite');
+        if (!transaction) {
+          reject(new Error('Failed to create transaction'));
+          return;
+        }
+        
+        const store = transaction.objectStore('clients');
+        if (!store) {
+          reject(new Error('Clients store not found. Please click "Repair DB" button.'));
+          return;
+        }
+        
+        const clientWithMeta = {
+          ...clientData,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        console.log('Adding client to database:', clientWithMeta);
+        const request = store.add(clientWithMeta);
 
-    request.onsuccess = async () => {
-      const clientId = request.result;
-      // Sync to cloud if available
-      await syncToCloud('clients', `client_${clientId}`, { id: clientId, ...clientWithMeta });
-      resolve(clientId);
-    };
-    request.onerror = () => reject(request.error);
-  });
+        request.onsuccess = async () => {
+          const clientId = request.result;
+          console.log('✅ Client added to IndexedDB with ID:', clientId);
+          // Sync to cloud if available
+          try {
+            await syncToCloud('clients', `client_${clientId}`, { id: clientId, ...clientWithMeta });
+          } catch (syncError) {
+            console.warn('Cloud sync failed (non-critical):', syncError);
+          }
+          resolve(clientId);
+        };
+        
+        request.onerror = () => {
+          console.error('Error adding client:', request.error);
+          reject(request.error || new Error('Failed to add client to database'));
+        };
+        
+        transaction.onerror = () => {
+          console.error('Transaction error:', transaction.error);
+          reject(transaction.error || new Error('Transaction failed'));
+        };
+      } catch (error) {
+        console.error('Error in addClient:', error);
+        reject(error);
+      }
+    });
+  } catch (error) {
+    console.error('Error getting database in addClient:', error);
+    throw error;
+  }
 }
 
 async function getAllClients() {
-  const database = await getDB();
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction(['clients'], 'readonly');
-    const store = transaction.objectStore('clients');
-    const request = store.getAll();
+  try {
+    const database = await getDB();
+    if (!database) {
+      throw new Error('Database not initialized');
+    }
+    
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = database.transaction(['clients'], 'readonly');
+        if (!transaction) {
+          reject(new Error('Failed to create transaction'));
+          return;
+        }
+        
+        const store = transaction.objectStore('clients');
+        if (!store) {
+          reject(new Error('Clients store not found. Database may need repair.'));
+          return;
+        }
+        
+        const request = store.getAll();
 
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
+        request.onsuccess = () => {
+          const clients = request.result || [];
+          console.log(`✅ Retrieved ${clients.length} clients from database`);
+          resolve(clients);
+        };
+        
+        request.onerror = () => {
+          console.error('Error in getAllClients request:', request.error);
+          reject(request.error || new Error('Failed to retrieve clients'));
+        };
+      } catch (error) {
+        console.error('Error in getAllClients:', error);
+        reject(error);
+      }
+    });
+  } catch (error) {
+    console.error('Error getting database in getAllClients:', error);
+    throw error;
+  }
 }
 
 async function getClient(clientId) {

@@ -647,21 +647,54 @@ async function initDashboard() {
       // Check if addClient function is available
       if (typeof addClient !== 'function') {
         console.error('addClient function not found!');
-        alert('Error: Database functions not loaded. Please refresh the page.');
+        console.log('Available functions:', Object.keys(window).filter(k => k.includes('Client')));
+        alert('Error: Database functions not loaded. Please refresh the page.\n\nIf the problem persists, try clicking the "Repair DB" button.');
         return;
       }
 
+      // Show loading state
+      const submitBtn = addClientForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.textContent : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Adding...';
+      }
+
       try {
-        console.log('Calling addClient...');
+        console.log('Calling addClient with data:', clientData);
         const clientId = await addClient(clientData);
-        console.log('Client added successfully with ID:', clientId);
+        console.log('✅ Client added successfully with ID:', clientId);
         addClientModal.style.display = 'none';
         addClientForm.reset();
         await window.loadClients();
-        console.log('Clients reloaded');
+        alert(`Client "${clientData.name}" added successfully!`);
       } catch (error) {
-        console.error('Error adding client:', error);
-        alert(`Error adding client: ${error.message || 'Unknown error'}. Please check the console for details.`);
+        console.error('❌ Error adding client:', error);
+        console.error('Error stack:', error.stack);
+        const errorMsg = `Error adding client: ${error.message || 'Unknown error'}\n\nWould you like to try repairing the database?`;
+        if (confirm(errorMsg)) {
+          try {
+            if (typeof window.repairDatabase === 'function') {
+              await window.repairDatabase();
+              // Retry adding client
+              const clientId = await addClient(clientData);
+              addClientModal.style.display = 'none';
+              addClientForm.reset();
+              await window.loadClients();
+              alert(`Client "${clientData.name}" added successfully after repair!`);
+            } else {
+              alert('Repair function not available. Please refresh the page.');
+            }
+          } catch (repairError) {
+            console.error('Repair and retry failed:', repairError);
+            alert(`Failed to add client even after repair: ${repairError.message}\n\nPlease refresh the page or check the console.`);
+          }
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
       }
     });
   } else {
