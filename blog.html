@@ -54,10 +54,14 @@
       <!-- Spiral Journal Container -->
       <div class="epc-spiral-wrapper">
         <div class="epc-spiral-container" id="spiralContainer">
-          <!-- Center Logo Anchor -->
-          <div class="epc-spiral-logo">
-            <span class="epc-spiral-logo-text">EPC</span>
-            <p class="epc-spiral-logo-subtitle">Journal</p>
+          <!-- Center Logo Anchor / 3D Figure Container -->
+          <div class="epc-spiral-logo" id="epc-3d-figure-container">
+            <!-- 3D Figure will render here via Three.js -->
+            <!-- Fallback: Static logo if 3D fails or on mobile -->
+            <div class="epc-spiral-logo-fallback">
+              <span class="epc-spiral-logo-text">EPC</span>
+              <p class="epc-spiral-logo-subtitle">Journal</p>
+            </div>
           </div>
           
           <!-- Spiral Path (subtle visual guide) -->
@@ -758,16 +762,38 @@
       perspective-origin: center center;
     }
     
-    /* Center Logo Anchor */
+    /* Center Logo Anchor / 3D Figure Container */
     .epc-spiral-logo {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(1);
       z-index: 1000;
-      text-align: center;
+      width: 600px;
+      height: 600px;
       pointer-events: none;
       transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+    }
+    
+    /* 3D Canvas */
+    .epc-spiral-logo canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    
+    /* Fallback logo (shown if 3D fails or on mobile) */
+    .epc-spiral-logo-fallback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    
+    .epc-spiral-logo canvas ~ .epc-spiral-logo-fallback {
+      display: none; /* Hide fallback when 3D is active */
     }
     
     .epc-spiral-logo-text {
@@ -1315,6 +1341,7 @@
   </style>
 
   <script src="assets/js/spiral-journal.js" defer></script>
+  <script src="assets/js/3d-journal-figure.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>
