@@ -61,6 +61,9 @@
         <div class="scroll-indicator">Scroll to explore</div>
       </div>
 
+      <!-- 3D Stage for Helix Effect -->
+      <div class="journal-stage" aria-hidden="true"></div>
+
       <!-- Journal Blocks -->
         <a href="blog/newyear.html" class="journal-block" style="top: 100vh; left: 15%;">
             <div class="date">January 2026</div>
@@ -440,9 +443,21 @@
       50% { transform: translateX(-50%) translateY(10px); }
     }
 
-    /* Journal Blocks - HTML Overlays */
+    /* 3D Stage for Helix Effect */
+    .journal-stage {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      z-index: 20; /* Above background/figure but below cards */
+    }
+
+    /* Journal Blocks - 3D Helix Cards */
     .journal-block {
       position: absolute;
+      left: 0;
+      top: 0;
       width: 280px;
       padding: 24px;
       background: rgba(15, 15, 15, 0.9);
@@ -451,7 +466,9 @@
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
-      z-index: 10; /* Above canvas */
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      pointer-events: auto; /* Allow clicking */
       text-decoration: none;
       color: inherit;
       display: block;
@@ -460,8 +477,8 @@
     .journal-block:hover {
       border-color: rgba(201, 178, 127, 0.6);
       background: rgba(20, 20, 20, 0.95);
-      transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(201, 178, 127, 0.15);
+      /* Note: transform is handled by JS for 3D helix, so hover doesn't override */
     }
     
     .journal-block .date {
