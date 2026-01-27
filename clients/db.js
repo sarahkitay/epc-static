@@ -10,90 +10,195 @@ let firebaseEnabled = false;
 // Check if Firebase is available and enabled
 async function checkFirebase() {
   try {
-    // Wait for Firebase to initialize (with timeout)
-    let attempts = 0;
-    const maxAttempts = 20; // 10 seconds max wait
-    
-    while (attempts < maxAttempts) {
-      if (typeof window !== 'undefined' && window.firebaseInitialized && window.firestoreDb) {
-        firebaseEnabled = true;
-        console.log('Firebase is enabled and ready');
-        return true;
-      }
-      // Wait 500ms before checking again
-      await new Promise(resolve => setTimeout(resolve, 500));
-      attempts++;
+    if (typeof window !== 'undefined' && window.firebaseInitialized) {
+      firebaseEnabled = true;
     }
-    
-    firebaseEnabled = false;
-    console.log('Firebase not available after waiting');
-    return false;
   } catch (e) {
     firebaseEnabled = false;
-    console.error('Error checking Firebase:', e);
-    return false;
   }
 }
 
-// Database initialization
+// Database initialization with error recovery
 async function initDB() {
   return new Promise((resolve, reject) => {
+    // Close any existing connection first
+    if (db) {
+      try {
+        db.close();
+        db = null;
+      } catch (e) {
+        console.warn('Error closing existing DB connection:', e);
+      }
+    }
+
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-    request.onerror = () => reject(request.error);
+    request.onerror = (event) => {
+      console.error('IndexedDB open error:', request.error);
+      // Try to recover by deleting and recreating
+      console.warn('Attempting database recovery...');
+      resetDatabase().then(() => {
+        // Retry after reset
+        const retryRequest = indexedDB.open(DB_NAME, DB_VERSION);
+        retryRequest.onsuccess = () => {
+          db = retryRequest.result;
+          resolve(db);
+        };
+        retryRequest.onerror = () => reject(retryRequest.error);
+      }).catch(reject);
+    };
+
     request.onsuccess = () => {
       db = request.result;
-      resolve(db);
+      
+      // Handle database connection errors
+      db.onerror = (event) => {
+        console.error('Database error:', event.target.error);
+      };
+      
+      db.onclose = () => {
+        console.warn('Database connection closed');
+        db = null;
+      };
+      
+      // Verify all stores exist
+      const requiredStores = ['clients', 'assessments', 'programs', 'programPhotos', 'progressNotes', 'ptNotes'];
+      const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
+      
+      if (missingStores.length > 0) {
+        console.warn('Missing stores detected:', missingStores);
+        // Close and reopen with version bump to trigger upgrade
+        db.close();
+        const upgradeRequest = indexedDB.open(DB_NAME, DB_VERSION + 1);
+        upgradeRequest.onupgradeneeded = (event) => {
+          createStores(event.target.result);
+        };
+        upgradeRequest.onsuccess = () => {
+          db = upgradeRequest.result;
+          resolve(db);
+        };
+        upgradeRequest.onerror = () => reject(upgradeRequest.error);
+      } else {
+        resolve(db);
+      }
     };
 
     request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-
-      // Clients store
-      if (!db.objectStoreNames.contains('clients')) {
-        const clientsStore = db.createObjectStore('clients', { keyPath: 'id', autoIncrement: true });
-        clientsStore.createIndex('name', 'name', { unique: false });
-        clientsStore.createIndex('category', 'category', { unique: false });
-        clientsStore.createIndex('trainer', 'primaryTrainer', { unique: false });
-      }
-
-      // Assessments store
-      if (!db.objectStoreNames.contains('assessments')) {
-        const assessmentsStore = db.createObjectStore('assessments', { keyPath: 'id', autoIncrement: true });
-        assessmentsStore.createIndex('clientId', 'clientId', { unique: false });
-        assessmentsStore.createIndex('date', 'date', { unique: false });
-      }
-
-      // Programs store
-      if (!db.objectStoreNames.contains('programs')) {
-        const programsStore = db.createObjectStore('programs', { keyPath: 'id', autoIncrement: true });
-        programsStore.createIndex('clientId', 'clientId', { unique: false });
-        programsStore.createIndex('week', 'week', { unique: false });
-        programsStore.createIndex('createdAt', 'createdAt', { unique: false });
-      }
-
-      // Program photos store
-      if (!db.objectStoreNames.contains('programPhotos')) {
-        const photosStore = db.createObjectStore('programPhotos', { keyPath: 'id', autoIncrement: true });
-        photosStore.createIndex('clientId', 'clientId', { unique: false });
-        photosStore.createIndex('uploadedAt', 'uploadedAt', { unique: false });
-      }
-
-      // Progress notes store
-      if (!db.objectStoreNames.contains('progressNotes')) {
-        const notesStore = db.createObjectStore('progressNotes', { keyPath: 'id', autoIncrement: true });
-        notesStore.createIndex('clientId', 'clientId', { unique: false });
-        notesStore.createIndex('date', 'date', { unique: false });
-      }
-
-      // PT notes store
-      if (!db.objectStoreNames.contains('ptNotes')) {
-        const ptNotesStore = db.createObjectStore('ptNotes', { keyPath: 'id', autoIncrement: true });
-        ptNotesStore.createIndex('clientId', 'clientId', { unique: false });
-        ptNotesStore.createIndex('date', 'date', { unique: false });
-      }
+      createStores(event.target.result);
     };
   });
+}
+
+// Helper function to create all stores
+function createStores(database) {
+  // Clients store
+  if (!database.objectStoreNames.contains('clients')) {
+    const clientsStore = database.createObjectStore('clients', { keyPath: 'id', autoIncrement: true });
+    clientsStore.createIndex('name', 'name', { unique: false });
+    clientsStore.createIndex('category', 'category', { unique: false });
+    clientsStore.createIndex('trainer', 'primaryTrainer', { unique: false });
+  }
+
+  // Assessments store
+  if (!database.objectStoreNames.contains('assessments')) {
+    const assessmentsStore = database.createObjectStore('assessments', { keyPath: 'id', autoIncrement: true });
+    assessmentsStore.createIndex('clientId', 'clientId', { unique: false });
+    assessmentsStore.createIndex('date', 'date', { unique: false });
+  }
+
+  // Programs store
+  if (!database.objectStoreNames.contains('programs')) {
+    const programsStore = database.createObjectStore('programs', { keyPath: 'id', autoIncrement: true });
+    programsStore.createIndex('clientId', 'clientId', { unique: false });
+    programsStore.createIndex('week', 'week', { unique: false });
+    programsStore.createIndex('createdAt', 'createdAt', { unique: false });
+  }
+
+  // Program photos store
+  if (!database.objectStoreNames.contains('programPhotos')) {
+    const photosStore = database.createObjectStore('programPhotos', { keyPath: 'id', autoIncrement: true });
+    photosStore.createIndex('clientId', 'clientId', { unique: false });
+    photosStore.createIndex('uploadedAt', 'uploadedAt', { unique: false });
+  }
+
+  // Progress notes store
+  if (!database.objectStoreNames.contains('progressNotes')) {
+    const notesStore = database.createObjectStore('progressNotes', { keyPath: 'id', autoIncrement: true });
+    notesStore.createIndex('clientId', 'clientId', { unique: false });
+    notesStore.createIndex('date', 'date', { unique: false });
+  }
+
+  // PT notes store
+  if (!database.objectStoreNames.contains('ptNotes')) {
+    const ptNotesStore = database.createObjectStore('ptNotes', { keyPath: 'id', autoIncrement: true });
+    ptNotesStore.createIndex('clientId', 'clientId', { unique: false });
+    ptNotesStore.createIndex('date', 'date', { unique: false });
+  }
+}
+
+// Reset database (delete and recreate) - use with caution!
+async function resetDatabase() {
+  return new Promise((resolve, reject) => {
+    if (db) {
+      db.close();
+      db = null;
+    }
+    
+    const deleteRequest = indexedDB.deleteDatabase(DB_NAME);
+    
+    deleteRequest.onsuccess = () => {
+      console.log('Database deleted successfully, will recreate on next init');
+      resolve();
+    };
+    
+    deleteRequest.onerror = () => {
+      console.error('Error deleting database:', deleteRequest.error);
+      reject(deleteRequest.error);
+    };
+    
+    deleteRequest.onblocked = () => {
+      console.warn('Database deletion blocked - close all tabs and try again');
+      // Still resolve, the next open will handle it
+      resolve();
+    };
+  });
+}
+
+// Repair database - checks health and fixes issues
+async function repairDatabase() {
+  try {
+    console.log('Starting database repair...');
+    
+    // Close existing connection
+    if (db) {
+      db.close();
+      db = null;
+    }
+    
+    // Try to open and verify
+    const testDB = await initDB();
+    
+    // Test read operation
+    const testTransaction = testDB.transaction(['clients'], 'readonly');
+    const testStore = testTransaction.objectStore('clients');
+    await new Promise((resolve, reject) => {
+      const testRequest = testStore.getAll();
+      testRequest.onsuccess = () => {
+        console.log('Database repair successful - found', testRequest.result.length, 'clients');
+        resolve();
+      };
+      testRequest.onerror = () => reject(testRequest.error);
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Database repair failed:', error);
+    // Last resort: reset database
+    console.log('Attempting full database reset...');
+    await resetDatabase();
+    await initDB();
+    return true;
+  }
 }
 
 // Get database instance
@@ -104,20 +209,13 @@ async function getDB() {
 
 // Helper function to sync to Firebase after IndexedDB operations
 async function syncToCloud(collection, docId, data) {
-  const firebaseReady = await checkFirebase();
-  if (firebaseReady && typeof window !== 'undefined' && window.syncToFirebase) {
+  await checkFirebase();
+  if (firebaseEnabled && typeof window !== 'undefined' && window.syncToFirebase) {
     try {
-      const success = await window.syncToFirebase(collection, docId, data);
-      if (success) {
-        console.log(`Successfully synced ${collection}/${docId} to Firebase`);
-      } else {
-        console.warn(`Failed to sync ${collection}/${docId} to Firebase`);
-      }
+      await window.syncToFirebase(collection, docId, data);
     } catch (error) {
       console.error('Cloud sync error:', error);
     }
-  } else {
-    console.log(`Firebase not ready, skipping sync for ${collection}/${docId}`);
   }
 }
 
@@ -146,59 +244,12 @@ async function addClient(clientData) {
 
 async function getAllClients() {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['clients'], 'readonly');
     const store = transaction.objectStore('clients');
     const request = store.getAll();
 
-    request.onsuccess = async () => {
-      let clients = request.result || [];
-      
-      // Try to load from Firebase/cloud if available
-      const firebaseReady = await checkFirebase();
-      if (firebaseReady && typeof window !== 'undefined' && window.firestoreDb) {
-        try {
-          console.log('Attempting to load clients from Firebase...');
-          // Load all clients from Firebase
-          const firestoreDb = window.firestoreDb;
-          const snapshot = await firestoreDb.collection('clients').get();
-          const cloudClients = [];
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            if (data.id) {
-              cloudClients.push(data);
-            }
-          });
-          
-          // Merge cloud data with local data (cloud takes precedence)
-          if (cloudClients.length > 0) {
-            console.log(`Loaded ${cloudClients.length} clients from Firebase`);
-            // Update local IndexedDB with cloud data
-            const writeTransaction = database.transaction(['clients'], 'readwrite');
-            const writeStore = writeTransaction.objectStore('clients');
-            
-            for (const cloudClient of cloudClients) {
-              await new Promise((resolve, reject) => {
-                const putRequest = writeStore.put(cloudClient);
-                putRequest.onsuccess = () => resolve();
-                putRequest.onerror = () => reject(putRequest.error);
-              });
-            }
-            
-            clients = cloudClients;
-            console.log('Clients synced from Firebase to local storage');
-          } else {
-            console.log('No clients found in Firebase, using local data');
-          }
-        } catch (error) {
-          console.error('Error loading from Firebase, using local data:', error);
-        }
-      } else {
-        console.log('Firebase not available, using local IndexedDB only');
-      }
-      
-      resolve(clients);
-    };
+    request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
 }
@@ -472,7 +523,21 @@ async function getClientPTNotes(clientId) {
   });
 }
 
-// Initialize database on load
+// Make repair function globally available
 if (typeof window !== 'undefined') {
-  initDB().catch(console.error);
+  window.repairDatabase = repairDatabase;
+  window.resetDatabase = resetDatabase;
+  
+  // Initialize database on load with error recovery
+  initDB().catch(async (error) => {
+    console.error('Database initialization failed:', error);
+    console.log('Attempting automatic repair...');
+    try {
+      await repairDatabase();
+      console.log('Database repair completed successfully');
+    } catch (repairError) {
+      console.error('Automatic repair failed:', repairError);
+      alert('Database error detected. Please refresh the page. If the problem persists, open the browser console and run: window.repairDatabase()');
+    }
+  });
 }

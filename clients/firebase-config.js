@@ -2,21 +2,22 @@
 // EPC Client Management System
 // Note: Firebase client config is public by design, but should be restricted via Firestore rules
 
-// Load from environment variables if available (for server-side), otherwise use defaults
-// Client-side will use the default config as Firebase client keys are meant to be public
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const FIREBASE_CONFIG = {
-  apiKey: process.env.FIREBASE_API_KEY || "AIzaSyBawF_wynu2aM60hrknuESv-hA2g_8W18A",
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "epcclients-61ee6.firebaseapp.com",
-  projectId: process.env.FIREBASE_PROJECT_ID || "epcclients-61ee6",
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "epcclients-61ee6.firebasestorage.app",
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "290706438619",
-  appId: process.env.FIREBASE_APP_ID || "1:290706438619:web:d8beb28d6a8282fd574ffe",
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID || "G-9FW3SMZ944"
+  apiKey: "AIzaSyBawF_wynu2aM60hrknuESv-hA2g_8W18A",
+  authDomain: "epcclients-61ee6.firebaseapp.com",
+  projectId: "epcclients-61ee6",
+  storageBucket: "epcclients-61ee6.firebasestorage.app",
+  messagingSenderId: "290706438619",
+  appId: "1:290706438619:web:d8beb28d6a8282fd574ffe",
+  measurementId: "G-9FW3SMZ944"
 };
 
-// Initialize Firebase (using CDN version for compatibility)
+// Initialize Firebase (using CDN compat version for compatibility)
 let firebaseInitialized = false;
 let firestoreDb = null;
+let analytics = null;
 
 // Check if Firebase is configured
 function isFirebaseConfigured() {
@@ -53,15 +54,34 @@ function initFirebase() {
       return true;
     }
     
+    // Initialize Firebase app
     const app = firebase.initializeApp(FIREBASE_CONFIG);
+    
+    // Initialize Firestore
     firestoreDb = firebase.firestore(app);
+    
+    // Initialize Analytics (if available)
+    try {
+      if (typeof firebase.analytics !== 'undefined') {
+        analytics = firebase.analytics(app);
+        console.log('✅ Firebase Analytics initialized');
+      }
+    } catch (analyticsError) {
+      console.warn('Analytics initialization skipped:', analyticsError.message);
+    }
+    
     firebaseInitialized = true;
     window.firebaseInitialized = true;
     window.firestoreDb = firestoreDb;
+    window.firebaseApp = app;
+    window.firebaseAnalytics = analytics;
     window.syncToFirebase = syncToFirebase;
     window.loadFromFirebase = loadFromFirebase;
+    
     console.log('✅ Firebase initialized successfully - Cloud sync enabled!');
     console.log('Firestore database ready:', !!firestoreDb);
+    console.log('Analytics ready:', !!analytics);
+    
     return true;
   } catch (error) {
     console.error('Firebase initialization error:', error);
@@ -69,9 +89,21 @@ function initFirebase() {
     try {
       const app = firebase.app();
       firestoreDb = firebase.firestore(app);
+      
+      // Try to get analytics if available
+      try {
+        if (typeof firebase.analytics !== 'undefined') {
+          analytics = firebase.analytics(app);
+        }
+      } catch (analyticsError) {
+        // Analytics not critical, continue without it
+      }
+      
       firebaseInitialized = true;
       window.firebaseInitialized = true;
       window.firestoreDb = firestoreDb;
+      window.firebaseApp = app;
+      window.firebaseAnalytics = analytics;
       window.syncToFirebase = syncToFirebase;
       window.loadFromFirebase = loadFromFirebase;
       console.log('✅ Firebase already initialized, using existing app');
@@ -118,14 +150,72 @@ async function loadFromFirebase(collection, docId) {
   }
 }
 
+// Test Firebase connection
+async function testFirebaseConnection() {
+  if (!firebaseInitialized || !firestoreDb) {
+    console.warn('Firebase not initialized yet');
+    return { connected: false, error: 'Firebase not initialized' };
+  }
+  
+  try {
+    // Try a simple read operation to test connection
+    const testRef = firestoreDb.collection('_test').doc('connection');
+    await testRef.set({ 
+      timestamp: new Date().toISOString(),
+      test: true 
+    }, { merge: true });
+    
+    const doc = await testRef.get();
+    if (doc.exists()) {
+      console.log('✅ Firebase connection test successful');
+      return { connected: true, message: 'Firebase is connected and working' };
+    } else {
+      return { connected: false, error: 'Test document not found' };
+    }
+  } catch (error) {
+    console.error('Firebase connection test failed:', error);
+    return { connected: false, error: error.message };
+  }
+}
+
+// Make test function globally available
+if (typeof window !== 'undefined') {
+  window.testFirebaseConnection = testFirebaseConnection;
+}
+
 // Initialize Firebase when DOM is ready
 if (typeof window !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       // Wait for Firebase SDK to load from CDN
-      setTimeout(initFirebase, 500);
+      setTimeout(async () => {
+        const initialized = initFirebase();
+        if (initialized) {
+          // Test connection after a short delay
+          setTimeout(async () => {
+            const result = await testFirebaseConnection();
+            if (result.connected) {
+              console.log('✅ Firebase fully connected and verified');
+            } else {
+              console.warn('⚠️ Firebase initialized but connection test failed:', result.error);
+            }
+          }, 1000);
+        }
+      }, 500);
     });
   } else {
-    setTimeout(initFirebase, 500);
+    setTimeout(async () => {
+      const initialized = initFirebase();
+      if (initialized) {
+        setTimeout(async () => {
+          const result = await testFirebaseConnection();
+          if (result.connected) {
+            console.log('✅ Firebase fully connected and verified');
+          } else {
+            console.warn('⚠️ Firebase initialized but connection test failed:', result.error);
+          }
+        }, 1000);
+      }
+    }, 500);
   }
 }

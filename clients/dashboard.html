@@ -36,9 +36,14 @@
     <header class="dashboard-header">
       <div class="header-content">
         <h2 class="dashboard-title">Client Roster</h2>
-        <button class="btn-primary" id="addClientBtn">
-          <span>+ Add New Client</span>
-        </button>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-secondary" id="repairDbBtn" title="Repair database if experiencing issues" style="font-size: 11px; padding: 8px 12px;">
+            🔧 Repair DB
+          </button>
+          <button class="btn-primary" id="addClientBtn">
+            <span>+ Add New Client</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -163,6 +168,7 @@
   <!-- Firebase SDK for cloud sync (using compat version for non-module scripts) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
   
   <script src="firebase-config.js"></script>
   <script src="db.js"></script>

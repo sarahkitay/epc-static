@@ -1,4 +1,4 @@
-// 3D Journal Figure - Centered and larger, full length visible
+// 3D Journal Figure - Dual renderer for occlusion (back + front)
 (function() {
   'use strict';
 
@@ -27,47 +27,74 @@
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    // Scene setup
-    const scene = new THREE.Scene();
+    // Create TWO renderers (back + front for occlusion)
+    const backContainer = document.getElementById('journal-3d-back');
+    const frontContainer = document.getElementById('journal-3d-front');
+    if (!backContainer || !frontContainer) return;
+
+    // Back renderer (figure)
+    const backRenderer = new THREE.WebGLRenderer({ 
+      antialias: true,
+      alpha: true 
+    });
+    backRenderer.setClearAlpha(0);
+    backRenderer.setSize(window.innerWidth, window.innerHeight);
+    backRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    backRenderer.outputColorSpace = THREE.SRGBColorSpace;
+    backRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+    backRenderer.toneMappingExposure = 1.1;
+    backRenderer.physicallyCorrectLights = true;
+    backRenderer.shadowMap.enabled = true;
+    backRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    backContainer.appendChild(backRenderer.domElement);
+
+    // Front renderer (occlusion mask)
+    const frontRenderer = new THREE.WebGLRenderer({ 
+      antialias: true,
+      alpha: true 
+    });
+    frontRenderer.setClearAlpha(0);
+    frontRenderer.setSize(window.innerWidth, window.innerHeight);
+    frontRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    frontContainer.appendChild(frontRenderer.domElement);
+
+    // Shared scene setup
+    const backScene = new THREE.Scene();
+    const frontScene = new THREE.Scene();
+
+    // Camera setup - closer for better depth perception
     const camera = new THREE.PerspectiveCamera(
-      50,
+      45, // Smaller FOV for more depth perception
       window.innerWidth / window.innerHeight,
       0.1,
       5000
     );
-    // Position camera much further back to see full figure
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 0, 400);
 
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      alpha: true 
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const canvasContainer = document.getElementById('canvas-container');
-    if (canvasContainer) {
-      canvasContainer.appendChild(renderer.domElement);
-    }
+    // Lighting - improved for depth
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.25); // Reduced ambient
+    backScene.add(ambientLight);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2); // Increased intensity
     keyLight.position.set(100, 100, 100);
-    scene.add(keyLight);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 2048;
+    keyLight.shadow.mapSize.height = 2048;
+    backScene.add(keyLight);
 
     const fillLight = new THREE.DirectionalLight(0xC9B27F, 0.5);
     fillLight.position.set(-100, 50, -50);
-    scene.add(fillLight);
+    backScene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xC9B27F, 0.4);
+    const backLight = new THREE.DirectionalLight(0xC9B27F, 0.9); // Increased for depth
     backLight.position.set(0, -50, -100);
-    scene.add(backLight);
+    backScene.add(backLight);
 
-    // Figure container - centered
-    const figureGroup = new THREE.Group();
-    scene.add(figureGroup);
+    // Figure containers
+    const backFigureGroup = new THREE.Group();
+    const frontFigureGroup = new THREE.Group();
+    backScene.add(backFigureGroup);
+    frontScene.add(frontFigureGroup);
 
     // Load GLB
     const loader = new GLTFLoader();
@@ -86,8 +113,8 @@
         const geometry = new THREE.BoxGeometry(50, 150, 50);
         const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
         const placeholder = new THREE.Mesh(geometry, material);
-        figureGroup.add(placeholder);
-        figureGroup.scale.set(2, 2, 2); // Make placeholder larger
+        backFigureGroup.add(placeholder);
+        backFigureGroup.scale.set(2, 2, 2);
         return;
       }
 
@@ -101,25 +128,49 @@
           const center = box.getCenter(new THREE.Vector3());
           figureModel.position.sub(center);
           
-          // Scale up the model to fit viewport height while maintaining aspect ratio
+          // Scale to fit viewport
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          // Scale to fit ~70% of viewport height, ensuring full figure is visible with margin
           const viewportHeight = window.innerHeight;
-          const targetHeight = viewportHeight * 0.7; // Smaller scale to ensure nothing is cut off
+          const targetHeight = viewportHeight * 0.7;
           const scale = targetHeight / maxDim;
           figureModel.scale.multiplyScalar(scale);
           
-          figureGroup.add(figureModel);
-          figureGroup.position.set(0, 0, 0); // Centered at origin
+          // BACK SCENE: Normal materials with improved depth
+          const backClone = figureModel.clone(true);
+          backClone.traverse((o) => {
+            if (o.isMesh && o.material) {
+              o.castShadow = true;
+              o.receiveShadow = true;
+              if (o.material.isMeshStandardMaterial) {
+                o.material.metalness = 0.15;
+                o.material.roughness = 0.55;
+              }
+            }
+          });
+          backFigureGroup.add(backClone);
+          backFigureGroup.position.set(0, 0, 0);
           
-          // Adjust camera to ensure full figure is visible with plenty of margin
-          const newBox = new THREE.Box3().setFromObject(figureGroup);
+          // FRONT SCENE: Alpha-only occlusion mask
+          const frontClone = figureModel.clone(true);
+          frontClone.traverse((o) => {
+            if (o.isMesh) {
+              o.material = new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                transparent: true,
+                opacity: 0.95 // Slight transparency for subtle occlusion
+              });
+            }
+          });
+          frontFigureGroup.add(frontClone);
+          frontFigureGroup.position.set(0, 0, 0);
+          
+          // Adjust camera to ensure full figure is visible
+          const newBox = new THREE.Box3().setFromObject(backFigureGroup);
           const newSize = newBox.getSize(new THREE.Vector3());
           const maxSize = Math.max(newSize.x, newSize.y, newSize.z);
-          // Set camera distance to see full figure with generous margin (3x the size)
           const distance = maxSize * 3;
-          camera.position.z = Math.max(500, distance);
+          camera.position.z = Math.max(400, distance);
           camera.updateProjectionMatrix();
           
           console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale, 'Camera Z:', camera.position.z);
@@ -142,7 +193,7 @@
 
     window.addEventListener('scroll', () => {
       scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      targetRotation = scrollPercent * Math.PI * 2; // Full rotation as you scroll
+      targetRotation = scrollPercent * Math.PI * 2;
     }, { passive: true });
 
     // Animation loop
@@ -151,12 +202,17 @@
 
       // Smooth rotation
       currentRotation += (targetRotation - currentRotation) * 0.05;
-      figureGroup.rotation.y = currentRotation;
+      backFigureGroup.rotation.y = currentRotation;
+      frontFigureGroup.rotation.y = currentRotation;
 
       // Gentle floating animation
-      figureGroup.position.y = Math.sin(Date.now() * 0.0005) * 5;
+      const floatY = Math.sin(Date.now() * 0.0005) * 5;
+      backFigureGroup.position.y = floatY;
+      frontFigureGroup.position.y = floatY;
 
-      renderer.render(scene, camera);
+      // Render both scenes
+      backRenderer.render(backScene, camera);
+      frontRenderer.render(frontScene, camera);
     }
 
     animate();
@@ -165,16 +221,16 @@
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      backRenderer.setSize(window.innerWidth, window.innerHeight);
+      frontRenderer.setSize(window.innerWidth, window.innerHeight);
       
       // Recalculate camera distance if model is loaded
       if (figureModel) {
-        const box = new THREE.Box3().setFromObject(figureGroup);
+        const box = new THREE.Box3().setFromObject(backFigureGroup);
         const size = box.getSize(new THREE.Vector3());
         const maxSize = Math.max(size.x, size.y, size.z);
-        // Use 3x the size for generous margin to ensure nothing is cut off
         const distance = maxSize * 3;
-        camera.position.z = Math.max(500, distance);
+        camera.position.z = Math.max(400, distance);
         camera.updateProjectionMatrix();
       }
     });

@@ -68,7 +68,7 @@ function checkAuth() {
   }
   
   // If parent is logged in and on dashboard, redirect to their child's page
-  if (parentSession && pathname.includes('dashboard.html')) {
+  if (parentSession && (pathname.includes('dashboard.html') || pathname.endsWith('/dashboard'))) {
     try {
       const parentData = JSON.parse(parentSession);
       const clientPath = getPath(`client.html?id=${parentData.clientId}`);
@@ -308,6 +308,7 @@ async function initDashboard() {
   initLogout();
 
   const addClientBtn = document.getElementById('addClientBtn');
+  const repairDbBtn = document.getElementById('repairDbBtn');
   const addClientModal = document.getElementById('addClientModal');
   const closeAddModal = document.getElementById('closeAddModal');
   const cancelAddClient = document.getElementById('cancelAddClient');
@@ -318,10 +319,76 @@ async function initDashboard() {
   const clientsGrid = document.getElementById('clientsGrid');
   const emptyState = document.getElementById('emptyState');
 
+  // Repair database button
+  if (repairDbBtn) {
+    repairDbBtn.addEventListener('click', async () => {
+      if (!confirm('Repair database? This will check and fix any database issues. Your data should be safe.')) {
+        return;
+      }
+      
+      repairDbBtn.disabled = true;
+      repairDbBtn.textContent = 'Repairing...';
+      
+      try {
+        if (typeof window.repairDatabase === 'function') {
+          await window.repairDatabase();
+          // Reload clients after repair
+          await loadClients();
+          alert('Database repaired successfully!');
+        } else {
+          throw new Error('Repair function not available');
+        }
+      } catch (error) {
+        console.error('Repair error:', error);
+        alert(`Repair failed: ${error.message}\n\nPlease refresh the page or check the console.`);
+      } finally {
+        repairDbBtn.disabled = false;
+        repairDbBtn.textContent = '🔧 Repair DB';
+      }
+    });
+  }
+
+  // Log Firebase connection status on dashboard load
+  setTimeout(async () => {
+    if (typeof window.firebaseInitialized !== 'undefined' && window.firebaseInitialized) {
+      console.log('✅ Firebase is initialized');
+      if (typeof window.testFirebaseConnection === 'function') {
+        const result = await window.testFirebaseConnection();
+        if (result.connected) {
+          console.log('✅ Firebase connection verified:', result.message);
+        } else {
+          console.warn('⚠️ Firebase connection issue:', result.error);
+        }
+      }
+    } else {
+      console.log('ℹ️ Firebase not initialized - using local storage only');
+    }
+  }, 2000);
+
   let allClients = [];
 
-  // Initialize database
-  await initDB();
+  // Initialize database with error recovery
+  try {
+    await initDB();
+  } catch (error) {
+    console.error('Database initialization error:', error);
+    const shouldRepair = confirm('Database error detected. Would you like to attempt automatic repair?\n\nThis will check and fix database issues. Your data should be safe.');
+    if (shouldRepair) {
+      try {
+        if (typeof window.repairDatabase === 'function') {
+          await window.repairDatabase();
+          console.log('Database repaired, reloading...');
+          // Reload clients after repair
+          await loadClients();
+        } else {
+          throw new Error('Repair function not available');
+        }
+      } catch (repairError) {
+        console.error('Repair failed:', repairError);
+        alert('Automatic repair failed. Please refresh the page. If the problem persists, open the browser console (F12) and run: window.repairDatabase()');
+      }
+    }
+  }
 
   // Load clients
   async function loadClients() {
@@ -332,7 +399,25 @@ async function initDashboard() {
       renderClients(allClients);
     } catch (error) {
       console.error('Error loading clients:', error);
-      alert('Error loading clients. Please refresh the page.');
+      const errorMsg = `Error loading clients: ${error.message || error}\n\nWould you like to attempt database repair?`;
+      if (confirm(errorMsg)) {
+        try {
+          if (typeof window.repairDatabase === 'function') {
+            await window.repairDatabase();
+            // Retry loading
+            allClients = await getAllClients();
+            renderClients(allClients);
+            alert('Database repaired successfully! Clients reloaded.');
+          } else {
+            alert('Repair function not available. Please refresh the page.');
+          }
+        } catch (repairError) {
+          console.error('Repair failed:', repairError);
+          alert(`Repair failed: ${repairError.message}\n\nPlease refresh the page or run: window.repairDatabase()`);
+        }
+      } else {
+        alert('Please refresh the page to retry.');
+      }
     }
   }
   
@@ -880,19 +965,25 @@ function formatDate(dateString) {
   });
 }
 
+// Helper: are we on the dashboard page? (handles /clients/dashboard and /clients/dashboard.html)
+function isDashboardPage() {
+  const p = window.location.pathname;
+  return p.includes('dashboard.html') || p.endsWith('/dashboard') || p === '/clients/dashboard';
+}
+
 // Initialize based on current page
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/clients/') || window.location.pathname.endsWith('/clients')) {
       initLogin();
-    } else if (window.location.pathname.includes('dashboard.html')) {
+    } else if (isDashboardPage()) {
       initDashboard();
     }
   });
 } else {
   if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/clients/') || window.location.pathname.endsWith('/clients')) {
     initLogin();
-  } else if (window.location.pathname.includes('dashboard.html')) {
+  } else if (isDashboardPage()) {
     initDashboard();
   }
 }

@@ -51,8 +51,10 @@
         <p class="epc-page-subtitle">Movement • Recovery • Performance</p>
       </div>
 
-    <!-- 3D Canvas Container -->
-    <div id="canvas-container"></div>
+    <!-- 3D Canvas Containers - Back (figure) and Front (occlusion) -->
+    <div id="journal-3d-back"></div>
+    <div id="journal-cards-layer"></div>
+    <div id="journal-3d-front"></div>
 
     <!-- Journal Content -->
     <div class="journal-container">
@@ -368,39 +370,55 @@
       overflow-x: hidden;
     }
 
-    /* 3D Canvas Container */
-    #canvas-container {
+    /* 3D Canvas Containers - Layered for occlusion */
+    #journal-3d-back,
+    #journal-cards-layer,
+    #journal-3d-front {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
-      height: 100vh;
-      z-index: 1;
+      height: 100%;
       pointer-events: none;
+    }
+    
+    #journal-3d-back {
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: visible; /* Allow full figure to be visible */
     }
     
-    /* Stop 3D figure before footer - but allow full height */
-    @media (min-height: 600px) {
-      #canvas-container {
-        max-height: calc(100vh - 100px); /* More space for footer, but show full figure */
-      }
+    #journal-cards-layer {
+      z-index: 20;
+      pointer-events: none;
     }
     
-    /* Ensure canvas doesn't clip content */
-    #canvas-container canvas {
-      max-width: 100vw;
-      max-height: 100vh;
+    #journal-cards-layer .journal-block {
+      pointer-events: auto;
+    }
+    
+    #journal-3d-front {
+      z-index: 30;
+      pointer-events: none;
+      mix-blend-mode: normal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     /* Stop 3D figure before footer */
     @media (min-height: 600px) {
-      #canvas-container {
-        max-height: calc(100vh - 200px); /* Stop before footer */
+      #journal-3d-back,
+      #journal-3d-front {
+        max-height: calc(100vh - 100px);
       }
+    }
+    
+    /* Ensure canvas doesn't clip content */
+    #journal-3d-back canvas,
+    #journal-3d-front canvas {
+      max-width: 100vw;
+      max-height: 100vh;
     }
 
     /* Journal Content */
@@ -440,20 +458,20 @@
       50% { transform: translateX(-50%) translateY(10px); }
     }
 
-    /* Fixed overlay stage (Greta-like) */
-    .epc-orbit-stage {
+    /* Cards layer - between back and front renderers for occlusion */
+    #journal-cards-layer {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;     /* stage doesn't block scroll/click */
-      z-index: 50;              /* above journal background/figure */
+      pointer-events: none;
+      z-index: 20;
       perspective: 1200px;
       transform-style: preserve-3d;
     }
 
-    /* Cards live in stage, but still clickable */
-    .epc-orbit-stage .journal-block {
+    /* Cards in layer are clickable */
+    #journal-cards-layer .journal-block {
       pointer-events: auto;
       position: absolute;
       left: 0;
@@ -1211,8 +1229,7 @@
     }
   </style>
 
-  <!-- Fixed overlay stage for 3D helix (Greta-style) -->
-  <div class="epc-orbit-stage" aria-hidden="true"></div>
+  <!-- Cards layer already exists in HTML above -->
 
   <script src="assets/js/journal-3d.js" defer></script>
   <script src="assets/js/journal-spiral.js" defer></script>
