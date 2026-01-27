@@ -319,6 +319,19 @@ async function initDashboard() {
   const clientsGrid = document.getElementById('clientsGrid');
   const emptyState = document.getElementById('emptyState');
 
+  // Single delegated click handler for cards (runs once; cards are replaced on each render)
+  if (clientsGrid) {
+    clientsGrid.addEventListener('click', (e) => {
+      if (e.target.classList.contains('client-card-btn')) {
+        return; // Buttons use their own onclick
+      }
+      const card = e.target.closest('.client-card');
+      if (card && card.dataset.clientId) {
+        viewClient(card.dataset.clientId);
+      }
+    });
+  }
+
   // Repair database button - optimized for non-blocking UI
   if (repairDbBtn) {
     repairDbBtn.addEventListener('click', async (e) => {
@@ -523,22 +536,8 @@ async function initDashboard() {
     `;
     }).join('');
 
-    // Add click handlers to cards (use event delegation for better performance)
-    clientsGrid.addEventListener('click', (e) => {
-      // Check if click is on a button - if so, don't navigate
-      if (e.target.classList.contains('client-card-btn')) {
-        return; // Let the button's onclick handle it
-      }
-      
-      // Find the closest client card
-      const card = e.target.closest('.client-card');
-      if (card) {
-        const clientId = card.dataset.clientId;
-        if (clientId) {
-          viewClient(clientId);
-        }
-      }
-    });
+    // Actually render the cards into the DOM (this was missing and caused clients not to show)
+    clientsGrid.innerHTML = clientsHtml;
   }
 
   // Filter and sort clients
