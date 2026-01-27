@@ -1,4 +1,4 @@
-// Journal Spiral (3D helix) - cards orbit around figure with perspective
+// Journal Spiral (3D helix) - Greta Thunberg-style orbital effect
 (function () {
   "use strict";
   if (window.innerWidth <= 768) return;
@@ -6,44 +6,47 @@
   const blocks = Array.from(document.querySelectorAll(".journal-block"));
   const container = document.querySelector(".journal-container");
   const cta = document.querySelector(".epc-blog-cta");
-  const stage = document.querySelector(".journal-stage");
-  if (!blocks.length || !container || !stage) return;
+  if (!blocks.length || !container) return;
 
-  // Move the blocks into the stage so they render as a 3D overlay
+  // Create / reuse stage
+  let stage = document.querySelector(".epc-orbit-stage");
+  if (!stage) {
+    stage = document.createElement("div");
+    stage.className = "epc-orbit-stage";
+    stage.setAttribute("aria-hidden", "true");
+    document.body.appendChild(stage);
+  }
+
+  // Move cards into stage for 3D overlay rendering (Greta-like)
   blocks.forEach((b) => stage.appendChild(b));
 
-  // Helpers
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  function getScrollRange() {
+  function getScrollBounds() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const containerRect = container.getBoundingClientRect();
     const containerTop = containerRect.top + scrollTop;
 
-    // start after the hero/intro portion
-    const introOffset = window.innerHeight * 1.1;
-    const start = containerTop + introOffset;
+    // start after hero
+    const start = containerTop + window.innerHeight * 1.05;
 
-    // end before CTA so it doesn't collide
-    let end = start + window.innerHeight * 3.0;
+    // end before CTA
+    let end = start + window.innerHeight * 3.2;
     if (cta) {
       const ctaRect = cta.getBoundingClientRect();
       const ctaTop = ctaRect.top + scrollTop;
-      end = ctaTop - window.innerHeight * 0.65;
+      end = ctaTop - window.innerHeight * 0.7;
     }
 
     return { start, end };
   }
 
   function update() {
-    const { start, end } = getScrollRange();
+    const { start, end } = getScrollBounds();
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    // progress through the spiral section
-    const t = clamp((scrollTop - start) / Math.max(1, end - start), 0, 1);
-
-    // Hide before the spiral starts
+    // Before start: hide cards
     if (scrollTop < start) {
       blocks.forEach((b) => {
         b.style.opacity = 0;
@@ -54,63 +57,67 @@
       blocks.forEach((b) => (b.style.pointerEvents = "auto"));
     }
 
+    const t = clamp((scrollTop - start) / Math.max(1, end - start), 0, 1);
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Orbit center: place it around your figure
-    // (Adjust these two to lock perfectly on the model)
-    const centerX = vw * 0.50;
-    const centerY = vh * 0.52;
+    // Orbit center - try to center on figure if available
+    let centerX = vw * 0.53;
+    let centerY = vh * 0.52;
+    
+    // Try to find and center on the 3D figure
+    const canvasContainer = document.getElementById("canvas-container");
+    if (canvasContainer) {
+      const rect = canvasContainer.getBoundingClientRect();
+      centerX = rect.left + rect.width / 2;
+      centerY = rect.top + rect.height / 2;
+    }
 
-    // Helix tuning (these are the "Greta knobs")
-    const turns = 1.35;            // how many full rotations as you scroll (1.0–2.0)
-    const radius = Math.min(420, vw * 0.26); // orbit radius
-    const depth = 340;             // translateZ range (controls scale/foreground feeling)
-    const verticalTravel = vh * 0.85; // how far the helix "drops" during scroll
-    const spacing = 0.16;          // phase spacing between cards (smaller = tighter spiral)
-
-    // base rotation so first cards start slightly off-center (aesthetic)
-    const baseRot = -Math.PI * 0.25;
+    // Helix tuning (closest to Greta feel)
+    const turns = 1.7;                       // rotations across the section
+    const radius = Math.min(460, vw * 0.28);  // orbit radius
+    const depth = 420;                        // translateZ depth range
+    const travelY = vh * 0.95;                // how far helix drifts downward
+    const phaseStep = 0.14;                   // spacing between cards along helix
+    const baseRot = -Math.PI * 0.18;          // aesthetic starting angle
 
     blocks.forEach((block, i) => {
-      // each card has its own phase around the helix
-      const phase = i * spacing;
+      const phase = i * phaseStep;
 
-      // global angle advances as you scroll
+      // angle advances with scroll + each card offset
       const angle = baseRot + (t * turns * Math.PI * 2) + (phase * Math.PI * 2);
 
-      // helix position
+      // 3D helix coordinates
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * depth;
 
-      // spiral drops down as you scroll, but each card also offsets along the helix
-      const y = (t * verticalTravel) + (phase * vh * 0.55);
+      // cards also progress down page as scroll continues
+      const y = (t * travelY) + (phase * vh * 0.58);
 
-      // Depth-based scale/opacity (front = bigger + more opaque)
-      const zNorm = (z + depth) / (2 * depth); // 0..1
-      const scale = lerp(0.78, 1.08, zNorm);
-      const opacity = lerp(0.22, 1.0, zNorm);
+      // Depth-based realism: front = bigger, sharper, more opaque
+      const zn = (z + depth) / (2 * depth); // 0..1
+      const scale = lerp(0.78, 1.12, zn);
+      const opacity = lerp(0.20, 1.0, zn);
+      const blur = lerp(1.2, 0.0, zn);
 
-      // Make cards subtly "face" the viewer (adds realism)
-      const face = (-angle * 180) / Math.PI;
-      const tilt = lerp(-10, 10, zNorm);
+      // Slight facing/tilt for parallax
+      const faceY = lerp(18, -18, zn);
+      const tiltZ = lerp(-6, 6, zn);
 
-      // Position relative to orbit center, then pull up a bit so it sits around the figure
-      const finalX = centerX + x;
-      const finalY = centerY + (y - verticalTravel * 0.45);
+      // Final position (centered orbit, then offset for card centering)
+      const px = centerX + x;
+      const py = centerY + (y - travelY * 0.48);
 
       block.style.opacity = opacity.toFixed(3);
-      block.style.zIndex = String(Math.round(100 + zNorm * 100)); // front on top
+      block.style.filter = `blur(${blur.toFixed(2)}px)`;
+      block.style.zIndex = String(Math.round(50 + zn * 200));
 
-      // Use translate(-50%,-50%) so card centers orbit, not top-left
+      // translate3d + translate(-50%) so it orbits around its center
       block.style.transform =
-        `translate3d(${finalX}px, ${finalY}px, ${z}px) ` +
+        `translate3d(${px}px, ${py}px, ${z}px) ` +
         `translate3d(-50%, -50%, 0) ` +
-        `scale(${scale}) ` +
-        `rotateY(${face * 0.15}deg) rotateZ(${tilt}deg)`;
-
-      // Optional: soften interaction when far back
-      block.style.filter = `blur(${lerp(1.2, 0.0, zNorm).toFixed(2)}px)`;
+        `rotateY(${faceY}deg) rotateZ(${tiltZ}deg) ` +
+        `scale(${scale})`;
     });
   }
 
@@ -122,7 +129,5 @@
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
-
-  // init
   requestAnimationFrame(update);
 })();
