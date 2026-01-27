@@ -24,28 +24,33 @@
   // Calculate spiral position for each card
   function calculateSpiralPosition(index, progress) {
     const normalizedIndex = index / TOTAL_CARDS;
-    const angle = (normalizedIndex * SPIRAL_TURNS * 2 * Math.PI) + (progress * 0.5);
-    const radius = SPIRAL_RADIUS_START + (normalizedIndex * SPIRAL_RADIUS_GROWTH * SPIRAL_TURNS) + (progress * 50);
+    // Base angle for card position + scroll rotation
+    const baseAngle = normalizedIndex * SPIRAL_TURNS * 2 * Math.PI;
+    const scrollRotation = progress * Math.PI * 2; // Full rotation as you scroll
+    const angle = baseAngle + scrollRotation;
     
+    // Radius grows with index and scroll
+    const baseRadius = SPIRAL_RADIUS_START + (normalizedIndex * SPIRAL_RADIUS_GROWTH * SPIRAL_TURNS);
+    const radius = baseRadius + (progress * 100); // Slight expansion on scroll
+    
+    // Calculate position relative to center
     const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius + (progress * 800); // Descend as we scroll
+    const y = Math.sin(angle) * radius + (progress * 1000); // Descend as we scroll
     
-    // Rotation aligned to spiral tangent
+    // Rotation aligned to spiral tangent (cards face outward)
     const rotation = (angle * 180 / Math.PI) + 90;
     
-    // Opacity based on distance from center and scroll position
-    const distanceFromCenter = Math.sqrt(x * x + y * y);
-    const maxDistance = SPIRAL_RADIUS_START + (SPIRAL_RADIUS_GROWTH * SPIRAL_TURNS);
-    const opacity = Math.max(0.3, 1 - (distanceFromCenter / maxDistance) * 0.5);
+    // Opacity based on scroll position (cards in view are more visible)
+    const cardProgress = (progress * TOTAL_CARDS) - index;
+    const opacity = Math.max(0.4, Math.min(1, 1 - Math.abs(cardProgress) * 0.3));
     
     // Scale based on position (active card is larger)
-    const cardProgress = (progress * TOTAL_CARDS) - index;
-    const scale = Math.max(0.85, Math.min(1, 1 - Math.abs(cardProgress) * 0.15));
+    const scale = Math.max(0.7, Math.min(1.1, 1 - Math.abs(cardProgress) * 0.2));
     
-    // Blur effect for non-active cards
-    const blur = Math.abs(cardProgress) > 0.5 ? Math.abs(cardProgress) * 2 : 0;
+    // Blur effect for non-active cards (less aggressive)
+    const blur = Math.abs(cardProgress) > 1 ? Math.min(Math.abs(cardProgress) * 1.5, 4) : 0;
     
-    return { x, y, rotation, opacity, scale, blur, zIndex: Math.round(1000 - Math.abs(cardProgress) * 100) };
+    return { x, y, rotation, opacity, scale, blur, zIndex: Math.round(1000 - Math.abs(cardProgress) * 50) };
   }
 
   // Update card positions based on scroll
@@ -54,7 +59,8 @@
     const viewportHeight = window.innerHeight;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const containerTop = scrollTop + containerRect.top;
-    const scrollPosition = Math.max(0, scrollTop - containerTop + viewportHeight * 0.5);
+    // Start calculating from when container enters viewport
+    const scrollPosition = Math.max(0, scrollTop - containerTop + viewportHeight * 0.3);
     
     scrollProgress = Math.min(1, scrollPosition / SCROLL_DEPTH);
     
@@ -70,13 +76,14 @@
     spiralCards.forEach((card, index) => {
       const pos = calculateSpiralPosition(index, scrollProgress);
       
+      // Use translate3d for better performance and correct syntax
       card.style.transform = `
-        translate(${pos.x}px, ${pos.y}px) 
+        translate3d(${pos.x}px, ${pos.y}px, 0) 
         rotate(${pos.rotation}deg) 
         scale(${pos.scale})
       `;
       card.style.opacity = pos.opacity;
-      card.style.filter = pos.blur > 0 ? `blur(${pos.blur}px)` : 'none';
+      card.style.filter = pos.blur > 0 ? `blur(${Math.min(pos.blur, 3)}px)` : 'none';
       card.style.zIndex = pos.zIndex;
       
       // Add active class to featured card
@@ -125,8 +132,15 @@
     });
   });
 
-  // Initialize
-  updateSpiral();
+  // Initialize after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(updateSpiral, 100);
+    });
+  } else {
+    setTimeout(updateSpiral, 100);
+  }
+  
   window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('resize', updateSpiral);
 

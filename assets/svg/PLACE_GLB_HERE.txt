@@ -1,0 +1,19 @@
+📁 PLACE YOUR GLB FILE HERE
+
+1. Name your GLB file: journal.glb
+2. Place it in this directory: /Users/sarahkitay/Desktop/epc-static/assets/svg/journal.glb
+3. The 3D loader will automatically load it from: /assets/svg/journal.glb
+
+GLB Requirements:
+- GLB is a binary 3D model format (glTF 2.0)
+- Works perfectly with Three.js GLTFLoader
+- Can include textures, materials, and animations
+- Much better for 3D than SVG!
+
+Once you place the file, the 3D figure will appear in the center of the spiral journal!
+
+The model will:
+- Rotate based on scroll position
+- Be centered automatically
+- Scale to fit the container
+- Have orbiting journal blocks around it

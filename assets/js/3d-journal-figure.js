@@ -70,7 +70,25 @@
 
     // Load GLB model
     const loader = new GLTFLoader();
-    loader.load('/assets/svg/journal.glb', (gltf) => {
+    // Try multiple path variations
+    const glbPaths = [
+      '/assets/svg/journal.glb',
+      './assets/svg/journal.glb',
+      'assets/svg/journal.glb'
+    ];
+    
+    let pathIndex = 0;
+    function tryLoadGLB() {
+      if (pathIndex >= glbPaths.length) {
+        console.warn('GLB not found, using placeholder');
+        const geometry = new THREE.BoxGeometry(100, 100, 10);
+        const material = new THREE.MeshStandardMaterial({ color: 0xC9B991 });
+        const placeholder = new THREE.Mesh(geometry, material);
+        figureGroup.add(placeholder);
+        return;
+      }
+      
+      loader.load(glbPaths[pathIndex], (gltf) => {
       const model = gltf.scene;
       
       // Scale and position the model
@@ -84,15 +102,15 @@
       
       figureGroup.add(model);
       
-      console.log('GLB model loaded successfully');
-    }, undefined, (error) => {
-      console.warn('GLB load error:', error);
-      // Fallback: simple placeholder
-      const geometry = new THREE.BoxGeometry(100, 100, 10);
-      const material = new THREE.MeshStandardMaterial({ color: 0xC9B991 });
-      const placeholder = new THREE.Mesh(geometry, material);
-      figureGroup.add(placeholder);
-    });
+        console.log('GLB model loaded successfully from:', glbPaths[pathIndex]);
+      }, undefined, (error) => {
+        console.warn('GLB load error for', glbPaths[pathIndex], ':', error);
+        pathIndex++;
+        tryLoadGLB(); // Try next path
+      });
+    }
+    
+    tryLoadGLB();
 
     // Create journal blocks orbiting around figure
     const blocks = [];
