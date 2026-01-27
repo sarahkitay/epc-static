@@ -1,4 +1,4 @@
-// 3D Journal with scroll-based rotation and view switching
+// 3D Journal Figure - Centered and larger
 (function() {
   'use strict';
 
@@ -33,9 +33,10 @@
       50,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      2000
     );
-    camera.position.set(0, 50, 400);
+    // Position camera closer and higher to see the figure better
+    camera.position.set(0, 0, 200);
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
@@ -49,34 +50,28 @@
     }
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    keyLight.position.set(200, 200, 200);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    keyLight.position.set(100, 100, 100);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xC9B27F, 0.4);
-    fillLight.position.set(-150, 50, -100);
+    const fillLight = new THREE.DirectionalLight(0xC9B27F, 0.5);
+    fillLight.position.set(-100, 50, -50);
     scene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xC9B27F, 0.3);
-    backLight.position.set(0, -100, -200);
+    const backLight = new THREE.DirectionalLight(0xC9B27F, 0.4);
+    backLight.position.set(0, -50, -100);
     scene.add(backLight);
 
-    // Figure container
+    // Figure container - centered
     const figureGroup = new THREE.Group();
     scene.add(figureGroup);
 
     // Load GLB
     const loader = new GLTFLoader();
     let figureModel = null;
-    let views = {
-      front: null,
-      right: null,
-      back: null,
-      left: null
-    };
 
     const glbPaths = [
       '/assets/svg/journal.glb',
@@ -88,10 +83,11 @@
     function tryLoadGLB() {
       if (pathIndex >= glbPaths.length) {
         console.warn('GLB not found, using placeholder');
-        const geometry = new THREE.BoxGeometry(100, 100, 10);
-        const material = new THREE.MeshStandardMaterial({ color: 0xC9B991 });
+        const geometry = new THREE.BoxGeometry(50, 100, 50);
+        const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
         const placeholder = new THREE.Mesh(geometry, material);
         figureGroup.add(placeholder);
+        figureGroup.scale.set(2, 2, 2); // Make placeholder larger
         return;
       }
 
@@ -100,30 +96,21 @@
         (gltf) => {
           figureModel = gltf.scene;
           
-          // Try to find views by name (adjust names based on your GLB)
-          views.front = figureModel.getObjectByName('frontt') || figureModel.getObjectByName('front') || figureModel.children[0];
-          views.right = figureModel.getObjectByName('sider') || figureModel.getObjectByName('right') || figureModel.children[1];
-          views.back = figureModel.getObjectByName('back1') || figureModel.getObjectByName('back') || figureModel.children[2];
-          views.left = figureModel.getObjectByName('sidel') || figureModel.getObjectByName('left') || figureModel.children[3];
+          // Center the model
+          const box = new THREE.Box3().setFromObject(figureModel);
+          const center = box.getCenter(new THREE.Vector3());
+          figureModel.position.sub(center);
           
-          // If no named objects, just use the model as-is
-          if (!views.front && figureModel.children.length > 0) {
-            views.front = figureModel;
-            views.right = figureModel;
-            views.back = figureModel;
-            views.left = figureModel;
-          }
-          
-          // Hide all except front initially
-          if (views.front && views.front !== figureModel) views.front.visible = true;
-          if (views.right && views.right !== figureModel) views.right.visible = false;
-          if (views.back && views.back !== figureModel) views.back.visible = false;
-          if (views.left && views.left !== figureModel) views.left.visible = false;
+          // Scale up the model significantly
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 120 / maxDim; // Make it about 120 units tall
+          figureModel.scale.multiplyScalar(scale);
           
           figureGroup.add(figureModel);
-          figureGroup.position.set(0, -50, 0);
+          figureGroup.position.set(0, 0, 0); // Centered at origin
           
-          console.log('GLB loaded from:', glbPaths[pathIndex]);
+          console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale);
         },
         undefined,
         (error) => {
@@ -136,42 +123,15 @@
 
     tryLoadGLB();
 
-    // Scroll-based animation
+    // Scroll-based rotation
     let scrollPercent = 0;
     let targetRotation = 0;
     let currentRotation = 0;
 
     window.addEventListener('scroll', () => {
       scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      targetRotation = scrollPercent * Math.PI * 2;
+      targetRotation = scrollPercent * Math.PI * 2; // Full rotation as you scroll
     }, { passive: true });
-
-    // View switching function
-    function updateVisibleView(rotation) {
-      if (!views.front) return;
-      
-      const normalizedRotation = rotation % (Math.PI * 2);
-      
-      // Only switch views if we have separate view objects
-      if (views.front !== figureModel && views.right !== figureModel) {
-        // Hide all
-        if (views.front) views.front.visible = false;
-        if (views.right) views.right.visible = false;
-        if (views.back) views.back.visible = false;
-        if (views.left) views.left.visible = false;
-        
-        // Show correct view based on angle
-        if (normalizedRotation < Math.PI / 4 || normalizedRotation > (7 * Math.PI / 4)) {
-          if (views.front) views.front.visible = true;
-        } else if (normalizedRotation < (3 * Math.PI / 4)) {
-          if (views.right) views.right.visible = true;
-        } else if (normalizedRotation < (5 * Math.PI / 4)) {
-          if (views.back) views.back.visible = true;
-        } else {
-          if (views.left) views.left.visible = true;
-        }
-      }
-    }
 
     // Animation loop
     function animate() {
@@ -180,12 +140,9 @@
       // Smooth rotation
       currentRotation += (targetRotation - currentRotation) * 0.05;
       figureGroup.rotation.y = currentRotation;
-      
-      // Update visible view
-      updateVisibleView(currentRotation);
 
       // Gentle floating animation
-      figureGroup.position.y = -50 + Math.sin(Date.now() * 0.0005) * 10;
+      figureGroup.position.y = Math.sin(Date.now() * 0.0005) * 5;
 
       renderer.render(scene, camera);
     }

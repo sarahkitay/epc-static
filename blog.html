@@ -377,6 +377,9 @@
       height: 100vh;
       z-index: 1;
       pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* Journal Content */
@@ -425,7 +428,7 @@
       border: 1px solid rgba(201, 178, 127, 0.2);
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       backdrop-filter: blur(10px);
       text-decoration: none;
       color: inherit;
