@@ -31,19 +31,22 @@ export default async function handler(req, res) {
       accessTokenLength: accessToken.length
     });
 
-    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     return res.status(200).json({
       configured,
       useSandbox,
       ...(configured ? { applicationId, locationId } : {}),
-      // Include debug info in development
-      ...(process.env.NODE_ENV !== 'production' ? {
-        debug: {
-          hasAppId,
-          hasLocationId,
-          hasAccessToken
-        }
-      } : {})
+      // Always include debug info to help troubleshoot
+      debug: {
+        hasAppId,
+        hasLocationId,
+        hasAccessToken,
+        appIdLength: applicationId.length,
+        locationIdLength: locationId.length,
+        accessTokenLength: accessToken.length
+      }
     });
   }
 
