@@ -600,22 +600,10 @@
         const remaining = currentClient.packageRemainingSessions != null ? currentClient.packageRemainingSessions : (total != null ? total - used : null);
         const packageGrid = document.getElementById('parentPackageGrid');
         if (packageGrid) {
-          // Calculate package amount (if packageName contains session count, estimate; otherwise show N/A)
-          let packageAmount = 'N/A';
-          if (currentClient.packageName) {
-            const match = currentClient.packageName.match(/(\d+)\s*session/i);
-            if (match) {
-              const sessions = parseInt(match[1]);
-              // Rough estimate: $50/session average, or use a lookup
-              const estimatedAmount = sessions * 50;
-              packageAmount = `~$${estimatedAmount}`;
-            }
-          }
-          
           packageGrid.innerHTML = `
             <div class="info-item">
-              <span class="info-label">Package Amount</span>
-              <span class="info-value">${packageAmount}</span>
+              <span class="info-label">Package</span>
+              <span class="info-value">${currentClient.packageName || 'Not set'}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Sessions Remaining</span>
