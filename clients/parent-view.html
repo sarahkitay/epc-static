@@ -628,20 +628,23 @@
         }
         
         // Update status badge
-        if (statusBadge && remaining !== null) {
-          if (remaining === 0) {
-            statusBadge.textContent = '❌ OUT';
-            statusBadge.className = 'package-status-badge status-out';
-          } else if (remaining <= 3) {
-            statusBadge.textContent = '⚠️ LOW';
-            statusBadge.className = 'package-status-badge status-low';
+        if (statusBadge) {
+          if (remaining !== null && remaining !== undefined) {
+            if (remaining === 0) {
+              statusBadge.textContent = '❌ OUT';
+              statusBadge.className = 'package-status-badge status-out';
+            } else if (remaining <= 3) {
+              statusBadge.textContent = '⚠️ LOW';
+              statusBadge.className = 'package-status-badge status-low';
+            } else {
+              statusBadge.textContent = '✓ OK';
+              statusBadge.className = 'package-status-badge status-ok';
+            }
           } else {
-            statusBadge.textContent = '✓ OK';
-            statusBadge.className = 'package-status-badge status-ok';
+            // No package data - hide badge
+            statusBadge.textContent = '';
+            statusBadge.className = 'package-status-badge';
           }
-        } else if (statusBadge) {
-          statusBadge.textContent = '';
-          statusBadge.className = 'package-status-badge';
         }
 
         return true;
