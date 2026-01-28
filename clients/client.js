@@ -393,6 +393,12 @@ async function loadAllAssessmentsModal() {
 }
 
 async function handleSaveAssessment() {
+  // Prevent parents from saving assessments
+  if (isParentSession()) {
+    alert('Parents cannot add assessments. Please contact your trainer.');
+    return;
+  }
+  
   const proteusScoreValue = document.getElementById('proteusScore').value.trim();
   const assessmentData = {
     proteusScore: proteusScoreValue || null,
@@ -643,6 +649,12 @@ function initProgramBuilder() {
 
   // Save program
   async function handleSaveProgram() {
+    // Prevent parents from saving programs
+    if (isParentSession()) {
+      alert('Parents cannot add programs. Please contact your trainer.');
+      return;
+    }
+    
     if (currentExercises.length === 0) {
       alert('Please add exercises to the program before saving.');
       return;
@@ -877,6 +889,12 @@ function initPhotos() {
         return;
       }
 
+      // Prevent parents from saving photos
+      if (isParentSession()) {
+        alert('Parents cannot upload photos. Please contact your trainer.');
+        return;
+      }
+      
       const text = document.getElementById('manualText').value.trim();
 
       try {
@@ -1000,6 +1018,12 @@ function initPhotos() {
         return;
       }
 
+      // Prevent parents from saving photos
+      if (isParentSession()) {
+        alert('Parents cannot upload photos. Please contact your trainer.');
+        return;
+      }
+      
       const text = document.getElementById('extractedText').value.trim();
 
       try {
@@ -1115,6 +1139,12 @@ function initNotes() {
       e.preventDefault();
       const content = document.getElementById('noteContent').value.trim();
       
+      // Prevent parents from saving notes
+      if (isParentSession()) {
+        alert('Parents cannot add notes. Please contact your trainer.');
+        return;
+      }
+      
       if (!content) {
         alert('Please enter a note.');
         return;
@@ -1186,6 +1216,12 @@ function initPTNotes() {
     ptNoteForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = document.getElementById('ptNoteContent').value.trim();
+      
+      // Prevent parents from saving PT notes
+      if (isParentSession()) {
+        alert('Parents cannot add PT notes. Please contact your trainer.');
+        return;
+      }
       
       if (!content) {
         alert('Please enter a PT note.');
@@ -2400,6 +2436,33 @@ function makePageReadOnly() {
   actionButtons.forEach(btn => {
     if (btn) btn.style.display = 'none';
   });
+  
+  // Hide entire assessment and program forms for parents (view-only)
+  const assessmentForm = document.getElementById('assessmentForm');
+  const programBuilder = document.getElementById('program-tab');
+  const assessmentTab = document.querySelector('[data-tab="assessment"]');
+  const programTab = document.querySelector('[data-tab="program"]');
+  
+  if (assessmentForm) {
+    assessmentForm.style.display = 'none';
+  }
+  if (programBuilder) {
+    const programForm = programBuilder.querySelector('.program-builder-form');
+    if (programForm) programForm.style.display = 'none';
+  }
+  
+  // Hide assessment and program builder tabs for parents
+  if (assessmentTab) assessmentTab.style.display = 'none';
+  if (programTab) programTab.style.display = 'none';
+  
+  // Switch to first visible tab if assessment tab was active
+  const activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab && (activeTab.dataset.tab === 'assessment' || activeTab.dataset.tab === 'program')) {
+    const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
+    if (firstVisibleTab) {
+      firstVisibleTab.click();
+    }
+  }
   
   // Add subtle parent notice banner
   const header = document.querySelector('.client-header');
