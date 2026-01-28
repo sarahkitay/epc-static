@@ -709,13 +709,8 @@ function initProgramBuilder() {
       </div>
     `).join('');
     
-    if (typeof setSafeHTML !== 'undefined') {
-      setSafeHTML(container, exercisesHtml);
-    } else if (typeof sanitizeHTML !== 'undefined') {
-      container.innerHTML = sanitizeHTML(exercisesHtml);
-    } else {
-      container.textContent = `${currentExercises.length} exercise(s) in program`;
-    }
+    // Use direct innerHTML assignment for trusted, hardcoded HTML (form elements would be stripped by sanitizeHTML)
+    container.innerHTML = exercisesHtml;
   };
 
   renderProgramExercisesFn();

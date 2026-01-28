@@ -320,48 +320,123 @@
       console.log('Parent view - Share settings:', shareSettings);
       console.log('Parent view - Current client:', currentClient);
       
-      // Assessments: show if not explicitly disabled
+      // Assessments: show if not explicitly disabled (false)
+      // Default behavior: show if enabled (true) or not set (undefined)
       if (shareSettings.assessments !== false) {
-        const allAssessments = await getClientAssessments(currentClientId);
-        const staffAssessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
-        console.log('Parent view - Staff assessments found:', staffAssessments.length);
-        if (staffAssessments.length > 0) {
-          await loadAssessments();
-          document.getElementById('parentAssessmentCard').style.display = 'block';
+        try {
+          const allAssessments = await getClientAssessments(currentClientId);
+          const staffAssessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
+          console.log('Parent view - Assessments:', {
+            sharing: shareSettings.assessments,
+            total: allAssessments.length,
+            staffCreated: staffAssessments.length,
+            allAssessments: allAssessments.map(a => ({ id: a.id, createdBy: a.createdBy, date: a.date }))
+          });
+          if (staffAssessments.length > 0) {
+            await loadAssessments();
+            const assessmentCard = document.getElementById('parentAssessmentCard');
+            if (assessmentCard) {
+              assessmentCard.style.display = 'block';
+              console.log('✅ Parent view - Assessment card displayed');
+            } else {
+              console.error('❌ Parent view - Assessment card element not found');
+            }
+          } else {
+            console.log('⚠️ Parent view - No staff assessments to display (sharing enabled but no data)');
+          }
+        } catch (error) {
+          console.error('❌ Parent view - Error loading assessments:', error);
         }
+      } else {
+        console.log('🚫 Parent view - Assessments sharing disabled by staff');
       }
       
-      // Programs: show if not explicitly disabled
+      // Programs: show if not explicitly disabled (false)
       if (shareSettings.programs !== false) {
-        const allPrograms = await getClientPrograms(currentClientId);
-        const staffPrograms = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
-        console.log('Parent view - Staff programs found:', staffPrograms.length);
-        if (staffPrograms.length > 0) {
-          await loadPrograms();
-          document.getElementById('parentProgramsCard').style.display = 'block';
+        try {
+          const allPrograms = await getClientPrograms(currentClientId);
+          const staffPrograms = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
+          console.log('Parent view - Programs:', {
+            sharing: shareSettings.programs,
+            total: allPrograms.length,
+            staffCreated: staffPrograms.length,
+            allPrograms: allPrograms.map(p => ({ id: p.id, createdBy: p.createdBy, week: p.week }))
+          });
+          if (staffPrograms.length > 0) {
+            await loadPrograms();
+            const programsCard = document.getElementById('parentProgramsCard');
+            if (programsCard) {
+              programsCard.style.display = 'block';
+              console.log('✅ Parent view - Programs card displayed');
+            } else {
+              console.error('❌ Parent view - Programs card element not found');
+            }
+          } else {
+            console.log('⚠️ Parent view - No staff programs to display (sharing enabled but no data)');
+          }
+        } catch (error) {
+          console.error('❌ Parent view - Error loading programs:', error);
         }
+      } else {
+        console.log('🚫 Parent view - Programs sharing disabled by staff');
       }
       
-      // Photos: show if not explicitly disabled
+      // Photos: show if not explicitly disabled (false)
       if (shareSettings.photos !== false) {
-        const allPhotos = await getClientPhotos(currentClientId);
-        const staffPhotos = allPhotos.filter(p => !p.createdBy || p.createdBy === 'staff');
-        console.log('Parent view - Staff photos found:', staffPhotos.length);
-        if (staffPhotos.length > 0) {
-          await loadPhotos();
-          document.getElementById('parentPhotosCard').style.display = 'block';
+        try {
+          const allPhotos = await getClientPhotos(currentClientId);
+          const staffPhotos = allPhotos.filter(p => !p.createdBy || p.createdBy === 'staff');
+          console.log('Parent view - Photos:', {
+            sharing: shareSettings.photos,
+            total: allPhotos.length,
+            staffCreated: staffPhotos.length
+          });
+          if (staffPhotos.length > 0) {
+            await loadPhotos();
+            const photosCard = document.getElementById('parentPhotosCard');
+            if (photosCard) {
+              photosCard.style.display = 'block';
+              console.log('✅ Parent view - Photos card displayed');
+            } else {
+              console.error('❌ Parent view - Photos card element not found');
+            }
+          } else {
+            console.log('⚠️ Parent view - No staff photos to display (sharing enabled but no data)');
+          }
+        } catch (error) {
+          console.error('❌ Parent view - Error loading photos:', error);
         }
+      } else {
+        console.log('🚫 Parent view - Photos sharing disabled by staff');
       }
       
-      // Notes: show if not explicitly disabled
+      // Notes: show if not explicitly disabled (false)
       if (shareSettings.notes !== false) {
-        const allNotes = await getClientNotes(currentClientId);
-        const staffNotes = allNotes.filter(n => !n.createdBy || n.createdBy === 'staff');
-        console.log('Parent view - Staff notes found:', staffNotes.length);
-        if (staffNotes.length > 0) {
-          await loadNotes();
-          document.getElementById('parentNotesCard').style.display = 'block';
+        try {
+          const allNotes = await getClientNotes(currentClientId);
+          const staffNotes = allNotes.filter(n => !n.createdBy || n.createdBy === 'staff');
+          console.log('Parent view - Notes:', {
+            sharing: shareSettings.notes,
+            total: allNotes.length,
+            staffCreated: staffNotes.length
+          });
+          if (staffNotes.length > 0) {
+            await loadNotes();
+            const notesCard = document.getElementById('parentNotesCard');
+            if (notesCard) {
+              notesCard.style.display = 'block';
+              console.log('✅ Parent view - Notes card displayed');
+            } else {
+              console.error('❌ Parent view - Notes card element not found');
+            }
+          } else {
+            console.log('⚠️ Parent view - No staff notes to display (sharing enabled but no data)');
+          }
+        } catch (error) {
+          console.error('❌ Parent view - Error loading notes:', error);
         }
+      } else {
+        console.log('🚫 Parent view - Notes sharing disabled by staff');
       }
       // Always show package section for parents (they need to see remaining sessions and purchase option)
       const parentPackageCard = document.getElementById('parentPackageCard');
