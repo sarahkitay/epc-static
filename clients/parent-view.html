@@ -259,14 +259,15 @@
         
         <!-- Custom Package Input -->
         <div id="customPackageInput" style="display: none; margin-top: 20px; padding: 20px; background: rgba(201,178,127,0.08); border: 1px solid var(--epc-line); border-radius: 6px;">
+          <p style="margin: 0 0 16px 0; font-size: 13px; color: var(--epc-ink-dim);">Enter the number of sessions and the amount to charge for this custom package.</p>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
             <div>
-              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Number of Sessions</label>
-              <input type="number" id="customSessions" class="form-input" placeholder="Enter sessions" min="1" style="width: 100%;" />
+              <label for="customSessions" style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Number of Sessions</label>
+              <input type="number" id="customSessions" class="form-input" placeholder="e.g., 6" min="1" required style="width: 100%;" />
             </div>
             <div>
-              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Amount ($)</label>
-              <input type="number" id="customAmount" class="form-input" placeholder="Enter amount" min="1" step="0.01" style="width: 100%;" />
+              <label for="customAmount" style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Amount to Charge ($)</label>
+              <input type="number" id="customAmount" class="form-input" placeholder="e.g., 600.00" min="0.01" step="0.01" required style="width: 100%;" />
             </div>
           </div>
           <button type="button" class="btn-primary" id="confirmCustomPackage" style="width: 100%;">Confirm Custom Package</button>
@@ -698,16 +699,23 @@
       
       if (confirmCustomPackage && customSessions && customAmount) {
         confirmCustomPackage.addEventListener('click', async () => {
-          const sessions = parseInt(customSessions.value, 10);
-          const amountDollars = parseFloat(customAmount.value);
+          // Get and validate sessions
+          const sessionsValue = customSessions.value.trim();
+          const sessions = parseInt(sessionsValue, 10);
           
-          if (!sessions || sessions < 1) {
+          if (!sessionsValue || isNaN(sessions) || sessions < 1) {
             alert('Please enter a valid number of sessions (at least 1).');
+            customSessions.focus();
             return;
           }
           
-          if (!amountDollars || amountDollars < 0.01) {
+          // Get and validate amount
+          const amountValue = customAmount.value.trim();
+          const amountDollars = parseFloat(amountValue);
+          
+          if (!amountValue || isNaN(amountDollars) || amountDollars < 0.01) {
             alert('Please enter a valid amount (at least $0.01).');
+            customAmount.focus();
             return;
           }
           
