@@ -480,7 +480,15 @@ async function handleSaveAssessment() {
   };
 
   try {
-    await saveAssessment(currentClientId, assessmentData);
+    // Validate required fields
+    if (!currentClientId) {
+      alert('Error: Client ID not found. Please refresh the page.');
+      return;
+    }
+    
+    const assessmentId = await saveAssessment(currentClientId, assessmentData);
+    console.log('Assessment saved successfully with ID:', assessmentId);
+    
     alert('Assessment saved successfully!');
     
     // Clear form
@@ -496,10 +504,15 @@ async function handleSaveAssessment() {
     if (overallAssessmentPdfPreview) overallAssessmentPdfPreview.style.display = 'none';
     
     // Reload history
-    loadAssessmentHistory();
+    await loadAssessmentHistory();
   } catch (error) {
     console.error('Error saving assessment:', error);
-    alert('Error saving assessment. Please try again.');
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      assessmentData: { ...assessmentData, pedicsPdf: assessmentData.pedicsPdf ? '[PDF data present]' : null, overallAssessmentPdf: assessmentData.overallAssessmentPdf ? '[PDF data present]' : null }
+    });
+    alert('Error saving assessment: ' + (error.message || 'Please try again.'));
   }
 }
 
@@ -570,12 +583,16 @@ function initProgramBuilder() {
   // Add custom exercise
   if (addCustomExerciseBtn) {
     addCustomExerciseBtn.addEventListener('click', () => {
-      const exerciseName = prompt('Enter exercise name:');
-      if (exerciseName && exerciseName.trim()) {
-        exerciseLibrary.push(exerciseName.trim());
-        renderExerciseLibrary();
-        document.getElementById('exerciseSearch').value = '';
-      }
+      // Use setTimeout to avoid blocking UI during prompt
+      setTimeout(() => {
+        const exerciseName = prompt('Enter exercise name:');
+        if (exerciseName && exerciseName.trim()) {
+          exerciseLibrary.push(exerciseName.trim());
+          renderExerciseLibrary();
+          const searchInput = document.getElementById('exerciseSearch');
+          if (searchInput) searchInput.value = '';
+        }
+      }, 0);
     });
   }
 
@@ -597,11 +614,20 @@ function initProgramBuilder() {
     const library = document.getElementById('exerciseLibrary');
     if (!library) return;
 
-    const libraryHtml = exercises.map(exercise => `
-      <div class="exercise-item" onclick="addExerciseToProgram('${escapeHtml(exercise)}')">
-        ${escapeHtml(exercise)}
-      </div>
-    `).join('');
+    // Use requestAnimationFrame to avoid blocking UI
+    requestAnimationFrame(() => {
+      const libraryHtml = exercises.map(exercise => `
+        <div class="exercise-item" onclick="addExerciseToProgram('${escapeHtml(exercise)}')">
+          ${escapeHtml(exercise)}
+        </div>
+      `).join('');
+      
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(library, libraryHtml);
+      } else {
+        library.innerHTML = libraryHtml;
+      }
+    });
   }
   
   // Store render function reference
