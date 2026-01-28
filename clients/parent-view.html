@@ -595,7 +595,7 @@
       const card = document.getElementById('purchasePackageCard');
       if (!card) return;
 
-      const options = card.querySelectorAll('.package-option-btn');
+      const options = card.querySelectorAll('.package-option-btn:not(#customPackageBtn)');
       const summary = document.getElementById('packageSelectionSummary');
       const summaryName = document.getElementById('selectedPackageName');
       const summaryAmount = document.getElementById('selectedPackageAmount');
@@ -683,17 +683,32 @@
       const customAmount = document.getElementById('customAmount');
       
       if (customPackageBtn && customPackageInput) {
-        customPackageBtn.addEventListener('click', () => {
+        customPackageBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
           // Hide other package options selection
           options.forEach((b) => b.classList.remove('selected'));
           customPackageBtn.classList.add('selected');
+          
           // Show custom input
           customPackageInput.style.display = 'block';
-          // Clear any previous selection
+          
+          // Clear any previous selection and hide payment forms
           selectedPackage = null;
           if (summary) summary.style.display = 'none';
           if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
           if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
+          if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'none';
+          
+          // Clear custom input fields
+          if (customSessions) customSessions.value = '';
+          if (customAmount) customAmount.value = '';
+          
+          // Focus on sessions input
+          setTimeout(() => {
+            if (customSessions) customSessions.focus();
+          }, 100);
         });
       }
       
@@ -766,9 +781,17 @@
       }
       
       options.forEach((btn) => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
           // Hide custom input if showing
-          if (customPackageInput) customPackageInput.style.display = 'none';
+          if (customPackageInput) {
+            customPackageInput.style.display = 'none';
+            // Clear custom input fields
+            if (customSessions) customSessions.value = '';
+            if (customAmount) customAmount.value = '';
+          }
           
           options.forEach((b) => b.classList.remove('selected'));
           if (customPackageBtn) customPackageBtn.classList.remove('selected');
