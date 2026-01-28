@@ -413,7 +413,8 @@ async function handleSaveAssessment() {
     hamstringNotes: document.getElementById('hamstringNotes').value.trim() || null,
     pushupScore: document.getElementById('pushupScore').value ? parseInt(document.getElementById('pushupScore').value) : null,
     pushupNotes: document.getElementById('pushupNotes').value.trim() || null,
-    date: document.getElementById('assessmentDate').value || new Date().toISOString()
+    date: document.getElementById('assessmentDate').value || new Date().toISOString(),
+    createdBy: 'staff' // Explicitly mark as created by staff
   };
 
   try {
@@ -650,7 +651,8 @@ function initProgramBuilder() {
     const week = document.getElementById('programWeek').value;
     const programData = {
       week: parseInt(week),
-      exercises: currentExercises
+      exercises: currentExercises,
+      createdBy: 'staff' // Explicitly mark as created by staff
     };
 
     try {

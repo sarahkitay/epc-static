@@ -713,7 +713,9 @@
 
     async function loadAssessments() {
       try {
-        const assessments = await getClientAssessments(currentClientId);
+        const allAssessments = await getClientAssessments(currentClientId);
+        // Filter to only show staff-created assessments (createdBy === 'staff' or undefined for backward compatibility)
+        const assessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
         const container = document.getElementById('parentAssessmentHistory');
 
         if (!assessments || assessments.length === 0) {
@@ -746,7 +748,9 @@
 
     async function loadPrograms() {
       try {
-        const programs = await getClientPrograms(currentClientId);
+        const allPrograms = await getClientPrograms(currentClientId);
+        // Filter to only show staff-created programs (createdBy === 'staff' or undefined for backward compatibility)
+        const programs = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
         const container = document.getElementById('parentPrograms');
 
         if (!programs || programs.length === 0) {

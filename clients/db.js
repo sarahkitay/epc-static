@@ -467,7 +467,8 @@ async function saveAssessment(clientId, assessmentData) {
       clientId: clientId,
       ...assessmentData,
       date: assessmentData.date || new Date().toISOString(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      createdBy: assessmentData.createdBy || 'staff' // Default to staff for backward compatibility
     };
     const request = store.add(assessmentWithMeta);
 
@@ -510,7 +511,8 @@ async function saveProgram(clientId, programData) {
     const programWithMeta = {
       clientId: clientId,
       ...programData,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      createdBy: programData.createdBy || 'staff' // Default to staff for backward compatibility
     };
     const request = store.add(programWithMeta);
 
