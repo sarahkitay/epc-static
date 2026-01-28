@@ -518,7 +518,15 @@ async function handleSaveAssessment() {
 
 async function loadAssessmentHistory() {
   try {
-    const assessments = await getClientAssessments(currentClientId);
+    const allAssessments = await getClientAssessments(currentClientId);
+    
+    // For parents: only show staff-created assessments
+    let assessments = allAssessments;
+    if (isParentSession()) {
+      assessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
+      console.log(`Parent view - Filtered assessments: ${assessments.length} of ${allAssessments.length} are staff-created`);
+    }
+    
     const historyList = document.getElementById('assessmentHistoryList');
     
     if (assessments.length === 0) {
@@ -866,7 +874,15 @@ function initProgramBuilder() {
   // Load program history
   async function loadProgramHistory() {
     try {
-      const programs = await getClientPrograms(currentClientId);
+      const allPrograms = await getClientPrograms(currentClientId);
+      
+      // For parents: only show staff-created programs
+      let programs = allPrograms;
+      if (isParentSession()) {
+        programs = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
+        console.log(`Parent view - Filtered programs: ${programs.length} of ${allPrograms.length} are staff-created`);
+      }
+      
       const historyList = document.getElementById('programHistoryList');
       
       if (programs.length === 0) {
@@ -2627,11 +2643,13 @@ function makePageReadOnly() {
   });
   
   // Hide entire assessment and program forms for parents (view-only)
+  // But show tabs and history if data sharing is enabled
   const assessmentForm = document.getElementById('assessmentForm');
   const programBuilder = document.getElementById('program-tab');
   const assessmentTab = document.querySelector('[data-tab="assessment"]');
   const programTab = document.querySelector('[data-tab="program"]');
   
+  // Hide forms but keep tabs visible for read-only viewing
   if (assessmentForm) {
     assessmentForm.style.display = 'none';
   }
@@ -2640,16 +2658,68 @@ function makePageReadOnly() {
     if (programForm) programForm.style.display = 'none';
   }
   
-  // Hide assessment and program builder tabs for parents
-  if (assessmentTab) assessmentTab.style.display = 'none';
-  if (programTab) programTab.style.display = 'none';
+  // For parents: Show assessment and program tabs as read-only if data sharing is enabled
+  // Check sharing settings and show tabs conditionally
+  const shareSettings = currentClient?.shareWithParent || {};
+  const showAssessments = shareSettings.assessments !== false; // Show unless explicitly disabled
+  const showPrograms = shareSettings.programs !== false; // Show unless explicitly disabled
   
-  // Switch to first visible tab if assessment tab was active
+  console.log('Parent view - Data sharing settings:', shareSettings);
+  console.log('Parent view - Show assessments:', showAssessments, 'Show programs:', showPrograms);
+  
+  // Only hide tabs if sharing is explicitly disabled
+  if (assessmentTab) {
+    if (showAssessments) {
+      assessmentTab.style.display = ''; // Show tab
+      // Update tab label to indicate read-only
+      const tabLabel = assessmentTab.querySelector('span');
+      if (tabLabel && !tabLabel.textContent.includes('(View Only)')) {
+        tabLabel.textContent = 'Assessments (View Only)';
+      }
+      // Ensure assessment history section is visible
+      const assessmentHistory = document.getElementById('assessmentHistory');
+      if (assessmentHistory) {
+        assessmentHistory.style.display = 'block';
+      }
+      console.log('✅ Assessment tab shown for parent');
+    } else {
+      assessmentTab.style.display = 'none'; // Hide if sharing disabled
+      console.log('🚫 Assessment tab hidden - sharing disabled');
+    }
+  }
+  
+  if (programTab) {
+    if (showPrograms) {
+      programTab.style.display = ''; // Show tab
+      // Update tab label to indicate read-only
+      const tabLabel = programTab.querySelector('span');
+      if (tabLabel && !tabLabel.textContent.includes('(View Only)')) {
+        tabLabel.textContent = 'Programs (View Only)';
+      }
+      // Ensure program history section is visible
+      const programHistory = document.getElementById('programHistoryList');
+      if (programHistory) {
+        const historyContainer = programHistory.closest('.program-history');
+        if (historyContainer) {
+          historyContainer.style.display = 'block';
+        }
+      }
+      console.log('✅ Program tab shown for parent');
+    } else {
+      programTab.style.display = 'none'; // Hide if sharing disabled
+      console.log('🚫 Program tab hidden - sharing disabled');
+    }
+  }
+  
+  // Switch to first visible tab if assessment/program tab was active but is now hidden
   const activeTab = document.querySelector('.tab-btn.active');
   if (activeTab && (activeTab.dataset.tab === 'assessment' || activeTab.dataset.tab === 'program')) {
-    const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
-    if (firstVisibleTab) {
-      firstVisibleTab.click();
+    const computedStyle = window.getComputedStyle(activeTab);
+    if (computedStyle.display === 'none') {
+      const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
+      if (firstVisibleTab) {
+        firstVisibleTab.click();
+      }
     }
   }
   
