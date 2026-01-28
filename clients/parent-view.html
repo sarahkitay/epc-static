@@ -11,7 +11,7 @@
     .parent-view-header {
       background: rgba(11, 11, 11, 0.98);
       border-bottom: 1px solid var(--epc-line);
-      padding: 20px 0;
+      padding: 8px 0;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -26,31 +26,38 @@
     }
     .parent-view-title {
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
+      font-size: 14px;
       color: var(--epc-gold);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.05em;
+      margin: 0;
+      line-height: 1.2;
     }
     .parent-view-subtitle {
-      font-size: 12px;
+      font-size: 10px;
       color: var(--epc-ink-dim);
-      margin-top: 4px;
+      margin-top: 2px;
+      line-height: 1.2;
     }
     .parent-view-actions {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
     }
     .parent-badge {
       display: inline-block;
-      padding: 6px 12px;
+      padding: 4px 8px;
       background: rgba(201, 178, 127, 0.15);
       border: 1px solid var(--epc-gold);
-      border-radius: 4px;
-      font-size: 11px;
+      border-radius: 3px;
+      font-size: 9px;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--epc-gold);
+    }
+    .parent-view-header .btn-secondary {
+      padding: 6px 12px;
+      font-size: 11px;
     }
     .parent-view-content {
       max-width: 1400px;
@@ -93,17 +100,24 @@
       color: var(--epc-ink);
     }
     .read-only-notice {
-      background: rgba(201, 178, 127, 0.1);
-      border-left: 3px solid var(--epc-gold);
-      padding: 16px 20px;
-      margin-bottom: 32px;
-      border-radius: 4px;
+      background: rgba(201, 178, 127, 0.08);
+      border-bottom: 1px solid rgba(201, 178, 127, 0.2);
+      padding: 8px 40px;
+      margin: 0;
+      font-size: 11px;
+      color: var(--epc-ink-dim);
+      text-align: center;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 99;
     }
     .read-only-notice p {
       margin: 0;
-      font-size: 13px;
-      color: var(--epc-ink);
-      line-height: 1.6;
+      font-size: 11px;
+      color: var(--epc-ink-dim);
+      line-height: 1.4;
     }
     .purchase-package-options {
       display: flex;
@@ -134,12 +148,22 @@
       border-radius: 4px;
       font-size: 12px;
     }
-    @media (max-width: 768px) {
+      @media (max-width: 768px) {
       .parent-view-header-content {
         padding: 0 20px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
+      .parent-view-title {
+        font-size: 12px;
+      }
+      .parent-view-subtitle {
+        font-size: 9px;
+      }
+      .parent-badge {
+        font-size: 8px;
+        padding: 3px 6px;
       }
       .parent-view-content {
         padding: 20px;
@@ -168,7 +192,7 @@
     <div class="parent-view-content">
       <!-- Read-Only Notice -->
       <div class="read-only-notice">
-        <p><strong>Parent Portal:</strong> This is a read-only view of your child's progress. You can view assessments, programs, and notes, but cannot make changes. For questions or updates, please contact your trainer.</p>
+        <p>Read-only view. Contact your trainer to make changes.</p>
       </div>
 
       <!-- Client Info Card -->
@@ -179,8 +203,16 @@
         </div>
       </div>
 
+      <!-- Package & Sessions (read-only: remaining, used, total) -->
+      <div class="parent-info-card" id="parentPackageCard" style="display: none;">
+        <h3>Package & Sessions</h3>
+        <div class="info-grid" id="parentPackageGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
       <!-- Assessment History -->
-      <div class="parent-info-card">
+      <div class="parent-info-card" id="parentAssessmentCard" style="display: none;">
         <h3>Assessment History</h3>
         <div id="parentAssessmentHistory">
           <p style="color: var(--epc-ink-dim);">Loading assessments...</p>
@@ -188,7 +220,7 @@
       </div>
 
       <!-- Programs -->
-      <div class="parent-info-card">
+      <div class="parent-info-card" id="parentProgramsCard" style="display: none;">
         <h3>Training Programs</h3>
         <div id="parentPrograms">
           <p style="color: var(--epc-ink-dim);">Loading programs...</p>
@@ -196,10 +228,18 @@
       </div>
 
       <!-- Progress Notes -->
-      <div class="parent-info-card">
+      <div class="parent-info-card" id="parentNotesCard" style="display: none;">
         <h3>Progress Notes</h3>
         <div id="parentNotes">
           <p style="color: var(--epc-ink-dim);">Loading notes...</p>
+        </div>
+      </div>
+
+      <!-- PT Coordination Notes -->
+      <div class="parent-info-card" id="parentPTNotesCard" style="display: none;">
+        <h3>PT Coordination Notes</h3>
+        <div id="parentPTNotes">
+          <p style="color: var(--epc-ink-dim);">Loading PT notes...</p>
         </div>
       </div>
 
@@ -279,14 +319,77 @@
       // Load and display client data; stop if client not found (shows "log in again" inline)
       const loaded = await loadClientData();
       if (!loaded) return;
-      await loadAssessments();
-      await loadPrograms();
-      await loadNotes();
+      
+      // Check sharing settings and load only enabled sections
+      const shareSettings = currentClient?.shareWithParent || {
+        assessments: true,
+        programs: true,
+        notes: true,
+        ptNotes: false,
+        packageInfo: true
+      };
+      
+      if (shareSettings.assessments !== false) {
+        await loadAssessments();
+        document.getElementById('parentAssessmentCard').style.display = 'block';
+      }
+      if (shareSettings.programs !== false) {
+        await loadPrograms();
+        document.getElementById('parentProgramsCard').style.display = 'block';
+      }
+      if (shareSettings.notes !== false) {
+        await loadNotes();
+        document.getElementById('parentNotesCard').style.display = 'block';
+      }
+      if (shareSettings.ptNotes === true) {
+        await loadPTNotes();
+        document.getElementById('parentPTNotesCard').style.display = 'block';
+      }
+      if (shareSettings.packageInfo !== false) {
+        document.getElementById('parentPackageCard').style.display = 'block';
+      }
+      
       initPurchasePackage();
     }
 
-    // --- Purchase a Package (Square outline – wire SDK when credentials added) ---
+    // --- Purchase a Package (Square) ---
     let selectedPackage = null;
+    let squareCfg = null;
+    let squareCardInstance = null;
+    let squareCardInitPromise = null;
+
+    function loadSquareScript(useSandbox) {
+      return new Promise((resolve, reject) => {
+        if (window.Square) {
+          resolve();
+          return;
+        }
+        const s = document.createElement('script');
+        // Production script (no sandbox)
+        s.src = 'https://web.squarecdn.com/v1/square.js';
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error('Square SDK failed to load'));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function initSquareCard() {
+      if (!squareCfg || !squareCfg.applicationId || !squareCfg.locationId) return null;
+      if (squareCardInstance) return squareCardInstance;
+      if (squareCardInitPromise) return squareCardInitPromise;
+      squareCardInitPromise = (async () => {
+        await loadSquareScript(!!squareCfg.useSandbox);
+        if (!window.Square) throw new Error('Square SDK not available');
+        const payments = window.Square.payments(squareCfg.applicationId, squareCfg.locationId);
+        const card = await payments.card();
+        const container = document.getElementById('square-card-container');
+        if (container && container.innerHTML === '') await card.attach('#square-card-container');
+        squareCardInstance = card;
+        return card;
+      })();
+      return squareCardInitPromise;
+    }
 
     async function initPurchasePackage() {
       const card = document.getElementById('purchasePackageCard');
@@ -299,17 +402,26 @@
       const squarePaymentContainer = document.getElementById('squarePaymentContainer');
       const squareNotConfigured = document.getElementById('squareNotConfigured');
       const squarePaymentSuccess = document.getElementById('squarePaymentSuccess');
+      const squarePayBtn = document.getElementById('squarePayBtn');
 
-      // Check if Square is configured (GET /api/square-config)
+      // Check if Square is configured (GET /api/square)
       let squareConfigured = false;
       try {
-        const r = await fetch('/api/square-config');
+        const r = await fetch('/api/square');
         if (r.ok) {
           const cfg = await r.json();
-          squareConfigured = !!cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId));
+          console.log('Square config response:', cfg);
+          if (cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId))) {
+            squareCfg = { 
+              applicationId: cfg.applicationId, 
+              locationId: cfg.locationId, 
+              useSandbox: cfg.useSandbox === true 
+            };
+            squareConfigured = true;
+          }
         }
       } catch (e) {
-        console.warn('Square config check failed:', e);
+        console.error('Square config check failed:', e);
       }
 
       if (!squareConfigured) {
@@ -317,12 +429,10 @@
         if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
       } else {
         if (squareNotConfigured) squareNotConfigured.style.display = 'none';
-        // When Square is configured: show card form and Pay button here.
-        // For now we only show selection; actual Square SDK + /api/create-square-payment will be wired when you add credentials.
       }
 
       options.forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           options.forEach((b) => b.classList.remove('selected'));
           btn.classList.add('selected');
           selectedPackage = {
@@ -338,10 +448,104 @@
           }
           if (squareConfigured && squarePaymentContainer) {
             squarePaymentContainer.style.display = 'block';
-            // TODO: initialize Square card form here when SQUARE_APPLICATION_ID + SQUARE_LOCATION_ID are set
+            if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'none';
+            if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+            if (squarePayBtn) squarePayBtn.disabled = true;
+            try {
+              await initSquareCard();
+              if (squarePayBtn) squarePayBtn.disabled = false;
+            } catch (e) {
+              console.error('Square card init failed:', e);
+              if (squarePayBtn) squarePayBtn.disabled = false;
+              // Show error message
+              if (squareNotConfigured) {
+                squareNotConfigured.style.display = 'block';
+                squareNotConfigured.innerHTML = '<p style="margin: 0; color: #d32f2f;">Failed to load payment form. Please refresh the page.</p>';
+              }
+            }
+          } else if (!squareConfigured) {
+            // Re-check configuration when package is selected
+            try {
+              const r = await fetch('/api/square');
+              if (r.ok) {
+                const cfg = await r.json();
+                if (cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId))) {
+                  squareCfg = { 
+                    applicationId: cfg.applicationId, 
+                    locationId: cfg.locationId, 
+                    useSandbox: cfg.useSandbox === true 
+                  };
+                  squareConfigured = true;
+                  if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+                  if (squarePaymentContainer) {
+                    squarePaymentContainer.style.display = 'block';
+                    if (squarePayBtn) squarePayBtn.disabled = true;
+                    await initSquareCard();
+                    if (squarePayBtn) squarePayBtn.disabled = false;
+                  }
+                }
+              }
+            } catch (e) {
+              console.error('Square re-check failed:', e);
+            }
           }
         });
       });
+
+      if (squarePayBtn && squareConfigured) {
+        squarePayBtn.addEventListener('click', async () => {
+          if (!selectedPackage || !squareCardInstance || !currentClientId) return;
+          squarePayBtn.disabled = true;
+          try {
+            const amountStr = (selectedPackage.amount / 100).toFixed(2);
+            const verificationDetails = {
+              amount: amountStr,
+              currencyCode: 'USD',
+              intent: 'CHARGE',
+              customerInitiated: true,
+              sellerKeyedIn: false,
+              billingContact: {
+                givenName: (currentClient && currentClient.name) ? currentClient.name.split(' ')[0] : 'Parent',
+                familyName: (currentClient && currentClient.name) ? currentClient.name.split(' ').slice(1).join(' ') || 'Guardian' : 'Guardian',
+                countryCode: 'US'
+              }
+            };
+            const tokenResult = await squareCardInstance.tokenize(verificationDetails);
+            if (tokenResult.status !== 'OK') {
+              throw new Error(tokenResult.errors ? JSON.stringify(tokenResult.errors) : 'Card tokenization failed');
+            }
+            const sourceId = tokenResult.token;
+            const body = {
+              sourceId,
+              amount: selectedPackage.amount,
+              idempotencyKey: window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : 'pk-' + Date.now() + '-' + Math.random().toString(36).slice(2),
+              clientId: currentClientId,
+              clientName: (currentClient && currentClient.name) || '',
+              packageName: selectedPackage.name,
+              sessionCount: selectedPackage.sessions
+            };
+            const payRes = await fetch('/api/square', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+            const data = payRes.ok ? await payRes.json() : await payRes.json().catch(() => ({}));
+            if (!payRes.ok) {
+              throw new Error(data.error || data.message || 'Payment failed');
+            }
+            if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
+            if (summary) summary.style.display = 'none';
+            options.forEach((b) => b.classList.remove('selected'));
+            selectedPackage = null;
+            if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'block';
+          } catch (e) {
+            console.error('Square payment error:', e);
+            alert(e.message || 'Payment could not be completed. Please try again.');
+          } finally {
+            squarePayBtn.disabled = false;
+          }
+        });
+      }
     }
 
     function showSessionExpiredState() {
@@ -387,6 +591,32 @@
             <span class="info-value">${currentClient.emergencyContact || 'N/A'}</span>
           </div>
         `;
+
+        const total = currentClient.packageTotalSessions != null ? currentClient.packageTotalSessions : null;
+        const used = currentClient.packageUsedSessions != null ? currentClient.packageUsedSessions : 0;
+        const remaining = currentClient.packageRemainingSessions != null ? currentClient.packageRemainingSessions : (total != null ? total - used : null);
+        const packageGrid = document.getElementById('parentPackageGrid');
+        if (packageGrid) {
+          packageGrid.innerHTML = `
+            <div class="info-item">
+              <span class="info-label">Package</span>
+              <span class="info-value">${currentClient.packageName || 'Not set'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Total Sessions</span>
+              <span class="info-value">${total != null ? total : '--'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sessions Remaining</span>
+              <span class="info-value">${remaining != null ? remaining : '--'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sessions Used</span>
+              <span class="info-value">${used}</span>
+            </div>
+          `;
+        }
+
         return true;
       } catch (error) {
         console.error('Error loading client:', error);
@@ -484,6 +714,33 @@
       } catch (error) {
         console.error('Error loading notes:', error);
         document.getElementById('parentNotes').innerHTML = '<p style="color: #d32f2f;">Error loading notes.</p>';
+      }
+    }
+
+    async function loadPTNotes() {
+      try {
+        const ptNotes = await getClientPTNotes(currentClientId);
+        const container = document.getElementById('parentPTNotes');
+
+        if (!ptNotes || ptNotes.length === 0) {
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No PT coordination notes recorded yet.</p>';
+          return;
+        }
+
+        container.innerHTML = ptNotes.map((note, idx) => {
+          const date = new Date(note.date).toLocaleDateString();
+          return `
+            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === ptNotes.length - 1 ? 'border-bottom: none;' : ''}">
+              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                <strong style="color: var(--epc-gold);">${date}</strong>
+              </div>
+              <p style="color: var(--epc-ink); line-height: 1.6; margin: 0;">${note.note}</p>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading PT notes:', error);
+        document.getElementById('parentPTNotes').innerHTML = '<p style="color: #d32f2f;">Error loading PT notes.</p>';
       }
     }
 
