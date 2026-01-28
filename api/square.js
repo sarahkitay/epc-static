@@ -92,7 +92,17 @@ export default async function handler(req, res) {
         });
       }
 
-      return res.status(200).json({ success: true, payment: data.payment });
+      // Payment successful - update client package info
+      // Note: This requires db.js functions to be available server-side
+      // For now, return success and let frontend handle the update
+      return res.status(200).json({ 
+        success: true, 
+        payment: data.payment,
+        clientId,
+        sessionCount,
+        packageName,
+        purchaseDate: new Date().toISOString()
+      });
     } catch (e) {
       console.error('create-square-payment error:', e);
       return res.status(500).json({ error: e.message || 'Payment request failed' });

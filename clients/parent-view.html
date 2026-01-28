@@ -197,6 +197,15 @@
         </div>
         <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
           <button type="button" class="btn-primary" id="parentPurchasePackageBtn" onclick="window.location.href='client.html?id=' + currentClientId;">Purchase Package</button>
+          <button type="button" class="btn-secondary" id="viewPurchaseHistoryBtn" style="display: none;">View Purchase History</button>
+        </div>
+        
+        <!-- Purchase History Section -->
+        <div id="purchaseHistorySection" style="display: none; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--epc-line);">
+          <h4 style="font-family: 'Playfair Display', serif; font-size: 18px; color: var(--epc-gold); margin-bottom: 20px; letter-spacing: 0.05em;">Purchase History</h4>
+          <div id="purchaseHistoryList">
+            <!-- Populated by JavaScript -->
+          </div>
         </div>
       </div>
 
@@ -280,7 +289,6 @@
             <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--epc-ink-dim); line-height: 1.6;">
               <li>Enter your card information securely below</li>
               <li>Your payment is processed through Square's secure payment system</li>
-              <li>You will receive a confirmation email after successful payment</li>
             </ul>
           </div>
           
@@ -862,10 +870,50 @@
             if (!payRes.ok) {
               throw new Error(data.error || data.message || 'Payment failed');
             }
+            
+            // Payment successful - update client package info
+            try {
+              const currentTotal = currentClient.packageTotalSessions || 0;
+              const currentUsed = currentClient.packageUsedSessions || 0;
+              const currentRemaining = currentClient.packageRemainingSessions || (currentTotal - currentUsed);
+              
+              const newTotal = currentTotal + selectedPackage.sessions;
+              const newRemaining = currentRemaining + selectedPackage.sessions;
+              
+              // Save purchase to history
+              const purchaseHistory = currentClient.purchaseHistory || [];
+              purchaseHistory.push({
+                packageName: selectedPackage.name,
+                sessions: selectedPackage.sessions,
+                amount: selectedPackage.amount / 100, // Convert cents to dollars
+                purchaseDate: new Date().toISOString(),
+                paymentId: data.payment?.id || 'unknown'
+              });
+              
+              // Update client with new package info and purchase history
+              await updateClient(currentClientId, {
+                packageName: selectedPackage.name,
+                packageTotalSessions: newTotal,
+                packageRemainingSessions: newRemaining,
+                purchaseHistory: purchaseHistory
+              });
+              
+              console.log('Package updated successfully:', {
+                newTotal,
+                newRemaining,
+                purchaseHistory: purchaseHistory.length
+              });
+            } catch (updateError) {
+              console.error('Error updating client package:', updateError);
+              // Still show success since payment went through
+            }
+            
             // Payment successful - clear form and show success
             if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
             if (summary) summary.style.display = 'none';
             options.forEach((b) => b.classList.remove('selected'));
+            if (customPackageBtn) customPackageBtn.classList.remove('selected');
+            if (customPackageInput) customPackageInput.style.display = 'none';
             selectedPackage = null;
             // Clear card instance so it can be re-initialized for next purchase
             squareCardInstance = null;
@@ -940,6 +988,9 @@
         const remaining = currentClient.packageRemainingSessions != null ? currentClient.packageRemainingSessions : (total != null ? total - used : null);
         const packageGrid = document.getElementById('parentPackageGrid');
         const statusBadge = document.getElementById('parentPackageStatusBadge');
+        const viewHistoryBtn = document.getElementById('viewPurchaseHistoryBtn');
+        const purchaseHistorySection = document.getElementById('purchaseHistorySection');
+        const purchaseHistoryList = document.getElementById('purchaseHistoryList');
         
         if (packageGrid) {
           packageGrid.innerHTML = `
@@ -960,6 +1011,72 @@
               <span class="info-value">${used}</span>
             </div>
           `;
+          
+          // Show purchase history button if there's history
+          if (currentClient.purchaseHistory && currentClient.purchaseHistory.length > 0) {
+            if (viewHistoryBtn) viewHistoryBtn.style.display = 'inline-block';
+            
+            // Setup purchase history toggle
+            if (viewHistoryBtn && purchaseHistorySection) {
+              viewHistoryBtn.onclick = () => {
+                const isVisible = purchaseHistorySection.style.display !== 'none';
+                purchaseHistorySection.style.display = isVisible ? 'none' : 'block';
+                viewHistoryBtn.textContent = isVisible ? 'View Purchase History' : 'Hide Purchase History';
+                
+                if (!isVisible && purchaseHistoryList) {
+                  // Load and display purchase history
+                  const history = currentClient.purchaseHistory || [];
+                  const sessionHistory = currentClient.sessionHistory || [];
+                  
+                  purchaseHistoryList.innerHTML = history.map((purchase, idx) => {
+                    const purchaseDate = new Date(purchase.purchaseDate).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    });
+                    
+                    // Find sessions used after this purchase date
+                    const purchaseUsage = sessionHistory.filter(usage => {
+                      return new Date(usage.date) >= new Date(purchase.purchaseDate);
+                    });
+                    
+                    // Get sessions used from this specific purchase (limit to purchase.sessions)
+                    const thisPurchaseUsage = purchaseUsage.slice(0, purchase.sessions);
+                    
+                    return `
+                      <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === history.length - 1 ? 'border-bottom: none;' : ''}">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                          <div>
+                            <h4 style="color: var(--epc-gold); margin: 0 0 4px 0; font-size: 16px;">${purchase.packageName}</h4>
+                            <p style="margin: 0; color: var(--epc-ink-dim); font-size: 12px;">Purchased: ${purchaseDate}</p>
+                          </div>
+                          <div style="text-align: right;">
+                            <p style="margin: 0; color: var(--epc-gold); font-size: 18px; font-weight: 600;">$${purchase.amount.toFixed(2)}</p>
+                            <p style="margin: 4px 0 0 0; color: var(--epc-ink-dim); font-size: 12px;">${purchase.sessions} sessions</p>
+                          </div>
+                        </div>
+                        ${thisPurchaseUsage.length > 0 ? `
+                          <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(201,178,127,0.2);">
+                            <p style="margin: 0 0 8px 0; font-size: 12px; color: var(--epc-ink-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Sessions Used (${thisPurchaseUsage.length} of ${purchase.sessions}):</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                              ${thisPurchaseUsage.map(usage => `
+                                <span style="display: inline-block; padding: 4px 10px; background: rgba(201,178,127,0.1); border: 1px solid var(--epc-line); border-radius: 4px; font-size: 11px; color: var(--epc-ink);">
+                                  ${new Date(usage.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}${usage.usedBy ? ` (${usage.usedBy})` : ''}
+                                </span>
+                              `).join('')}
+                            </div>
+                          </div>
+                        ` : '<p style="margin: 12px 0 0 0; color: var(--epc-ink-dim); font-size: 12px;">No sessions used from this purchase yet</p>'}
+                      </div>
+                    `;
+                  }).join('');
+                }
+              };
+            }
+          } else {
+            if (viewHistoryBtn) viewHistoryBtn.style.display = 'none';
+            if (purchaseHistorySection) purchaseHistorySection.style.display = 'none';
+          }
         }
         
         // Update status badge
