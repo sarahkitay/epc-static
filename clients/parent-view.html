@@ -205,12 +205,15 @@
 
       <!-- Package & Sessions (read-only: remaining, used, total) -->
       <div class="parent-info-card" id="parentPackageCard" style="display: none;">
-        <h3>Package & Sessions</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="margin: 0;">Package & Sessions</h3>
+          <span class="package-status-badge" id="parentPackageStatusBadge"></span>
+        </div>
         <div class="info-grid" id="parentPackageGrid">
           <!-- Populated by JavaScript -->
         </div>
-        <div style="margin-top: 20px; text-align: center;">
-          <button type="button" class="btn-primary" id="parentPurchaseNewPackageBtn" onclick="document.getElementById('purchasePackageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });">Purchase New Package</button>
+        <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+          <button type="button" class="btn-primary" id="parentPurchasePackageBtn" onclick="document.getElementById('purchasePackageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });">Purchase Package</button>
         </div>
       </div>
 
@@ -599,6 +602,8 @@
         const used = currentClient.packageUsedSessions != null ? currentClient.packageUsedSessions : 0;
         const remaining = currentClient.packageRemainingSessions != null ? currentClient.packageRemainingSessions : (total != null ? total - used : null);
         const packageGrid = document.getElementById('parentPackageGrid');
+        const statusBadge = document.getElementById('parentPackageStatusBadge');
+        
         if (packageGrid) {
           packageGrid.innerHTML = `
             <div class="info-item">
@@ -609,7 +614,32 @@
               <span class="info-label">Sessions Remaining</span>
               <span class="info-value">${remaining != null ? remaining : '--'}</span>
             </div>
+            <div class="info-item">
+              <span class="info-label">Total Sessions</span>
+              <span class="info-value">${total != null ? total : '--'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Sessions Used</span>
+              <span class="info-value">${used}</span>
+            </div>
           `;
+        }
+        
+        // Update status badge
+        if (statusBadge && remaining !== null) {
+          if (remaining === 0) {
+            statusBadge.textContent = '❌ OUT';
+            statusBadge.className = 'package-status-badge status-out';
+          } else if (remaining <= 3) {
+            statusBadge.textContent = '⚠️ LOW';
+            statusBadge.className = 'package-status-badge status-low';
+          } else {
+            statusBadge.textContent = '✓ OK';
+            statusBadge.className = 'package-status-badge status-ok';
+          }
+        } else if (statusBadge) {
+          statusBadge.textContent = '';
+          statusBadge.className = 'package-status-badge';
         }
 
         return true;
