@@ -1537,10 +1537,11 @@
         // 1) Save the quiz submission into the dedicated Airtable quiz table (does not email)
         try {
           const protocolSummary = (document.getElementById('resultSummary')?.textContent || '').trim();
-          await fetch('/api/submit-quiz', {
+          await fetch('/api/submit-form', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              formType: 'quiz',
               email,
               goal: formData.goal,
               body_areas: (formData.body_areas || []).join(', '),
@@ -1556,10 +1557,11 @@
         }
 
         // 2) Save full lead into Contact Form Submissions (includes phone) + sends notification email
-        const res = await fetch('/api/submit-contact', {
+        const res = await fetch('/api/submit-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            formType: 'contact',
             name,
             email,
             phone,
@@ -1908,10 +1910,10 @@
     const data = Object.fromEntries(formData);
     
     // Submit form
-    fetch('/api/submit-email-signup', {
+    fetch('/api/submit-form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify({ ...data, formType: 'email-signup' })
     })
     .then(response => response.json())
     .then(result => {

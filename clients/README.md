@@ -53,6 +53,33 @@ A password-protected internal client management system for Elite Performance Cli
 - Add timestamped PT coordination notes
 - Separate communication log for physical therapy coordination
 
+### 8. Parent Portal – Purchase a Package (Square)
+- Parents can buy session packages from the read-only parent view.
+- **Purchase a Package** uses **Square** for payments (outline only until credentials are added).
+- Package options and “Pay with Square” UI are in place; card form and charges activate once Square is configured.
+
+## Square Payment Setup (connect your Square account)
+
+To enable “Purchase a Package” in the Parent Portal:
+
+1. **Add environment variables in Vercel**
+   - Go to [Vercel](https://vercel.com) → your project → **Settings** → **Environment Variables**.
+   - Add these three (required):
+
+   | Name | Where to get it |
+   |------|------------------|
+   | `SQUARE_APPLICATION_ID` | [Square Developer Console](https://developer.squareup.com/apps) → your app → **Credentials** → **Application ID** (use Sandbox or Production depending on mode) |
+   | `SQUARE_ACCESS_TOKEN` | Same app → **Credentials** → **Access Token** (Sandbox **or** Production – must match the Application ID mode) |
+   | `SQUARE_LOCATION_ID` | Same app → **Locations** in the left nav → pick a location → **Location ID** (Sandbox location for testing, or your real location for live payments) |
+
+   - Optional: set `SQUARE_USE_SANDBOX=true` when testing with sandbox credentials so the parent view loads the Square sandbox script.
+
+2. **Redeploy**
+   - Trigger a new deployment (e.g. push a commit or use “Redeploy” in Vercel) so the new env vars are picked up.
+
+3. **Check it works**
+   - Log in to the Parent Portal and open a child’s view. If all three env vars are set, you’ll see the card form and “Pay with Square” after choosing a package. The backend uses **POST /api/create-square-payment** to charge the card.
+
 ## Data Storage
 
 All data is stored locally in the browser using **IndexedDB**. No server required.

@@ -1,14 +1,14 @@
-// Journal Spiral (3D helix) - Greta Thunberg-style orbital effect
+// Journal Spiral (3D helix) – tiles create depth, circle the 3D figure, fade in at center
 (function () {
   "use strict";
   if (window.innerWidth <= 768) return;
 
   const blocks = Array.from(document.querySelectorAll(".journal-block"));
   const container = document.querySelector(".journal-container");
+  const introSection = document.querySelector(".intro-section");
   const cta = document.querySelector(".epc-blog-cta");
   if (!blocks.length || !container) return;
 
-  // Create / reuse cards layer (between back and front renderers)
   let cardsLayer = document.getElementById("journal-cards-layer");
   if (!cardsLayer) {
     cardsLayer = document.createElement("div");
@@ -16,7 +16,6 @@
     document.body.appendChild(cardsLayer);
   }
 
-  // Move cards into cards layer for occlusion
   blocks.forEach((b) => cardsLayer.appendChild(b));
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -24,18 +23,24 @@
 
   function getScrollBounds() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const containerRect = container.getBoundingClientRect();
-    const containerTop = containerRect.top + scrollTop;
+    const vh = window.innerHeight;
 
-    // start after hero
-    const start = containerTop + window.innerHeight * 1.05;
+    // Start directly below the scroll CTA (intro bottom in document coords)
+    let start;
+    if (introSection) {
+      const r = introSection.getBoundingClientRect();
+      start = r.bottom + scrollTop;
+    } else {
+      const containerRect = container.getBoundingClientRect();
+      start = containerRect.top + scrollTop + vh * 0.3;
+    }
 
-    // end before CTA
-    let end = start + window.innerHeight * 3.2;
+    // End well before CTA – no cluster at the stop
+    let end = start + Math.max(vh * 2.5, blocks.length * 90);
     if (cta) {
       const ctaRect = cta.getBoundingClientRect();
       const ctaTop = ctaRect.top + scrollTop;
-      end = ctaTop - window.innerHeight * 0.7;
+      end = Math.min(end, ctaTop - vh * 0.5);
     }
 
     return { start, end };
@@ -44,81 +49,75 @@
   function update() {
     const { start, end } = getScrollBounds();
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const range = Math.max(1, end - start);
 
-    // Before start: hide cards
+    // Toggle body class so 3D + cards layer become visible only after scroll past CTA
+    if (scrollTop >= start) {
+      document.body.classList.add("journal-spiral-active");
+    } else {
+      document.body.classList.remove("journal-spiral-active");
+    }
+
     if (scrollTop < start) {
       blocks.forEach((b) => {
-        b.style.opacity = 0;
+        b.style.opacity = "0";
         b.style.pointerEvents = "none";
       });
       return;
-    } else {
-      blocks.forEach((b) => (b.style.pointerEvents = "auto"));
     }
 
-    const t = clamp((scrollTop - start) / Math.max(1, end - start), 0, 1);
+    blocks.forEach((b) => { b.style.pointerEvents = "auto"; });
+
+    const t = clamp((scrollTop - start) / range, 0, 1);
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Orbit center - try to center on figure if available
     let centerX = vw * 0.5;
     let centerY = vh * 0.5;
-    
-    // Try to find and center on the 3D figure (back renderer)
-    const backContainer = document.getElementById("journal-3d-back");
-    if (backContainer) {
-      const rect = backContainer.getBoundingClientRect();
+    const backEl = document.getElementById("journal-3d-back");
+    if (backEl) {
+      const rect = backEl.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         centerX = rect.left + rect.width / 2;
         centerY = rect.top + rect.height / 2;
       }
     }
 
-    // Helix tuning (closest to Greta feel)
-    const turns = 1.7;                       // rotations across the section
-    const radius = Math.min(400, vw * 0.25);  // orbit radius (reduced)
-    const depth = 420;                        // translateZ depth range
-    const travelY = vh * 0.4;                 // how far helix drifts downward (reduced)
-    const phaseStep = 0.14;                   // spacing between cards along helix
-    const baseRot = -Math.PI * 0.18;          // aesthetic starting angle
+    // Helix: orbit around figure, depth, readable/clickable, no cluster at stop
+    const turns = 2;
+    const radius = Math.min(380, vw * 0.24);
+    const depth = 400;
+    const travelY = vh * 0.35;
+    const phaseStep = 0.18;  // more spread, less cluster at end
+    const baseRot = -Math.PI * 0.2;
 
     blocks.forEach((block, i) => {
       const phase = i * phaseStep;
-
-      // angle advances with scroll + each card offset
       const angle = baseRot + (t * turns * Math.PI * 2) + (phase * Math.PI * 2);
 
-      // 3D helix coordinates
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * depth;
+      const y = (t * travelY) + (phase * vh * 0.12) - (travelY * 0.15);
 
-      // cards also progress down page as scroll continues (centered around figure)
-      const y = (t * travelY) + (phase * vh * 0.15) - (travelY * 0.2);
+      const zn = (z + depth) / (2 * depth);
+      // Readable: front cards sharper, higher min opacity
+      const scale = lerp(0.82, 1.08, zn);
+      const opacity = lerp(0.5, 1, zn);
+      const blur = lerp(0.6, 0, zn);
 
-      // Depth-based realism: front = bigger, sharper, more opaque
-      const zn = (z + depth) / (2 * depth); // 0..1
-      const scale = lerp(0.78, 1.12, zn);
-      const opacity = lerp(0.20, 1.0, zn);
-      const blur = lerp(1.2, 0.0, zn);
-
-      // Occlusion: cards behind figure (zNorm < 0.48) go under front renderer
       const behind = zn < 0.48;
-      const occludedOpacity = behind ? opacity * 0.72 : opacity;
+      const occludedOpacity = behind ? opacity * 0.75 : opacity;
 
-      // Slight facing/tilt for parallax
-      const faceY = lerp(18, -18, zn);
-      const tiltZ = lerp(-6, 6, zn);
+      const faceY = lerp(12, -12, zn);
+      const tiltZ = lerp(-4, 4, zn);
 
-      // Final position (centered orbit around figure)
       const px = centerX + x;
       const py = centerY + y;
 
-      block.style.opacity = occludedOpacity.toFixed(3);
-      block.style.filter = `blur(${blur.toFixed(2)}px)`;
-      // Z-index: behind cards go under front renderer (z-index 15), front cards above (z-index 25)
+      block.style.opacity = String(occludedOpacity);
+      block.style.filter = blur <= 0 ? "none" : `blur(${blur.toFixed(2)}px)`;
       block.style.zIndex = behind ? "15" : "25";
 
-      // translate3d + translate(-50%) so it orbits around its center
       block.style.transform =
         `translate3d(${px}px, ${py}px, ${z}px) ` +
         `translate3d(-50%, -50%, 0) ` +

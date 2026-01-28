@@ -101,6 +101,7 @@
     let figureModel = null;
 
     const glbPaths = [
+      (typeof location !== 'undefined' && location.origin ? location.origin + '/assets/svg/journal.glb' : '/assets/svg/journal.glb'),
       '/assets/svg/journal.glb',
       './assets/svg/journal.glb',
       'assets/svg/journal.glb'

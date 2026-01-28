@@ -7,8 +7,13 @@
     "dev": "npx serve . -l 3000",
     "start": "npx serve . -l 3000"
   },
-  "devDependencies": {},
-  "keywords": ["epc", "client-management"],
+  "keywords": [
+    "epc",
+    "client-management"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "react-square-web-payments-sdk": "^3.3.0"
+  }
 }

@@ -450,10 +450,11 @@
         if (!phone) return showError('Please enter your phone number.');
 
         try {
-            const resp = await fetch('/api/submit-booking-request', {
+            const resp = await fetch('/api/submit-form', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              formType: 'booking',
               name,
               email,
               phone,

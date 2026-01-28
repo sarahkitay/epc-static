@@ -164,10 +164,10 @@
             const data = Object.fromEntries(formData);
             
             try {
-              const response = await fetch('/api/submit-winter-ball', {
+              const response = await fetch('/api/submit-form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify({ ...data, formType: 'winter-ball' })
               });
               
               const result = await response.json();

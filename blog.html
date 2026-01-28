@@ -370,7 +370,7 @@
       overflow-x: hidden;
     }
 
-    /* 3D Canvas Containers - Layered for occlusion */
+    /* 3D Canvas Containers - Layered for occlusion. Visible only after scroll past CTA. */
     #journal-3d-back,
     #journal-cards-layer,
     #journal-3d-front {
@@ -379,6 +379,16 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    
+    body.journal-spiral-active #journal-3d-back,
+    body.journal-spiral-active #journal-cards-layer,
+    body.journal-spiral-active #journal-3d-front {
+      opacity: 1;
+      visibility: visible;
     }
     
     #journal-3d-back {
@@ -391,6 +401,8 @@
     #journal-cards-layer {
       z-index: 20;
       pointer-events: none;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
     
     #journal-cards-layer .journal-block {
@@ -419,6 +431,7 @@
     #journal-3d-front canvas {
       max-width: 100vw;
       max-height: 100vh;
+      display: block;
     }
 
     /* Journal Content */
@@ -433,14 +446,15 @@
       transform-style: preserve-3d;
     }
 
-    /* Intro Section */
+    /* Intro Section – tall enough so "Scroll to explore" is clear; spiral starts below it */
     .intro-section {
       text-align: center;
-      padding: 20px 50px 40px;
+      padding: 20px 50px 120px;
       position: relative;
+      min-height: 220px;
     }
 
-    /* Scroll indicator */
+    /* Scroll indicator – CTA; tiles + 3D start directly below this */
     .scroll-indicator {
       position: absolute;
       bottom: 50px;
@@ -610,8 +624,10 @@
         padding-top: 80px;
       }
 
-      #canvas-container {
-        display: none; /* Hide 3D on mobile */
+      #journal-3d-back,
+      #journal-cards-layer,
+      #journal-3d-front {
+        display: none !important;
       }
     }
 

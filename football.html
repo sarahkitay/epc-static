@@ -988,10 +988,10 @@
       const data = Object.fromEntries(formData);
       
       try {
-        const response = await fetch('/api/submit-fulltime-academy', {
+        const response = await fetch('/api/submit-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ ...data, formType: 'fulltime-academy' })
         });
         
         const result = await response.json();
@@ -1030,10 +1030,10 @@
       const data = Object.fromEntries(formData);
       
       try {
-        const response = await fetch('/api/submit-parttime-academy', {
+        const response = await fetch('/api/submit-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ ...data, formType: 'parttime-academy' })
         });
         
         const result = await response.json();
