@@ -317,8 +317,17 @@
       // Default behavior: show if staff has created data, hide if explicitly disabled
       const shareSettings = currentClient?.shareWithParent || {};
       
+      console.log('=== PARENT PORTAL INITIALIZATION ===');
       console.log('Parent view - Share settings:', shareSettings);
+      console.log('Parent view - Current client ID:', currentClientId);
       console.log('Parent view - Current client:', currentClient);
+      console.log('Parent view - Share settings breakdown:', {
+        assessments: shareSettings.assessments,
+        programs: shareSettings.programs,
+        photos: shareSettings.photos,
+        notes: shareSettings.notes,
+        packageInfo: shareSettings.packageInfo
+      });
       
       // Assessments: show if not explicitly disabled (false)
       // Default behavior: show if enabled (true) or not set (undefined)
@@ -443,6 +452,28 @@
       if (parentPackageCard) {
         parentPackageCard.style.display = 'block';
       }
+      
+      // Debug: Log all card elements and their display status
+      console.log('=== PARENT PORTAL CARD VISIBILITY ===');
+      const cards = {
+        assessment: document.getElementById('parentAssessmentCard'),
+        programs: document.getElementById('parentProgramsCard'),
+        photos: document.getElementById('parentPhotosCard'),
+        notes: document.getElementById('parentNotesCard'),
+        package: document.getElementById('parentPackageCard')
+      };
+      Object.entries(cards).forEach(([name, card]) => {
+        if (card) {
+          console.log(`${name} card:`, {
+            exists: true,
+            display: window.getComputedStyle(card).display,
+            inlineStyle: card.style.display,
+            visible: window.getComputedStyle(card).display !== 'none'
+          });
+        } else {
+          console.error(`${name} card: NOT FOUND`);
+        }
+      });
       
       initPurchasePackage();
     }

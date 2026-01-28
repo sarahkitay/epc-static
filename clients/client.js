@@ -597,19 +597,80 @@ function initProgramBuilder() {
     });
   }
 
-  // Add custom exercise
+  // Add custom exercise modal
+  function showAddCustomExerciseModal() {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('addCustomExerciseModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'addCustomExerciseModal';
+      modal.className = 'modal';
+      modal.style.display = 'none';
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width: 400px;">
+          <div class="modal-header">
+            <h3>Add Custom Exercise</h3>
+            <button class="modal-close" onclick="document.getElementById('addCustomExerciseModal').style.display='none'">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label">Exercise Name</label>
+              <input type="text" id="customExerciseNameInput" class="form-input" placeholder="e.g., Squat, Bench Press" autofocus />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" onclick="document.getElementById('addCustomExerciseModal').style.display='none'">Cancel</button>
+            <button class="btn-primary" id="saveCustomExerciseBtn">Add Exercise</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Handle save button
+      document.getElementById('saveCustomExerciseBtn').addEventListener('click', () => {
+        const input = document.getElementById('customExerciseNameInput');
+        const exerciseName = input?.value?.trim();
+        if (exerciseName) {
+          exerciseLibrary.push(exerciseName);
+          renderExerciseLibrary();
+          const searchInput = document.getElementById('exerciseSearch');
+          if (searchInput) searchInput.value = '';
+          modal.style.display = 'none';
+          input.value = '';
+        }
+      });
+      
+      // Handle Enter key
+      document.getElementById('customExerciseNameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('saveCustomExerciseBtn').click();
+        }
+      });
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+    
+    // Show modal
+    modal.style.display = 'flex';
+    const input = document.getElementById('customExerciseNameInput');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+
+  // Add custom exercise button handler
   if (addCustomExerciseBtn) {
     addCustomExerciseBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      // Use async prompt to avoid blocking UI
-      const exerciseName = prompt('Enter exercise name:');
-      if (exerciseName && exerciseName.trim()) {
-        exerciseLibrary.push(exerciseName.trim());
-        renderExerciseLibrary();
-        const searchInput = document.getElementById('exerciseSearch');
-        if (searchInput) searchInput.value = '';
-      }
+      // Use non-blocking modal instead of blocking prompt
+      showAddCustomExerciseModal();
     });
   }
 
