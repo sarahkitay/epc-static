@@ -762,12 +762,13 @@
               ` : ''}
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
                 ${assessment.proteusScore ? `<div><strong>Proteus Score:</strong> ${assessment.proteusScore}</div>` : ''}
-                ${assessment.powerOutput ? `<div><strong>Power Output:</strong> ${assessment.powerOutput}</div>` : ''}
-                ${assessment.speed ? `<div><strong>Speed:</strong> ${assessment.speed}</div>` : ''}
-                ${assessment.overheadSquat ? `<div><strong>Overhead Squat:</strong> ${assessment.overheadSquat}</div>` : ''}
-                ${assessment.shoulderMobility ? `<div><strong>Shoulder Mobility:</strong> ${assessment.shoulderMobility}</div>` : ''}
-                ${assessment.hamstringMobility ? `<div><strong>Hamstring Mobility:</strong> ${assessment.hamstringMobility}</div>` : ''}
-                ${assessment.pushupAssessment ? `<div><strong>Push-up Assessment:</strong> ${assessment.pushupAssessment}</div>` : ''}
+                ${assessment.powerOutput ? `<div><strong>Power Output:</strong> ${assessment.powerOutput}${assessment.powerOutputNotes ? ` (${assessment.powerOutputNotes})` : ''}</div>` : ''}
+                ${assessment.speed ? `<div><strong>Speed:</strong> ${assessment.speed}${assessment.speedNotes ? ` (${assessment.speedNotes})` : ''}</div>` : ''}
+                ${assessment.squatOverallScore ? `<div><strong>Overhead Squat Score:</strong> ${assessment.squatOverallScore}${assessment.squatNotes ? ` (${assessment.squatNotes})` : ''}</div>` : ''}
+                ${(assessment.shoulderRightScore || assessment.shoulderLeftScore) ? `<div><strong>Shoulder Mobility:</strong> R: ${assessment.shoulderRightScore || 'N/A'}, L: ${assessment.shoulderLeftScore || 'N/A'}${assessment.shoulderNotes ? ` (${assessment.shoulderNotes})` : ''}</div>` : ''}
+                ${assessment.hamstringScore ? `<div><strong>Hamstring Mobility:</strong> ${assessment.hamstringScore}${assessment.hamstringNotes ? ` (${assessment.hamstringNotes})` : ''}</div>` : ''}
+                ${assessment.pushupScore ? `<div><strong>Push-up Score:</strong> ${assessment.pushupScore}${assessment.pushupNotes ? ` (${assessment.pushupNotes})` : ''}</div>` : ''}
+                ${assessment.pedicsReview ? `<div><strong>PEDICS Review:</strong> ${assessment.pedicsReview}</div>` : ''}
               </div>
             </div>
           `;
