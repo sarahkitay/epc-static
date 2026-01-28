@@ -313,24 +313,55 @@
       if (!loaded) return;
       
       // Check sharing settings and load only enabled sections
-      // Only show sections if explicitly set to true (default is hidden)
+      // Show sections if not explicitly disabled (=== false)
+      // Default behavior: show if staff has created data, hide if explicitly disabled
       const shareSettings = currentClient?.shareWithParent || {};
       
-      if (shareSettings.assessments === true) {
-        await loadAssessments();
-        document.getElementById('parentAssessmentCard').style.display = 'block';
+      console.log('Parent view - Share settings:', shareSettings);
+      console.log('Parent view - Current client:', currentClient);
+      
+      // Assessments: show if not explicitly disabled
+      if (shareSettings.assessments !== false) {
+        const allAssessments = await getClientAssessments(currentClientId);
+        const staffAssessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
+        console.log('Parent view - Staff assessments found:', staffAssessments.length);
+        if (staffAssessments.length > 0) {
+          await loadAssessments();
+          document.getElementById('parentAssessmentCard').style.display = 'block';
+        }
       }
-      if (shareSettings.programs === true) {
-        await loadPrograms();
-        document.getElementById('parentProgramsCard').style.display = 'block';
+      
+      // Programs: show if not explicitly disabled
+      if (shareSettings.programs !== false) {
+        const allPrograms = await getClientPrograms(currentClientId);
+        const staffPrograms = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
+        console.log('Parent view - Staff programs found:', staffPrograms.length);
+        if (staffPrograms.length > 0) {
+          await loadPrograms();
+          document.getElementById('parentProgramsCard').style.display = 'block';
+        }
       }
-      if (shareSettings.photos === true) {
-        await loadPhotos();
-        document.getElementById('parentPhotosCard').style.display = 'block';
+      
+      // Photos: show if not explicitly disabled
+      if (shareSettings.photos !== false) {
+        const allPhotos = await getClientPhotos(currentClientId);
+        const staffPhotos = allPhotos.filter(p => !p.createdBy || p.createdBy === 'staff');
+        console.log('Parent view - Staff photos found:', staffPhotos.length);
+        if (staffPhotos.length > 0) {
+          await loadPhotos();
+          document.getElementById('parentPhotosCard').style.display = 'block';
+        }
       }
-      if (shareSettings.notes === true) {
-        await loadNotes();
-        document.getElementById('parentNotesCard').style.display = 'block';
+      
+      // Notes: show if not explicitly disabled
+      if (shareSettings.notes !== false) {
+        const allNotes = await getClientNotes(currentClientId);
+        const staffNotes = allNotes.filter(n => !n.createdBy || n.createdBy === 'staff');
+        console.log('Parent view - Staff notes found:', staffNotes.length);
+        if (staffNotes.length > 0) {
+          await loadNotes();
+          document.getElementById('parentNotesCard').style.display = 'block';
+        }
       }
       // Always show package section for parents (they need to see remaining sessions and purchase option)
       const parentPackageCard = document.getElementById('parentPackageCard');
