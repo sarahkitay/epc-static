@@ -420,10 +420,11 @@
       // Check if Square is configured (GET /api/square)
       let squareConfigured = false;
       try {
-        const r = await fetch('/api/square');
+        const r = await fetch('/api/square', { cache: 'no-cache' });
         if (r.ok) {
           const cfg = await r.json();
           console.log('Square config response:', cfg);
+          console.log('Square configured check:', cfg?.configured, 'appId:', !!cfg?.applicationId, 'locationId:', !!cfg?.locationId);
           if (cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId))) {
             squareCfg = { 
               applicationId: cfg.applicationId, 
@@ -431,17 +432,24 @@
               useSandbox: cfg.useSandbox === true 
             };
             squareConfigured = true;
+            console.log('Square is configured:', squareCfg);
+          } else {
+            console.warn('Square not configured - response:', cfg);
           }
+        } else {
+          console.error('Square config API error:', r.status, await r.text().catch(() => ''));
         }
       } catch (e) {
         console.error('Square config check failed:', e);
       }
 
+      console.log('Square configured final:', squareConfigured);
       if (!squareConfigured) {
         if (squareNotConfigured) squareNotConfigured.style.display = 'block';
         if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
       } else {
         if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+        console.log('Square is ready - payment form will show when package is selected');
       }
 
       options.forEach((btn) => {
