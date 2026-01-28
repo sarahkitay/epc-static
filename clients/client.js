@@ -148,7 +148,12 @@ async function initClientPage() {
 
   // Load exercise library
   exerciseLibrary = [...DEFAULT_EXERCISES];
-  renderExerciseLibrary();
+  // renderExerciseLibrary is defined later in the file, call it after a short delay
+  setTimeout(() => {
+    if (typeof renderExerciseLibrary === 'function') {
+      renderExerciseLibrary();
+    }
+  }, 0);
 }
 
 // Load client data
@@ -1229,10 +1234,84 @@ function initClientActions() {
   console.log('Initializing client actions...');
   const moveClientBtn = document.getElementById('moveClientBtn');
   const editClientBtn = document.getElementById('editClientBtn');
+  const dataSharingBtn = document.getElementById('dataSharingBtn');
   const moveClientModal = document.getElementById('moveClientModal');
   const closeMoveModal = document.getElementById('closeMoveModal');
   const cancelMoveBtn = document.getElementById('cancelMoveBtn');
   const confirmMoveBtn = document.getElementById('confirmMoveBtn');
+  
+  // Hide Data Sharing button for parents (staff only)
+  const isParent = !!isParentSession();
+  if (dataSharingBtn) {
+    if (isParent) {
+      dataSharingBtn.style.display = 'none';
+    } else {
+      dataSharingBtn.style.display = 'inline-block';
+    }
+  }
+  
+  // Data Sharing Modal
+  const dataSharingModal = document.getElementById('dataSharingModal');
+  const closeDataSharingModal = document.getElementById('closeDataSharingModal');
+  const cancelDataSharing = document.getElementById('cancelDataSharing');
+  const saveDataSharing = document.getElementById('saveDataSharing');
+  
+  // Only allow data sharing setup for staff
+  if (dataSharingBtn && !isParent) {
+    dataSharingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (dataSharingModal) {
+        // Load current sharing settings
+        const shareSettings = currentClient?.shareWithParent || {
+          assessments: true,
+          programs: true,
+          notes: true,
+          ptNotes: false,
+          packageInfo: true
+        };
+        document.getElementById('shareAssessments').checked = shareSettings.assessments !== false;
+        document.getElementById('sharePrograms').checked = shareSettings.programs !== false;
+        document.getElementById('shareNotes').checked = shareSettings.notes !== false;
+        document.getElementById('sharePTNotes').checked = shareSettings.ptNotes === true;
+        document.getElementById('sharePackageInfo').checked = shareSettings.packageInfo !== false;
+        dataSharingModal.style.display = 'flex';
+      }
+    });
+  }
+  
+  if (closeDataSharingModal) {
+    closeDataSharingModal.addEventListener('click', () => {
+      dataSharingModal.style.display = 'none';
+    });
+  }
+  
+  if (cancelDataSharing) {
+    cancelDataSharing.addEventListener('click', () => {
+      dataSharingModal.style.display = 'none';
+    });
+  }
+  
+  if (saveDataSharing) {
+    saveDataSharing.addEventListener('click', async () => {
+      const shareSettings = {
+        assessments: document.getElementById('shareAssessments').checked,
+        programs: document.getElementById('sharePrograms').checked,
+        notes: document.getElementById('shareNotes').checked,
+        ptNotes: document.getElementById('sharePTNotes').checked,
+        packageInfo: document.getElementById('sharePackageInfo').checked
+      };
+      try {
+        await updateClient(currentClientId, { shareWithParent: shareSettings });
+        alert('Data sharing settings saved successfully!');
+        dataSharingModal.style.display = 'none';
+        await loadClientData();
+      } catch (error) {
+        console.error('Error saving data sharing settings:', error);
+        alert('Error saving settings. Please try again.');
+      }
+    });
+  }
 
   console.log('Move client button:', moveClientBtn ? 'found' : 'NOT FOUND');
   console.log('Edit client button:', editClientBtn ? 'found' : 'NOT FOUND');
@@ -1906,7 +1985,26 @@ function initPackageTracking() {
   const addPackageBtn = document.getElementById('addPackageBtn');
   const sessionUsedBtn = document.getElementById('sessionUsedBtn');
   const packageInfoSection = document.getElementById('packageInfoSection');
-  
+  const staffActions = document.getElementById('packageActionsStaff');
+  const parentActions = document.getElementById('packageActionsParent');
+  const purchasePackageLink = document.getElementById('purchasePackageLink');
+
+  // Parent portal: show package stats + "Purchase Package" only; hide Edit / Add New / Session Used Today
+  const isParent = !!isParentSession();
+  if (isParent) {
+    if (staffActions) staffActions.style.display = 'none';
+    if (parentActions) parentActions.style.display = 'block';
+    const purchasePackageBtn = document.getElementById('purchasePackageBtn');
+    if (purchasePackageBtn && currentClientId) {
+      purchasePackageBtn.onclick = () => {
+        window.location.href = 'parent-view.html?id=' + currentClientId;
+      };
+    }
+  } else {
+    if (staffActions) staffActions.style.display = 'flex';
+    if (parentActions) parentActions.style.display = 'none';
+  }
+
   // Load and display package info
   loadPackageInfo();
   
