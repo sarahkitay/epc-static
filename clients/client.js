@@ -551,8 +551,25 @@ async function loadAssessmentHistory() {
         </div>
       </div>
     `).join('');
+    
+    // Actually set the HTML to the DOM element
+    if (!historyList) {
+      console.error('assessmentHistoryList element not found');
+      return;
+    }
+    
+    if (typeof setSafeHTML !== 'undefined') {
+      setSafeHTML(historyList, historyHtml);
+    } else {
+      historyList.innerHTML = historyHtml;
+    }
+    
+    console.log(`Loaded ${assessments.length} assessment(s) into history`);
   } catch (error) {
     console.error('Error loading assessment history:', error);
+    if (historyList) {
+      historyList.innerHTML = '<p style="color: #d32f2f;">Error loading assessment history.</p>';
+    }
   }
 }
 
