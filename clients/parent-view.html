@@ -263,6 +263,9 @@
           <p style="margin: 0 0 8px 0;"><strong id="selectedPackageName"></strong></p>
           <p style="margin: 0; color: var(--epc-gold);" id="selectedPackageAmount"></p>
         </div>
+        <div id="squareReadyIndicator" style="display: none; padding: 12px 16px; background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); border-radius: 6px; margin-bottom: 16px; color: #4CAF50; font-size: 13px;">
+          <p style="margin: 0;">✓ Square payment is ready. Select a package above to proceed.</p>
+        </div>
         <div id="squarePaymentContainer" style="display: none;">
           <div id="square-card-container" style="min-height: 120px; margin-bottom: 16px;"></div>
           <button type="button" class="btn-primary" id="squarePayBtn" disabled>Pay with Square</button>
@@ -415,29 +418,54 @@
       const squarePaymentContainer = document.getElementById('squarePaymentContainer');
       const squareNotConfigured = document.getElementById('squareNotConfigured');
       const squarePaymentSuccess = document.getElementById('squarePaymentSuccess');
+      const squareReadyIndicator = document.getElementById('squareReadyIndicator');
       const squarePayBtn = document.getElementById('squarePayBtn');
 
       // Check if Square is configured (GET /api/square)
       let squareConfigured = false;
       try {
-        const r = await fetch('/api/square', { cache: 'no-cache' });
+        const r = await fetch('/api/square', { 
+          cache: 'no-cache',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
+        });
         if (r.ok) {
           const cfg = await r.json();
           console.log('Square config response:', cfg);
           console.log('Square configured check:', cfg?.configured, 'appId:', !!cfg?.applicationId, 'locationId:', !!cfg?.locationId);
-          if (cfg && (cfg.configured === true || (cfg.applicationId && cfg.locationId))) {
+          
+          // Check configured flag first, then fallback to checking for required fields
+          if (cfg && cfg.configured === true) {
             squareCfg = { 
               applicationId: cfg.applicationId, 
               locationId: cfg.locationId, 
               useSandbox: cfg.useSandbox === true 
             };
             squareConfigured = true;
-            console.log('Square is configured:', squareCfg);
+            console.log('Square is configured (via configured flag):', squareCfg);
+          } else if (cfg && cfg.applicationId && cfg.locationId) {
+            // Fallback: if API returns the IDs even without configured flag, use them
+            squareCfg = { 
+              applicationId: cfg.applicationId, 
+              locationId: cfg.locationId, 
+              useSandbox: cfg.useSandbox === true 
+            };
+            squareConfigured = true;
+            console.log('Square is configured (via IDs):', squareCfg);
           } else {
             console.warn('Square not configured - response:', cfg);
+            console.warn('Missing:', {
+              configured: cfg?.configured,
+              hasAppId: !!cfg?.applicationId,
+              hasLocationId: !!cfg?.locationId,
+              debug: cfg?.debug
+            });
           }
         } else {
-          console.error('Square config API error:', r.status, await r.text().catch(() => ''));
+          const errorText = await r.text().catch(() => '');
+          console.error('Square config API error:', r.status, errorText);
         }
       } catch (e) {
         console.error('Square config check failed:', e);
@@ -445,10 +473,21 @@
 
       console.log('Square configured final:', squareConfigured);
       if (!squareConfigured) {
-        if (squareNotConfigured) squareNotConfigured.style.display = 'block';
+        if (squareNotConfigured) {
+          squareNotConfigured.style.display = 'block';
+          console.log('Showing Square not configured message');
+        }
+        if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
         if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
       } else {
-        if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+        if (squareNotConfigured) {
+          squareNotConfigured.style.display = 'none';
+          console.log('Hiding Square not configured message');
+        }
+        if (squareReadyIndicator) {
+          squareReadyIndicator.style.display = 'block';
+          console.log('Showing Square ready indicator');
+        }
         console.log('Square is ready - payment form will show when package is selected');
       }
 
@@ -471,6 +510,7 @@
             squarePaymentContainer.style.display = 'block';
             if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'none';
             if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+            if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
             if (squarePayBtn) squarePayBtn.disabled = true;
             // Reset card instance if switching packages
             squareCardInstance = null;
@@ -503,6 +543,7 @@
                   };
                   squareConfigured = true;
                   if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+                  if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
                   if (squarePaymentContainer) {
                     squarePaymentContainer.style.display = 'block';
                     if (squarePayBtn) squarePayBtn.disabled = true;
