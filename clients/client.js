@@ -2120,13 +2120,8 @@ function showAddPackageModal() {
       </div>
     `;
     
-    if (typeof setSafeHTML !== 'undefined') {
-      setSafeHTML(modal, addPackageHtml);
-    } else if (typeof sanitizeHTML !== 'undefined') {
-      modal.innerHTML = sanitizeHTML(addPackageHtml);
-    } else {
-      modal.textContent = 'Add New Package';
-    }
+    // Use innerHTML directly for modals since the HTML is trusted (hardcoded, not user input)
+    modal.innerHTML = addPackageHtml;
     
     document.body.appendChild(modal);
     
@@ -2315,13 +2310,8 @@ function showEditPackageModal() {
       </div>
     `;
     
-    if (typeof setSafeHTML !== 'undefined') {
-      setSafeHTML(modal, editPackageHtml);
-    } else if (typeof sanitizeHTML !== 'undefined') {
-      modal.innerHTML = sanitizeHTML(editPackageHtml);
-    } else {
-      modal.textContent = 'Edit Package & Sessions';
-    }
+    // Use innerHTML directly for modals since the HTML is trusted (hardcoded, not user input)
+    modal.innerHTML = editPackageHtml;
     
     document.body.appendChild(modal);
     
