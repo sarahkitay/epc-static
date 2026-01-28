@@ -38,6 +38,15 @@
       margin-top: 2px;
       line-height: 1.2;
     }
+    .parent-view-label {
+      font-size: 11px;
+      color: rgba(201, 178, 127, 0.6);
+      margin-top: 4px;
+      line-height: 1.2;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-transform: none;
+    }
     .parent-view-actions {
       display: flex;
       gap: 8px;
@@ -99,26 +108,6 @@
       font-size: 14px;
       color: var(--epc-ink);
     }
-    .read-only-notice {
-      background: rgba(201, 178, 127, 0.08);
-      border-bottom: 1px solid rgba(201, 178, 127, 0.2);
-      padding: 8px 40px;
-      margin: 0;
-      font-size: 11px;
-      color: var(--epc-ink-dim);
-      text-align: center;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      position: sticky;
-      top: 0;
-      z-index: 99;
-    }
-    .read-only-notice p {
-      margin: 0;
-      font-size: 11px;
-      color: var(--epc-ink-dim);
-      line-height: 1.4;
-    }
     .purchase-package-options {
       display: flex;
       flex-wrap: wrap;
@@ -161,9 +150,9 @@
       .parent-view-subtitle {
         font-size: 9px;
       }
-      .parent-badge {
-        font-size: 8px;
-        padding: 3px 6px;
+      .parent-view-label {
+        font-size: 10px;
+        margin-top: 3px;
       }
       .parent-view-content {
         padding: 20px;
@@ -179,10 +168,9 @@
     <div class="parent-view-header-content">
       <div>
         <h1 class="parent-view-title" id="clientNameTitle">Loading...</h1>
-        <p class="parent-view-subtitle">Parent Portal - Read Only Access</p>
+        <p class="parent-view-label">Parent View</p>
       </div>
       <div class="parent-view-actions">
-        <span class="parent-badge">Parent View</span>
         <button class="btn-secondary" onclick="window.location.href='parent-portal.html'">Logout</button>
       </div>
     </div>
@@ -190,11 +178,6 @@
 
   <main>
     <div class="parent-view-content">
-      <!-- Read-Only Notice -->
-      <div class="read-only-notice">
-        <p>Read-only view. Contact your trainer to make changes.</p>
-      </div>
-
       <!-- Client Info Card -->
       <div class="parent-info-card">
         <h3>Client Information</h3>
