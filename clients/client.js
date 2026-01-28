@@ -2397,16 +2397,12 @@ function makePageReadOnly() {
     if (btn) btn.style.display = 'none';
   });
   
-  // Add parent notice
+  // Add subtle parent notice banner
   const header = document.querySelector('.client-header');
   if (header) {
     const notice = document.createElement('div');
-    notice.style.cssText = 'background: rgba(201, 178, 127, 0.1); border: 1px solid var(--epc-gold); border-radius: 6px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--epc-gold); width: 100%;';
-    if (typeof setSafeHTML !== 'undefined') {
-      setSafeHTML(notice, '👁️ <strong>Parent View:</strong> This is a read-only view. Contact your trainer to make changes.');
-    } else {
-      notice.textContent = '👁️ Parent View: This is a read-only view. Contact your trainer to make changes.';
-    }
+    notice.style.cssText = 'padding: 4px 0; margin-top: 8px; font-size: 11px; color: rgba(201, 178, 127, 0.6); letter-spacing: 0.03em;';
+    notice.textContent = 'Parent View';
     header.appendChild(notice);
   }
   
