@@ -728,6 +728,12 @@
           return `
             <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === assessments.length - 1 ? 'border-bottom: none;' : ''}">
               <h4 style="color: var(--epc-gold); margin-bottom: 12px;">Assessment ${idx + 1} - ${date}</h4>
+              ${(assessment.pedicsPdf || assessment.overallAssessmentPdf) ? `
+                <div style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+                  ${assessment.pedicsPdf ? `<a href="${assessment.pedicsPdf}" target="_blank" style="display: inline-block; padding: 8px 16px; background: rgba(201,178,127,0.1); border: 1px solid var(--epc-gold); border-radius: 4px; color: var(--epc-gold); text-decoration: none; font-size: 12px;">📄 View PEDICS PDF</a>` : ''}
+                  ${assessment.overallAssessmentPdf ? `<a href="${assessment.overallAssessmentPdf}" target="_blank" style="display: inline-block; padding: 8px 16px; background: rgba(201,178,127,0.1); border: 1px solid var(--epc-gold); border-radius: 4px; color: var(--epc-gold); text-decoration: none; font-size: 12px;">📄 View Overall Assessment PDF</a>` : ''}
+                </div>
+              ` : ''}
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
                 ${assessment.proteusScore ? `<div><strong>Proteus Score:</strong> ${assessment.proteusScore}</div>` : ''}
                 ${assessment.powerOutput ? `<div><strong>Power Output:</strong> ${assessment.powerOutput}</div>` : ''}

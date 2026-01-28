@@ -252,6 +252,60 @@ function initAssessment() {
     dateInput.value = new Date().toISOString().split('T')[0];
   }
 
+  // Handle PDF uploads
+  const pedicsPdfInput = document.getElementById('pedicsPdfUpload');
+  const overallAssessmentPdfInput = document.getElementById('overallAssessmentPdfUpload');
+  const pedicsPdfPreview = document.getElementById('pedicsPdfPreview');
+  const overallAssessmentPdfPreview = document.getElementById('overallAssessmentPdfPreview');
+
+  if (pedicsPdfInput) {
+    pedicsPdfInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.type !== 'application/pdf') {
+          alert('Please upload a PDF file.');
+          e.target.value = '';
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+          alert('PDF file size must be less than 10MB.');
+          e.target.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          window.currentPedicsPdf = event.target.result; // Store as base64
+          if (pedicsPdfPreview) pedicsPdfPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (overallAssessmentPdfInput) {
+    overallAssessmentPdfInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.type !== 'application/pdf') {
+          alert('Please upload a PDF file.');
+          e.target.value = '';
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+          alert('PDF file size must be less than 10MB.');
+          e.target.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          window.currentOverallAssessmentPdf = event.target.result; // Store as base64
+          if (overallAssessmentPdfPreview) overallAssessmentPdfPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
   // Handle save button clicks (both top and bottom)
   const handleSaveClick = async () => {
     await handleSaveAssessment();
@@ -407,6 +461,8 @@ async function handleSaveAssessment() {
     speed: document.getElementById('speed').value.trim() || null,
     speedNotes: document.getElementById('speedNotes').value.trim() || null,
     pedicsReview: document.getElementById('pedicsReview').value.trim() || null,
+    pedicsPdf: window.currentPedicsPdf || null, // PDF as base64
+    overallAssessmentPdf: window.currentOverallAssessmentPdf || null, // PDF as base64
     kneeValgus: document.getElementById('kneeValgus').checked,
     kneeVarus: document.getElementById('kneeVarus').checked,
     hipShift: document.getElementById('hipShift').value,
@@ -430,6 +486,14 @@ async function handleSaveAssessment() {
     // Clear form
     document.getElementById('assessmentForm').reset();
     document.getElementById('assessmentDate').value = new Date().toISOString().split('T')[0];
+    
+    // Clear PDF uploads
+    window.currentPedicsPdf = null;
+    window.currentOverallAssessmentPdf = null;
+    const pedicsPdfPreview = document.getElementById('pedicsPdfPreview');
+    const overallAssessmentPdfPreview = document.getElementById('overallAssessmentPdfPreview');
+    if (pedicsPdfPreview) pedicsPdfPreview.style.display = 'none';
+    if (overallAssessmentPdfPreview) overallAssessmentPdfPreview.style.display = 'none';
     
     // Reload history
     loadAssessmentHistory();
@@ -456,6 +520,12 @@ async function loadAssessmentHistory() {
       const historyHtml = assessments.map(assessment => `
       <div class="assessment-history-item">
         <div class="assessment-history-date">${formatDate(assessment.date)}</div>
+        ${(assessment.pedicsPdf || assessment.overallAssessmentPdf) ? `
+          <div style="margin-bottom: 12px; display: flex; gap: 12px; flex-wrap: wrap;">
+            ${assessment.pedicsPdf ? `<a href="${assessment.pedicsPdf}" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(201,178,127,0.1); border: 1px solid var(--epc-gold); border-radius: 4px; color: var(--epc-gold); text-decoration: none; font-size: 12px;">📄 View PEDICS PDF</a>` : ''}
+            ${assessment.overallAssessmentPdf ? `<a href="${assessment.overallAssessmentPdf}" target="_blank" style="display: inline-block; padding: 6px 12px; background: rgba(201,178,127,0.1); border: 1px solid var(--epc-gold); border-radius: 4px; color: var(--epc-gold); text-decoration: none; font-size: 12px;">📄 View Overall Assessment PDF</a>` : ''}
+          </div>
+        ` : ''}
         <div class="assessment-content">
           ${assessment.proteusScore ? `<p><strong>Proteus Score:</strong> ${escapeHtml(assessment.proteusScore)}</p>` : ''}
           ${assessment.powerOutput ? `<p><strong>Power Output:</strong> ${escapeHtml(assessment.powerOutput)}</p>` : ''}

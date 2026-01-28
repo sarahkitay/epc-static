@@ -116,6 +116,29 @@
         </div>
 
         <form id="assessmentForm" class="assessment-form">
+          <!-- PDF Uploads Section -->
+          <div class="assessment-section" style="margin-bottom: 32px;">
+            <h4 class="section-title">PDF Documents</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pedicsPdfUpload" class="form-label">PEDICS PDF</label>
+                <input type="file" id="pedicsPdfUpload" class="form-input" accept=".pdf" />
+                <div id="pedicsPdfPreview" style="margin-top: 8px; display: none;">
+                  <span style="color: var(--epc-gold); font-size: 12px;">PDF uploaded</span>
+                  <button type="button" onclick="document.getElementById('pedicsPdfUpload').value=''; document.getElementById('pedicsPdfPreview').style.display='none';" style="margin-left: 8px; padding: 2px 8px; font-size: 11px; background: transparent; border: 1px solid var(--epc-line); color: var(--epc-ink-dim); cursor: pointer;">Remove</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="overallAssessmentPdfUpload" class="form-label">Overall Assessment PDF</label>
+                <input type="file" id="overallAssessmentPdfUpload" class="form-input" accept=".pdf" />
+                <div id="overallAssessmentPdfPreview" style="margin-top: 8px; display: none;">
+                  <span style="color: var(--epc-gold); font-size: 12px;">PDF uploaded</span>
+                  <button type="button" onclick="document.getElementById('overallAssessmentPdfUpload').value=''; document.getElementById('overallAssessmentPdfPreview').style.display='none';" style="margin-left: 8px; padding: 2px 8px; font-size: 11px; background: transparent; border: 1px solid var(--epc-line); color: var(--epc-ink-dim); cursor: pointer;">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="assessment-section">
             <h4 class="section-title">Basic Metrics</h4>
             <div class="form-row">
