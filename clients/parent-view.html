@@ -351,8 +351,10 @@
         await loadPTNotes();
         document.getElementById('parentPTNotesCard').style.display = 'block';
       }
-      if (shareSettings.packageInfo !== false) {
-        document.getElementById('parentPackageCard').style.display = 'block';
+      // Always show package section for parents (they need to see remaining sessions and purchase option)
+      const parentPackageCard = document.getElementById('parentPackageCard');
+      if (parentPackageCard) {
+        parentPackageCard.style.display = 'block';
       }
       
       initPurchasePackage();
