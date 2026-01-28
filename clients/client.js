@@ -1373,18 +1373,12 @@ function initClientActions() {
       e.stopPropagation();
       if (dataSharingModal) {
         // Load current sharing settings
-        const shareSettings = currentClient?.shareWithParent || {
-          assessments: true,
-          programs: true,
-          photos: true,
-          notes: true,
-          packageInfo: true
-        };
-        document.getElementById('shareAssessments').checked = shareSettings.assessments !== false;
-        document.getElementById('sharePrograms').checked = shareSettings.programs !== false;
-        document.getElementById('sharePhotos').checked = shareSettings.photos !== false;
-        document.getElementById('shareNotes').checked = shareSettings.notes !== false;
-        document.getElementById('sharePackageInfo').checked = shareSettings.packageInfo !== false;
+        const shareSettings = currentClient?.shareWithParent || {};
+        document.getElementById('shareAssessments').checked = shareSettings.assessments === true;
+        document.getElementById('sharePrograms').checked = shareSettings.programs === true;
+        document.getElementById('sharePhotos').checked = shareSettings.photos === true;
+        document.getElementById('shareNotes').checked = shareSettings.notes === true;
+        document.getElementById('sharePackageInfo').checked = shareSettings.packageInfo !== false; // Package info defaults to visible
         dataSharingModal.style.display = 'flex';
       }
     });

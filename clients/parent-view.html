@@ -216,17 +216,17 @@
         </div>
       </div>
 
-      <!-- Progress Photos -->
+      <!-- Program Photos -->
       <div class="parent-info-card" id="parentPhotosCard" style="display: none;">
-        <h3>Progress Photos</h3>
+        <h3>Program Photos</h3>
         <div id="parentPhotos">
           <p style="color: var(--epc-ink-dim);">Loading photos...</p>
         </div>
       </div>
 
-      <!-- Progress Notes -->
+      <!-- Program Notes -->
       <div class="parent-info-card" id="parentNotesCard" style="display: none;">
-        <h3>Progress Notes</h3>
+        <h3>Program Notes</h3>
         <div id="parentNotes">
           <p style="color: var(--epc-ink-dim);">Loading notes...</p>
         </div>
@@ -313,27 +313,22 @@
       if (!loaded) return;
       
       // Check sharing settings and load only enabled sections
-      const shareSettings = currentClient?.shareWithParent || {
-        assessments: true,
-        programs: true,
-        photos: true,
-        notes: true,
-        packageInfo: true
-      };
+      // Only show sections if explicitly set to true (default is hidden)
+      const shareSettings = currentClient?.shareWithParent || {};
       
-      if (shareSettings.assessments !== false) {
+      if (shareSettings.assessments === true) {
         await loadAssessments();
         document.getElementById('parentAssessmentCard').style.display = 'block';
       }
-      if (shareSettings.programs !== false) {
+      if (shareSettings.programs === true) {
         await loadPrograms();
         document.getElementById('parentProgramsCard').style.display = 'block';
       }
-      if (shareSettings.photos !== false) {
+      if (shareSettings.photos === true) {
         await loadPhotos();
         document.getElementById('parentPhotosCard').style.display = 'block';
       }
-      if (shareSettings.notes !== false) {
+      if (shareSettings.notes === true) {
         await loadNotes();
         document.getElementById('parentNotesCard').style.display = 'block';
       }
@@ -794,7 +789,7 @@
         const container = document.getElementById('parentNotes');
 
         if (!notes || notes.length === 0) {
-          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No progress notes recorded yet.</p>';
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No program notes recorded yet.</p>';
           return;
         }
 
@@ -823,7 +818,7 @@
         const container = document.getElementById('parentPhotos');
 
         if (!photos || photos.length === 0) {
-          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No progress photos uploaded yet.</p>';
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No program photos uploaded yet.</p>';
           return;
         }
 
