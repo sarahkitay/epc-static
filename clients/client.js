@@ -517,6 +517,7 @@ async function handleSaveAssessment() {
 }
 
 async function loadAssessmentHistory() {
+  const historyList = document.getElementById('assessmentHistoryList');
   try {
     const allAssessments = await getClientAssessments(currentClientId);
     
@@ -526,8 +527,6 @@ async function loadAssessmentHistory() {
       assessments = allAssessments.filter(a => !a.createdBy || a.createdBy === 'staff');
       console.log(`Parent view - Filtered assessments: ${assessments.length} of ${allAssessments.length} are staff-created`);
     }
-    
-    const historyList = document.getElementById('assessmentHistoryList');
     
     if (assessments.length === 0) {
       if (typeof setSafeHTML !== 'undefined') {
@@ -873,6 +872,7 @@ function initProgramBuilder() {
 
   // Load program history
   async function loadProgramHistory() {
+    const historyList = document.getElementById('programHistoryList');
     try {
       const allPrograms = await getClientPrograms(currentClientId);
       
@@ -882,8 +882,6 @@ function initProgramBuilder() {
         programs = allPrograms.filter(p => !p.createdBy || p.createdBy === 'staff');
         console.log(`Parent view - Filtered programs: ${programs.length} of ${allPrograms.length} are staff-created`);
       }
-      
-      const historyList = document.getElementById('programHistoryList');
       
       if (programs.length === 0) {
         if (typeof setSafeHTML !== 'undefined') {

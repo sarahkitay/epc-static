@@ -301,7 +301,7 @@ async function addClient(clientData) {
       throw new Error('Database not initialized');
     }
     
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         const transaction = database.transaction(['clients'], 'readwrite');
         if (!transaction) {
@@ -414,7 +414,7 @@ async function getClient(clientId) {
 
 async function updateClient(clientId, clientData) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['clients'], 'readwrite');
     const store = transaction.objectStore('clients');
     const getRequest = store.get(clientId);
@@ -435,7 +435,11 @@ async function updateClient(clientId, clientData) {
       const putRequest = store.put(updated);
       putRequest.onsuccess = async () => {
         // Sync to cloud
-        await syncToCloud('clients', `client_${clientId}`, updated);
+        try {
+          await syncToCloud('clients', `client_${clientId}`, updated);
+        } catch (syncError) {
+          console.warn('Cloud sync failed (non-critical):', syncError);
+        }
         resolve(putRequest.result);
       };
       putRequest.onerror = () => reject(putRequest.error);
@@ -460,7 +464,7 @@ async function deleteClient(clientId) {
 // ===== ASSESSMENTS =====
 async function saveAssessment(clientId, assessmentData) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['assessments'], 'readwrite');
     const store = transaction.objectStore('assessments');
     const assessmentWithMeta = {
@@ -475,9 +479,13 @@ async function saveAssessment(clientId, assessmentData) {
     request.onsuccess = async () => {
       const assessmentId = request.result;
       // Sync to cloud
-      await syncToCloud('assessments', `assessment_${assessmentId}`, { id: assessmentId, ...assessmentWithMeta });
-      // Update client's last assessment date
-      await updateClient(clientId, { lastAssessmentDate: new Date().toISOString() });
+      try {
+        await syncToCloud('assessments', `assessment_${assessmentId}`, { id: assessmentId, ...assessmentWithMeta });
+        // Update client's last assessment date
+        await updateClient(clientId, { lastAssessmentDate: new Date().toISOString() });
+      } catch (syncError) {
+        console.warn('Cloud sync failed (non-critical):', syncError);
+      }
       resolve(assessmentId);
     };
     request.onerror = () => reject(request.error);
@@ -505,7 +513,7 @@ async function getClientAssessments(clientId) {
 // ===== PROGRAMS =====
 async function saveProgram(clientId, programData) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['programs'], 'readwrite');
     const store = transaction.objectStore('programs');
     const programWithMeta = {
@@ -519,9 +527,13 @@ async function saveProgram(clientId, programData) {
     request.onsuccess = async () => {
       const programId = request.result;
       // Sync to cloud
-      await syncToCloud('programs', `program_${programId}`, { id: programId, ...programWithMeta });
-      // Update client's last program date
-      await updateClient(clientId, { lastProgramDate: new Date().toISOString() });
+      try {
+        await syncToCloud('programs', `program_${programId}`, { id: programId, ...programWithMeta });
+        // Update client's last program date
+        await updateClient(clientId, { lastProgramDate: new Date().toISOString() });
+      } catch (syncError) {
+        console.warn('Cloud sync failed (non-critical):', syncError);
+      }
       resolve(programId);
     };
     request.onerror = () => reject(request.error);
@@ -549,7 +561,7 @@ async function getClientPrograms(clientId) {
 // ===== PROGRAM PHOTOS =====
 async function saveProgramPhoto(clientId, photoData) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['programPhotos'], 'readwrite');
     const store = transaction.objectStore('programPhotos');
     const photoWithMeta = {
@@ -563,7 +575,11 @@ async function saveProgramPhoto(clientId, photoData) {
     request.onsuccess = async () => {
       const photoId = request.result;
       // Sync to cloud
-      await syncToCloud('programPhotos', `photo_${photoId}`, { id: photoId, ...photoWithMeta });
+      try {
+        await syncToCloud('programPhotos', `photo_${photoId}`, { id: photoId, ...photoWithMeta });
+      } catch (syncError) {
+        console.warn('Cloud sync failed (non-critical):', syncError);
+      }
       resolve(photoId);
     };
     request.onerror = () => reject(request.error);
@@ -591,21 +607,26 @@ async function getClientPhotos(clientId) {
 // ===== PROGRESS NOTES =====
 async function saveProgressNote(clientId, noteContent) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['progressNotes'], 'readwrite');
     const store = transaction.objectStore('progressNotes');
     const noteWithMeta = {
       clientId: clientId,
       content: noteContent,
       date: new Date().toISOString(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      createdBy: 'staff' // Add createdBy field for proper filtering
     };
     const request = store.add(noteWithMeta);
 
     request.onsuccess = async () => {
       const noteId = request.result;
       // Sync to cloud
-      await syncToCloud('progressNotes', `note_${noteId}`, { id: noteId, ...noteWithMeta });
+      try {
+        await syncToCloud('progressNotes', `note_${noteId}`, { id: noteId, ...noteWithMeta });
+      } catch (syncError) {
+        console.warn('Cloud sync failed (non-critical):', syncError);
+      }
       resolve(noteId);
     };
     request.onerror = () => reject(request.error);
@@ -633,21 +654,26 @@ async function getClientNotes(clientId) {
 // ===== PT NOTES =====
 async function savePTNote(clientId, noteContent) {
   const database = await getDB();
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const transaction = database.transaction(['ptNotes'], 'readwrite');
     const store = transaction.objectStore('ptNotes');
     const noteWithMeta = {
       clientId: clientId,
       content: noteContent,
       date: new Date().toISOString(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      createdBy: 'staff' // Add createdBy field for proper filtering
     };
     const request = store.add(noteWithMeta);
 
     request.onsuccess = async () => {
       const noteId = request.result;
       // Sync to cloud
-      await syncToCloud('ptNotes', `ptnote_${noteId}`, { id: noteId, ...noteWithMeta });
+      try {
+        await syncToCloud('ptNotes', `ptnote_${noteId}`, { id: noteId, ...noteWithMeta });
+      } catch (syncError) {
+        console.warn('Cloud sync failed (non-critical):', syncError);
+      }
       resolve(noteId);
     };
     request.onerror = () => reject(request.error);
