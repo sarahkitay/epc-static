@@ -265,6 +265,7 @@
 
   <script src="db.js"></script>
   <script>
+    console.log('🔵 parent-view.html script block starting...');
     let currentClientId = null;
     let currentClient = null;
 
@@ -293,8 +294,13 @@
     }
 
     async function initParentView() {
+      console.log('🔵 initParentView() called');
       const session = checkParentSession();
-      if (!session) return;
+      if (!session) {
+        console.log('❌ No valid parent session found');
+        return;
+      }
+      console.log('✅ Parent session valid:', session);
 
       // Get client ID from URL or session
       const urlParams = new URLSearchParams(window.location.search);
@@ -306,11 +312,19 @@
         return;
       }
 
+      console.log('🔵 Initializing database...');
       await initDB();
+      console.log('✅ Database initialized');
 
       // Load and display client data; stop if client not found (shows "log in again" inline)
+      console.log('🔵 Loading client data...');
       const loaded = await loadClientData();
-      if (!loaded) return;
+      console.log('🔵 Client data loaded:', loaded);
+      if (!loaded) {
+        console.log('❌ Client data not loaded, stopping initialization');
+        return;
+      }
+      console.log('✅ Client data loaded successfully');
       
       // Check sharing settings and load only enabled sections
       // Show sections if not explicitly disabled (=== false)
@@ -980,10 +994,20 @@
       }
     }
 
+    console.log('🔵 Parent view script loaded, readyState:', document.readyState);
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initParentView);
+      console.log('🔵 Waiting for DOMContentLoaded...');
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('🔵 DOMContentLoaded fired, calling initParentView');
+        initParentView().catch(err => {
+          console.error('❌ Error in initParentView:', err);
+        });
+      });
     } else {
-      initParentView();
+      console.log('🔵 DOM already ready, calling initParentView immediately');
+      initParentView().catch(err => {
+        console.error('❌ Error in initParentView:', err);
+      });
     }
   </script>
 </body>
