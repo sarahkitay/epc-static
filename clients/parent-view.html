@@ -196,7 +196,7 @@
           <!-- Populated by JavaScript -->
         </div>
         <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
-          <button type="button" class="btn-primary" id="parentPurchasePackageBtn" onclick="document.getElementById('purchasePackageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });">Purchase Package</button>
+          <button type="button" class="btn-primary" id="parentPurchasePackageBtn" onclick="window.location.href='client.html?id=' + currentClientId;">Purchase Package</button>
         </div>
       </div>
 
@@ -236,8 +236,8 @@
       <div class="parent-info-card" id="purchasePackageCard">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <h3 style="margin: 0;">Purchase a Package</h3>
-          <button type="button" class="btn-secondary" onclick="document.getElementById('parentPackageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });" style="padding: 6px 12px; font-size: 12px;">
-            ← Back to Client Data
+          <button type="button" class="btn-secondary" onclick="window.location.href='client.html?id=' + currentClientId;" style="padding: 6px 12px; font-size: 12px;">
+            ← Back to Dashboard
           </button>
         </div>
         <p style="color: var(--epc-ink-dim); font-size: 13px; margin-bottom: 20px;">Buy session packages for your child. Payment is processed securely via Square.</p>

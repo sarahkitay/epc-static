@@ -85,6 +85,14 @@ async function initClientPage() {
   // Check if parent session - make page read-only (reuse parentData from above)
   if (parentData) {
     makePageReadOnly();
+    // Show back to parent view link instead of dashboard link
+    const backToDashboardLink = document.getElementById('backToDashboardLink');
+    const backToParentViewLink = document.getElementById('backToParentViewLink');
+    if (backToDashboardLink) backToDashboardLink.style.display = 'none';
+    if (backToParentViewLink) {
+      backToParentViewLink.style.display = 'inline-block';
+      backToParentViewLink.href = `parent-view.html?id=${currentClientId}`;
+    }
   }
   
   // Initialize all sections
