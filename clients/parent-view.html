@@ -242,20 +242,61 @@
         </div>
         <p style="color: var(--epc-ink-dim); font-size: 13px; margin-bottom: 20px;">Buy session packages for your child. Payment is processed securely via Square.</p>
         <div class="purchase-package-options" id="packageOptions">
-          <!-- Package buttons: name, sessions, amount (cents). Edit amounts when Square is set up. -->
-          <button type="button" class="package-option-btn" data-name="5 Session Package" data-sessions="5" data-amount="25000" data-display="$250">5 Sessions — $250</button>
-          <button type="button" class="package-option-btn" data-name="10 Session Package" data-sessions="10" data-amount="45000" data-display="$450">10 Sessions — $450</button>
-          <button type="button" class="package-option-btn" data-name="20 Session Package" data-sessions="20" data-amount="80000" data-display="$800">20 Sessions — $800</button>
+          <!-- Package buttons: name, sessions, amount (cents). -->
+          <button type="button" class="package-option-btn" data-name="12 Session Package" data-sessions="12" data-amount="120000" data-display="$1,200">12 Sessions — $1,200</button>
+          <button type="button" class="package-option-btn" data-name="8 Session Package" data-sessions="8" data-amount="100000" data-display="$1,000">8 Sessions — $1,000</button>
+          <button type="button" class="package-option-btn" id="customPackageBtn" style="background: rgba(201,178,127,0.15); border: 2px dashed var(--epc-gold);">Custom Package (Pre-approved)</button>
         </div>
+        
+        <!-- Custom Package Input -->
+        <div id="customPackageInput" style="display: none; margin-top: 20px; padding: 20px; background: rgba(201,178,127,0.08); border: 1px solid var(--epc-line); border-radius: 6px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Number of Sessions</label>
+              <input type="number" id="customSessions" class="form-input" placeholder="Enter sessions" min="1" style="width: 100%;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--epc-ink-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Amount ($)</label>
+              <input type="number" id="customAmount" class="form-input" placeholder="Enter amount" min="1" step="0.01" style="width: 100%;" />
+            </div>
+          </div>
+          <button type="button" class="btn-primary" id="confirmCustomPackage" style="width: 100%;">Confirm Custom Package</button>
+        </div>
+        
         <div id="packageSelectionSummary" style="display: none; margin: 20px 0; padding: 16px; background: rgba(201,178,127,0.08); border-radius: 6px;">
           <p style="margin: 0 0 8px 0;"><strong id="selectedPackageName"></strong></p>
           <p style="margin: 0; color: var(--epc-gold);" id="selectedPackageAmount"></p>
         </div>
-        <div id="squareReadyIndicator" style="display: none; padding: 12px 16px; background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); border-radius: 6px; margin-bottom: 16px; color: #4CAF50; font-size: 13px;">
+        
+        <!-- Increased margin before green notice -->
+        <div id="squareReadyIndicator" style="display: none; padding: 12px 16px; background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); border-radius: 6px; margin-top: 40px; margin-bottom: 16px; color: #4CAF50; font-size: 13px;">
           <p style="margin: 0;">✓ Square payment is ready. Select a package above to proceed.</p>
         </div>
+        
         <div id="squarePaymentContainer" style="display: none;">
-          <div id="square-card-container" style="min-height: 120px; margin-bottom: 16px;"></div>
+          <!-- Instructions above card input -->
+          <div style="margin-bottom: 20px; padding: 16px; background: rgba(201,178,127,0.06); border: 1px solid var(--epc-line); border-radius: 6px;">
+            <p style="margin: 0 0 8px 0; font-size: 13px; color: var(--epc-ink);"><strong>Payment Instructions:</strong></p>
+            <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--epc-ink-dim); line-height: 1.6;">
+              <li>Enter your card information securely below</li>
+              <li>Your payment is processed through Square's secure payment system</li>
+              <li>You will receive a confirmation email after successful payment</li>
+            </ul>
+          </div>
+          
+          <!-- Card input container -->
+          <div id="square-card-container" style="min-height: 120px; margin-bottom: 20px;"></div>
+          
+          <!-- Protections notice below card input -->
+          <div style="margin-bottom: 20px; padding: 16px; background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.2); border-radius: 6px;">
+            <p style="margin: 0 0 8px 0; font-size: 13px; color: var(--epc-ink);"><strong>🔒 Your Payment is Protected:</strong></p>
+            <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--epc-ink-dim); line-height: 1.6;">
+              <li>All card data is encrypted and never stored on our servers</li>
+              <li>PCI DSS compliant payment processing</li>
+              <li>Your information is secure and protected</li>
+            </ul>
+          </div>
+          
           <button type="button" class="btn-primary" id="squarePayBtn" disabled>Pay with Square</button>
         </div>
         <div id="squareNotConfigured" style="display: none; padding: 20px; background: rgba(201,178,127,0.06); border: 1px dashed var(--epc-line); border-radius: 6px; color: var(--epc-ink-dim); font-size: 13px;">
@@ -625,9 +666,96 @@
         console.log('Square is ready - payment form will show when package is selected');
       }
 
+      // Handle custom package button
+      const customPackageBtn = document.getElementById('customPackageBtn');
+      const customPackageInput = document.getElementById('customPackageInput');
+      const confirmCustomPackage = document.getElementById('confirmCustomPackage');
+      const customSessions = document.getElementById('customSessions');
+      const customAmount = document.getElementById('customAmount');
+      
+      if (customPackageBtn && customPackageInput) {
+        customPackageBtn.addEventListener('click', () => {
+          // Hide other package options selection
+          options.forEach((b) => b.classList.remove('selected'));
+          customPackageBtn.classList.add('selected');
+          // Show custom input
+          customPackageInput.style.display = 'block';
+          // Clear any previous selection
+          selectedPackage = null;
+          if (summary) summary.style.display = 'none';
+          if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
+          if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
+        });
+      }
+      
+      if (confirmCustomPackage && customSessions && customAmount) {
+        confirmCustomPackage.addEventListener('click', async () => {
+          const sessions = parseInt(customSessions.value, 10);
+          const amountDollars = parseFloat(customAmount.value);
+          
+          if (!sessions || sessions < 1) {
+            alert('Please enter a valid number of sessions (at least 1).');
+            return;
+          }
+          
+          if (!amountDollars || amountDollars < 0.01) {
+            alert('Please enter a valid amount (at least $0.01).');
+            return;
+          }
+          
+          // Convert dollars to cents
+          const amountCents = Math.round(amountDollars * 100);
+          
+          selectedPackage = {
+            name: `Custom Package - ${sessions} Sessions`,
+            sessions: sessions,
+            amount: amountCents,
+            display: `$${amountDollars.toFixed(2)}`
+          };
+          
+          if (summary && summaryName && summaryAmount) {
+            summary.style.display = 'block';
+            summaryName.textContent = selectedPackage.name;
+            summaryAmount.textContent = selectedPackage.display;
+          }
+          
+          // Hide custom input
+          customPackageInput.style.display = 'none';
+          
+          // Show payment form
+          if (squareConfigured && squarePaymentContainer) {
+            squarePaymentContainer.style.display = 'block';
+            if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'none';
+            if (squareNotConfigured) squareNotConfigured.style.display = 'none';
+            if (squareReadyIndicator) squareReadyIndicator.style.display = 'none';
+            if (squarePayBtn) squarePayBtn.disabled = true;
+            // Reset card instance
+            squareCardInstance = null;
+            squareCardInitPromise = null;
+            const cardContainer = document.getElementById('square-card-container');
+            if (cardContainer) cardContainer.innerHTML = '';
+            try {
+              await initSquareCard();
+              if (squarePayBtn) squarePayBtn.disabled = false;
+            } catch (e) {
+              console.error('Square card init failed:', e);
+              if (squarePayBtn) squarePayBtn.disabled = false;
+              if (squareNotConfigured) {
+                squareNotConfigured.style.display = 'block';
+                squareNotConfigured.innerHTML = '<p style="margin: 0; color: #d32f2f;">Failed to load payment form: ' + e.message + '. Please refresh the page.</p>';
+              }
+            }
+          }
+        });
+      }
+      
       options.forEach((btn) => {
         btn.addEventListener('click', async () => {
+          // Hide custom input if showing
+          if (customPackageInput) customPackageInput.style.display = 'none';
+          
           options.forEach((b) => b.classList.remove('selected'));
+          if (customPackageBtn) customPackageBtn.classList.remove('selected');
           btn.classList.add('selected');
           selectedPackage = {
             name: btn.dataset.name,
