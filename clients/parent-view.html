@@ -209,6 +209,9 @@
         <div class="info-grid" id="parentPackageGrid">
           <!-- Populated by JavaScript -->
         </div>
+        <div style="margin-top: 20px; text-align: center;">
+          <button type="button" class="btn-primary" id="parentPurchaseNewPackageBtn" onclick="document.getElementById('purchasePackageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });">Purchase New Package</button>
+        </div>
       </div>
 
       <!-- Assessment History -->
@@ -597,22 +600,26 @@
         const remaining = currentClient.packageRemainingSessions != null ? currentClient.packageRemainingSessions : (total != null ? total - used : null);
         const packageGrid = document.getElementById('parentPackageGrid');
         if (packageGrid) {
+          // Calculate package amount (if packageName contains session count, estimate; otherwise show N/A)
+          let packageAmount = 'N/A';
+          if (currentClient.packageName) {
+            const match = currentClient.packageName.match(/(\d+)\s*session/i);
+            if (match) {
+              const sessions = parseInt(match[1]);
+              // Rough estimate: $50/session average, or use a lookup
+              const estimatedAmount = sessions * 50;
+              packageAmount = `~$${estimatedAmount}`;
+            }
+          }
+          
           packageGrid.innerHTML = `
             <div class="info-item">
-              <span class="info-label">Package</span>
-              <span class="info-value">${currentClient.packageName || 'Not set'}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Total Sessions</span>
-              <span class="info-value">${total != null ? total : '--'}</span>
+              <span class="info-label">Package Amount</span>
+              <span class="info-value">${packageAmount}</span>
             </div>
             <div class="info-item">
               <span class="info-label">Sessions Remaining</span>
               <span class="info-value">${remaining != null ? remaining : '--'}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Sessions Used</span>
-              <span class="info-value">${used}</span>
             </div>
           `;
         }
