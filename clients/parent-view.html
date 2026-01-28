@@ -383,7 +383,9 @@
     }
 
     async function initSquareCard() {
-      if (!squareCfg || !squareCfg.applicationId || !squareCfg.locationId) return null;
+      if (!squareCfg || !squareCfg.applicationId || !squareCfg.locationId) {
+        throw new Error('Square configuration missing');
+      }
       if (squareCardInstance) return squareCardInstance;
       if (squareCardInitPromise) return squareCardInitPromise;
       squareCardInitPromise = (async () => {
@@ -392,7 +394,10 @@
         const payments = window.Square.payments(squareCfg.applicationId, squareCfg.locationId);
         const card = await payments.card();
         const container = document.getElementById('square-card-container');
-        if (container && container.innerHTML === '') await card.attach('#square-card-container');
+        if (!container) throw new Error('Card container not found');
+        // Clear container before attaching
+        container.innerHTML = '';
+        await card.attach('#square-card-container');
         squareCardInstance = card;
         return card;
       })();
@@ -459,6 +464,11 @@
             if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'none';
             if (squareNotConfigured) squareNotConfigured.style.display = 'none';
             if (squarePayBtn) squarePayBtn.disabled = true;
+            // Reset card instance if switching packages
+            squareCardInstance = null;
+            squareCardInitPromise = null;
+            const cardContainer = document.getElementById('square-card-container');
+            if (cardContainer) cardContainer.innerHTML = '';
             try {
               await initSquareCard();
               if (squarePayBtn) squarePayBtn.disabled = false;
@@ -468,7 +478,7 @@
               // Show error message
               if (squareNotConfigured) {
                 squareNotConfigured.style.display = 'block';
-                squareNotConfigured.innerHTML = '<p style="margin: 0; color: #d32f2f;">Failed to load payment form. Please refresh the page.</p>';
+                squareNotConfigured.innerHTML = '<p style="margin: 0; color: #d32f2f;">Failed to load payment form: ' + e.message + '. Please refresh the page.</p>';
               }
             }
           } else if (!squareConfigured) {
@@ -541,14 +551,28 @@
             if (!payRes.ok) {
               throw new Error(data.error || data.message || 'Payment failed');
             }
+            // Payment successful - clear form and show success
             if (squarePaymentContainer) squarePaymentContainer.style.display = 'none';
             if (summary) summary.style.display = 'none';
             options.forEach((b) => b.classList.remove('selected'));
             selectedPackage = null;
+            // Clear card instance so it can be re-initialized for next purchase
+            squareCardInstance = null;
+            squareCardInitPromise = null;
+            const cardContainer = document.getElementById('square-card-container');
+            if (cardContainer) cardContainer.innerHTML = '';
+            
             if (squarePaymentSuccess) squarePaymentSuccess.style.display = 'block';
+            
+            // Reload client data to show updated package info
+            setTimeout(async () => {
+              await loadClientData();
+            }, 1000);
           } catch (e) {
             console.error('Square payment error:', e);
-            alert(e.message || 'Payment could not be completed. Please try again.');
+            const errorMsg = e.message || 'Payment could not be completed. Please try again.';
+            alert(errorMsg);
+            // Keep form visible so user can retry
           } finally {
             squarePayBtn.disabled = false;
           }
