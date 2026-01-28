@@ -599,17 +599,17 @@ function initProgramBuilder() {
 
   // Add custom exercise
   if (addCustomExerciseBtn) {
-    addCustomExerciseBtn.addEventListener('click', () => {
-      // Use setTimeout to avoid blocking UI during prompt
-      setTimeout(() => {
-        const exerciseName = prompt('Enter exercise name:');
-        if (exerciseName && exerciseName.trim()) {
-          exerciseLibrary.push(exerciseName.trim());
-          renderExerciseLibrary();
-          const searchInput = document.getElementById('exerciseSearch');
-          if (searchInput) searchInput.value = '';
-        }
-      }, 0);
+    addCustomExerciseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // Use async prompt to avoid blocking UI
+      const exerciseName = prompt('Enter exercise name:');
+      if (exerciseName && exerciseName.trim()) {
+        exerciseLibrary.push(exerciseName.trim());
+        renderExerciseLibrary();
+        const searchInput = document.getElementById('exerciseSearch');
+        if (searchInput) searchInput.value = '';
+      }
     });
   }
 
@@ -631,20 +631,29 @@ function initProgramBuilder() {
     const library = document.getElementById('exerciseLibrary');
     if (!library) return;
 
-    // Use requestAnimationFrame to avoid blocking UI
-    requestAnimationFrame(() => {
-      const libraryHtml = exercises.map(exercise => `
-        <div class="exercise-item" onclick="addExerciseToProgram('${escapeHtml(exercise)}')">
-          ${escapeHtml(exercise)}
-        </div>
-      `).join('');
-      
+    // Build HTML synchronously but render asynchronously to avoid blocking
+    const libraryHtml = exercises.map(exercise => {
+      const escapedName = escapeHtml(exercise);
+      return `<div class="exercise-item" data-exercise="${escapedName}">${escapedName}</div>`;
+    }).join('');
+    
+    // Use setTimeout with 0 delay to defer rendering without blocking
+    setTimeout(() => {
       if (typeof setSafeHTML !== 'undefined') {
         setSafeHTML(library, libraryHtml);
       } else {
         library.innerHTML = libraryHtml;
       }
-    });
+      
+      // Re-attach event listeners after rendering (since onclick might be stripped)
+      const exerciseItems = library.querySelectorAll('.exercise-item');
+      exerciseItems.forEach(item => {
+        const exerciseName = item.dataset.exercise || item.textContent.trim();
+        item.addEventListener('click', () => {
+          addExerciseToProgram(exerciseName);
+        });
+      });
+    }, 0);
   }
   
   // Store render function reference
@@ -817,12 +826,29 @@ function initProgramBuilder() {
         <div class="assessment-history-item">
           <div class="assessment-history-date">Week ${program.week} - ${formatDate(program.createdAt)}</div>
           <div class="program-exercises-preview">
-            ${program.exercises.map(ex => `<p>• ${escapeHtml(ex.name)}</p>`).join('')}
+            ${(program.exercises || []).map(ex => `<p>• ${escapeHtml(ex.name || ex)}</p>`).join('')}
           </div>
         </div>
       `).join('');
+      
+      // Actually set the HTML to the DOM element
+      if (!historyList) {
+        console.error('programHistoryList element not found');
+        return;
+      }
+      
+      if (typeof setSafeHTML !== 'undefined') {
+        setSafeHTML(historyList, programsHtml);
+      } else {
+        historyList.innerHTML = programsHtml;
+      }
+      
+      console.log(`Loaded ${programs.length} program(s) into history`);
     } catch (error) {
       console.error('Error loading program history:', error);
+      if (historyList) {
+        historyList.innerHTML = '<p style="color: #d32f2f;">Error loading program history.</p>';
+      }
     }
   }
 
