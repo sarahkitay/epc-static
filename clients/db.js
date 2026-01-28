@@ -555,7 +555,8 @@ async function saveProgramPhoto(clientId, photoData) {
     const photoWithMeta = {
       clientId: clientId,
       ...photoData,
-      uploadedAt: new Date().toISOString()
+      uploadedAt: new Date().toISOString(),
+      createdBy: photoData.createdBy || 'staff' // Default to staff for backward compatibility
     };
     const request = store.add(photoWithMeta);
 

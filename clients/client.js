@@ -883,7 +883,8 @@ function initPhotos() {
         await saveProgramPhoto(currentClientId, {
           photoData: currentPhotoData,
           extractedText: text,
-          week: document.getElementById('programWeek')?.value || null
+          week: document.getElementById('programWeek')?.value || null,
+          createdBy: 'staff'
         });
 
         alert('Photo saved successfully!');
@@ -1005,7 +1006,8 @@ function initPhotos() {
         await saveProgramPhoto(currentClientId, {
           photoData: currentPhotoData,
           extractedText: text,
-          week: document.getElementById('programWeek')?.value || null
+          week: document.getElementById('programWeek')?.value || null,
+          createdBy: 'staff'
         });
 
         alert('Photo saved successfully!');
@@ -1268,14 +1270,14 @@ function initClientActions() {
         const shareSettings = currentClient?.shareWithParent || {
           assessments: true,
           programs: true,
+          photos: true,
           notes: true,
-          ptNotes: false,
           packageInfo: true
         };
         document.getElementById('shareAssessments').checked = shareSettings.assessments !== false;
         document.getElementById('sharePrograms').checked = shareSettings.programs !== false;
+        document.getElementById('sharePhotos').checked = shareSettings.photos !== false;
         document.getElementById('shareNotes').checked = shareSettings.notes !== false;
-        document.getElementById('sharePTNotes').checked = shareSettings.ptNotes === true;
         document.getElementById('sharePackageInfo').checked = shareSettings.packageInfo !== false;
         dataSharingModal.style.display = 'flex';
       }
@@ -1299,8 +1301,8 @@ function initClientActions() {
       const shareSettings = {
         assessments: document.getElementById('shareAssessments').checked,
         programs: document.getElementById('sharePrograms').checked,
+        photos: document.getElementById('sharePhotos').checked,
         notes: document.getElementById('shareNotes').checked,
-        ptNotes: document.getElementById('sharePTNotes').checked,
         packageInfo: document.getElementById('sharePackageInfo').checked
       };
       try {

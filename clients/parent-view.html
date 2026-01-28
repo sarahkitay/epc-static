@@ -200,9 +200,9 @@
         </div>
       </div>
 
-      <!-- Assessment History -->
+      <!-- Assessment -->
       <div class="parent-info-card" id="parentAssessmentCard" style="display: none;">
-        <h3>Assessment History</h3>
+        <h3>Assessment</h3>
         <div id="parentAssessmentHistory">
           <p style="color: var(--epc-ink-dim);">Loading assessments...</p>
         </div>
@@ -210,9 +210,17 @@
 
       <!-- Programs -->
       <div class="parent-info-card" id="parentProgramsCard" style="display: none;">
-        <h3>Training Programs</h3>
+        <h3>Programs</h3>
         <div id="parentPrograms">
           <p style="color: var(--epc-ink-dim);">Loading programs...</p>
+        </div>
+      </div>
+
+      <!-- Progress Photos -->
+      <div class="parent-info-card" id="parentPhotosCard" style="display: none;">
+        <h3>Progress Photos</h3>
+        <div id="parentPhotos">
+          <p style="color: var(--epc-ink-dim);">Loading photos...</p>
         </div>
       </div>
 
@@ -221,14 +229,6 @@
         <h3>Progress Notes</h3>
         <div id="parentNotes">
           <p style="color: var(--epc-ink-dim);">Loading notes...</p>
-        </div>
-      </div>
-
-      <!-- PT Coordination Notes -->
-      <div class="parent-info-card" id="parentPTNotesCard" style="display: none;">
-        <h3>PT Coordination Notes</h3>
-        <div id="parentPTNotes">
-          <p style="color: var(--epc-ink-dim);">Loading PT notes...</p>
         </div>
       </div>
 
@@ -316,8 +316,8 @@
       const shareSettings = currentClient?.shareWithParent || {
         assessments: true,
         programs: true,
+        photos: true,
         notes: true,
-        ptNotes: false,
         packageInfo: true
       };
       
@@ -329,13 +329,13 @@
         await loadPrograms();
         document.getElementById('parentProgramsCard').style.display = 'block';
       }
+      if (shareSettings.photos !== false) {
+        await loadPhotos();
+        document.getElementById('parentPhotosCard').style.display = 'block';
+      }
       if (shareSettings.notes !== false) {
         await loadNotes();
         document.getElementById('parentNotesCard').style.display = 'block';
-      }
-      if (shareSettings.ptNotes === true) {
-        await loadPTNotes();
-        document.getElementById('parentPTNotesCard').style.display = 'block';
       }
       // Always show package section for parents (they need to see remaining sessions and purchase option)
       const parentPackageCard = document.getElementById('parentPackageCard');
@@ -782,7 +782,9 @@
 
     async function loadNotes() {
       try {
-        const notes = await getClientNotes(currentClientId);
+        const allNotes = await getClientNotes(currentClientId);
+        // Filter to only show staff-created notes (createdBy === 'staff' or undefined for backward compatibility)
+        const notes = allNotes.filter(n => !n.createdBy || n.createdBy === 'staff');
         const container = document.getElementById('parentNotes');
 
         if (!notes || notes.length === 0) {
@@ -797,7 +799,7 @@
               <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
                 <strong style="color: var(--epc-gold);">${date}</strong>
               </div>
-              <p style="color: var(--epc-ink); line-height: 1.6; margin: 0;">${note.note}</p>
+              <p style="color: var(--epc-ink); line-height: 1.6; margin: 0;">${note.content || note.note}</p>
             </div>
           `;
         }).join('');
@@ -807,30 +809,35 @@
       }
     }
 
-    async function loadPTNotes() {
+    async function loadPhotos() {
       try {
-        const ptNotes = await getClientPTNotes(currentClientId);
-        const container = document.getElementById('parentPTNotes');
+        const allPhotos = await getClientPhotos(currentClientId);
+        // Filter to only show staff-created photos (createdBy === 'staff' or undefined for backward compatibility)
+        const photos = allPhotos.filter(p => !p.createdBy || p.createdBy === 'staff');
+        const container = document.getElementById('parentPhotos');
 
-        if (!ptNotes || ptNotes.length === 0) {
-          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No PT coordination notes recorded yet.</p>';
+        if (!photos || photos.length === 0) {
+          container.innerHTML = '<p style="color: var(--epc-ink-dim);">No progress photos uploaded yet.</p>';
           return;
         }
 
-        container.innerHTML = ptNotes.map((note, idx) => {
-          const date = new Date(note.date).toLocaleDateString();
+        container.innerHTML = photos.map((photo, idx) => {
+          const date = new Date(photo.uploadedAt).toLocaleDateString();
           return `
-            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === ptNotes.length - 1 ? 'border-bottom: none;' : ''}">
+            <div style="border-bottom: 1px solid var(--epc-line); padding: 20px 0; ${idx === photos.length - 1 ? 'border-bottom: none;' : ''}">
               <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
                 <strong style="color: var(--epc-gold);">${date}</strong>
               </div>
-              <p style="color: var(--epc-ink); line-height: 1.6; margin: 0;">${note.note}</p>
+              ${photo.imageUrl ? `
+                <img src="${photo.imageUrl}" alt="Progress photo" style="max-width: 100%; border-radius: 6px; margin-top: 12px;" />
+              ` : ''}
+              ${photo.notes ? `<p style="color: var(--epc-ink); line-height: 1.6; margin-top: 12px; margin-bottom: 0;">${photo.notes}</p>` : ''}
             </div>
           `;
         }).join('');
       } catch (error) {
-        console.error('Error loading PT notes:', error);
-        document.getElementById('parentPTNotes').innerHTML = '<p style="color: #d32f2f;">Error loading PT notes.</p>';
+        console.error('Error loading photos:', error);
+        document.getElementById('parentPhotos').innerHTML = '<p style="color: #d32f2f;">Error loading photos.</p>';
       }
     }
 
