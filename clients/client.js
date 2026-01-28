@@ -2654,8 +2654,16 @@ function makePageReadOnly() {
     assessmentForm.style.display = 'none';
   }
   if (programBuilder) {
-    const programForm = programBuilder.querySelector('.program-builder-form');
-    if (programForm) programForm.style.display = 'none';
+    // Hide the entire program builder form section for parents
+    const programBuilderForm = programBuilder.querySelector('.program-builder');
+    if (programBuilderForm) {
+      programBuilderForm.style.display = 'none';
+    }
+    // Keep the program history section visible
+    const programHistory = programBuilder.querySelector('.program-history');
+    if (programHistory) {
+      programHistory.style.display = 'block';
+    }
   }
   
   // For parents: Show assessment and program tabs as read-only if data sharing is enabled
