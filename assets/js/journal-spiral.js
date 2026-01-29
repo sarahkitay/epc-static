@@ -17,6 +17,9 @@
   }
 
   blocks.forEach((b) => cardsLayer.appendChild(b));
+  
+  console.log('🔵 Journal Spiral - initialized with', blocks.length, 'blocks');
+  console.log('🔵 Journal Spiral - cardsLayer:', cardsLayer);
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -51,11 +54,16 @@
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const range = Math.max(1, end - start);
 
+    console.log('🔵 Journal Spiral - scrollTop:', scrollTop, 'start:', start, 'end:', end);
+    console.log('🔵 Journal Spiral - blocks count:', blocks.length);
+
     // Toggle body class so 3D + cards layer become visible only after scroll past CTA
     if (scrollTop >= start) {
       document.body.classList.add("journal-spiral-active");
+      console.log('✅ Journal Spiral - ACTIVE (past intro)');
     } else {
       document.body.classList.remove("journal-spiral-active");
+      console.log('⚠️ Journal Spiral - INACTIVE (still in intro)');
     }
 
     if (scrollTop < start) {
@@ -66,6 +74,7 @@
       return;
     }
 
+    console.log('✅ Journal Spiral - Making blocks visible and interactive');
     blocks.forEach((b) => { b.style.pointerEvents = "auto"; });
 
     const t = clamp((scrollTop - start) / range, 0, 1);
