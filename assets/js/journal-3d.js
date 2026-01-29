@@ -222,17 +222,17 @@
       targetRotation = scrollPercent * Math.PI * 2;
     }, { passive: true });
 
-    // Animation loop
+    // Animation loop - smooth and consistent
     function animate() {
       requestAnimationFrame(animate);
 
-      // Smooth rotation
-      currentRotation += (targetRotation - currentRotation) * 0.05;
+      // Smooth rotation (reduced factor for less jitter)
+      currentRotation += (targetRotation - currentRotation) * 0.03;
       backFigureGroup.rotation.y = currentRotation;
       frontFigureGroup.rotation.y = currentRotation;
 
-      // Gentle floating animation
-      const floatY = Math.sin(Date.now() * 0.0005) * 5;
+      // Gentle floating animation (reduced for smoother motion)
+      const floatY = Math.sin(Date.now() * 0.0003) * 3;
       backFigureGroup.position.y = floatY;
       frontFigureGroup.position.y = floatY;
 
