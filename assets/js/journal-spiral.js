@@ -26,6 +26,11 @@
     b.style.left = "0";
     b.style.right = "auto";
     b.style.position = "absolute";
+    // Hide original in journal-container (prevent duplicate rendering)
+    const original = document.querySelector(`.journal-container .journal-block[href="${b.href}"]`);
+    if (original && original !== b) {
+      original.style.display = "none";
+    }
   });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -88,7 +93,14 @@
     const scrollTop = currentScroll;
     const range = Math.max(1, end - start);
 
-    // before start: hide cards (but keep 3D figure visible)
+    // Toggle body class for CSS visibility control
+    if (targetScroll >= start) {
+      document.body.classList.add("journal-spiral-active");
+    } else {
+      document.body.classList.remove("journal-spiral-active");
+    }
+
+    // before start: hide cards
     if (scrollTop < start) {
       blocks.forEach((b) => {
         b.style.opacity = "0";
