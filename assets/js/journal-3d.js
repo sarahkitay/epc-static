@@ -101,10 +101,9 @@
     let figureModel = null;
 
     // Path relative to blog.html (which is in root)
-    // Since blog.html is at root and GLB is at assets/svg/journal.glb
-    // Use relative path from HTML file's location
-    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-    const glbUrl = baseUrl + 'assets/svg/journal.glb';
+    // blog.html is at root, GLB is at assets/svg/journal.glb
+    // Use simple relative path - works from root HTML file
+    const glbUrl = 'assets/svg/journal.glb';
     
     console.log('🔵 Journal 3D - Containers found:', {
       backContainer: !!backContainer,
@@ -113,8 +112,7 @@
       frontContainerId: frontContainer?.id
     });
     console.log('🔵 Journal 3D - GLB URL:', glbUrl);
-    console.log('🔵 Journal 3D - Base URL:', baseUrl);
-    console.log('🔵 Journal 3D - Window location:', window.location.href);
+    console.log('🔵 Journal 3D - Full URL will be:', new URL(glbUrl, window.location.href).href);
 
     loader.load(
       glbUrl,
