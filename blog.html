@@ -54,8 +54,8 @@
 
     <!-- Journal Content -->
     <div class="journal-container">
-      <!-- Intro Section -->
-      <div class="intro-section">
+      <!-- Intro Section - hidden on mobile -->
+      <div class="intro-section" style="display: none;">
         <div class="scroll-indicator">Scroll to explore</div>
       </div>
 
@@ -452,6 +452,7 @@
     /* Mobile-specific intro section padding reduction */
     @media (max-width: 768px) {
       .intro-section {
+        display: none !important; /* Completely hide intro section on mobile */
         padding: 0;
         min-height: 0;
         margin: 0;
@@ -474,8 +475,8 @@
       .epc-page-subtitle {
         font-size: 10px;
         margin-top: 0;
-        margin-bottom: 4px;
-        line-height: 1.3;
+        margin-bottom: 0; /* Zero margin - cards right after */
+        line-height: 1.2;
       }
       
       /* Hide breadcrumbs on mobile */
@@ -492,6 +493,20 @@
       .epc-blog-overview {
         padding-top: 0;
         padding-bottom: 0;
+        margin: 0;
+      }
+      
+      /* Remove ALL spacing from journal container */
+      .journal-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        margin-top: -4px !important; /* Negative margin to pull cards up */
+      }
+      
+      /* First blog card - no top margin at all */
+      .journal-block:first-child {
+        margin-top: 0 !important;
+        margin-bottom: 20px;
       }
     }
 
