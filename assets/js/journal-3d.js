@@ -30,7 +30,13 @@
     // Create TWO renderers (back + front for occlusion)
     const backContainer = document.getElementById('journal-3d-back');
     const frontContainer = document.getElementById('journal-3d-front');
-    if (!backContainer || !frontContainer) return;
+    if (!backContainer || !frontContainer) {
+      console.error('❌ Journal 3D - Containers not found!', {
+        backContainer: !!backContainer,
+        frontContainer: !!frontContainer
+      });
+      throw new Error('Journal 3D containers not found');
+    }
 
     // Back renderer (figure)
     const backRenderer = new THREE.WebGLRenderer({ 
