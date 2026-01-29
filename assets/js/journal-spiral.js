@@ -21,17 +21,10 @@
   console.log('🔵 Journal Spiral - initialized with', blocks.length, 'blocks');
   console.log('🔵 Journal Spiral - cardsLayer:', cardsLayer);
   
-  // TEST: Make first block immediately visible for debugging
-  if (blocks[0]) {
-    blocks[0].style.position = 'fixed';
-    blocks[0].style.left = '50%';
-    blocks[0].style.top = '50%';
-    blocks[0].style.transform = 'translate(-50%, -50%)';
-    blocks[0].style.opacity = '1';
-    blocks[0].style.zIndex = '9999';
-    blocks[0].style.backgroundColor = 'rgba(201, 178, 127, 0.9)';
-    console.log('🔵 TEST: First block forced visible at center', blocks[0]);
-  }
+  // Set all blocks to fixed positioning so they float over content
+  blocks.forEach((b) => {
+    b.style.position = 'fixed';
+  });
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -132,21 +125,22 @@
       const faceY = lerp(12, -12, zn);
       const tiltZ = lerp(-4, 4, zn);
 
-      const px = centerX + x;
-      const py = centerY + y;
+      // Position blocks relative to center, not adding to it
+      block.style.left = `${centerX}px`;
+      block.style.top = `${centerY}px`;
 
       block.style.opacity = String(occludedOpacity);
       block.style.filter = blur <= 0 ? "none" : `blur(${blur.toFixed(2)}px)`;
       block.style.zIndex = behind ? "15" : "25";
 
       block.style.transform =
-        `translate3d(${px}px, ${py}px, ${z}px) ` +
+        `translate3d(${x}px, ${y}px, ${z}px) ` +
         `translate3d(-50%, -50%, 0) ` +
         `rotateY(${faceY}deg) rotateZ(${tiltZ}deg) ` +
         `scale(${scale})`;
         
       if (i === 0) {
-        console.log('🔵 Block 0 - position:', {px, py, z}, 'opacity:', occludedOpacity, 'transform:', block.style.transform);
+        console.log('🔵 Block 0 - center:', {centerX, centerY}, 'offset:', {x, y, z}, 'opacity:', occludedOpacity);
       }
     });
   }
