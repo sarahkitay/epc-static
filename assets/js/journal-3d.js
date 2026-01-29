@@ -79,22 +79,22 @@
     );
     camera.position.set(0, 0, 400);
 
-    // Lighting - improved for depth
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.25); // Reduced ambient
+    // Lighting - much brighter for visibility
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Increased ambient
     backScene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2); // Increased intensity
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.5); // Much brighter
     keyLight.position.set(100, 100, 100);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 2048;
     keyLight.shadow.mapSize.height = 2048;
     backScene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xC9B27F, 0.5);
+    const fillLight = new THREE.DirectionalLight(0xC9B27F, 1.2); // Brighter fill
     fillLight.position.set(-100, 50, -50);
     backScene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xC9B27F, 0.9); // Increased for depth
+    const backLight = new THREE.DirectionalLight(0xC9B27F, 1.5); // Brighter back
     backLight.position.set(0, -50, -100);
     backScene.add(backLight);
 
