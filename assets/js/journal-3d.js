@@ -100,28 +100,25 @@
     const loader = new GLTFLoader();
     let figureModel = null;
 
-    const glbPaths = [
-      (typeof location !== 'undefined' && location.origin ? location.origin + '/assets/svg/journal.glb' : '/assets/svg/journal.glb'),
-      '/assets/svg/journal.glb',
-      './assets/svg/journal.glb',
-      'assets/svg/journal.glb'
-    ];
+    // Path relative to blog.html (which is in root)
+    // Since blog.html is at root and GLB is at assets/svg/journal.glb
+    // Use relative path from HTML file's location
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+    const glbUrl = baseUrl + 'assets/svg/journal.glb';
+    
+    console.log('🔵 Journal 3D - Containers found:', {
+      backContainer: !!backContainer,
+      frontContainer: !!frontContainer,
+      backContainerId: backContainer?.id,
+      frontContainerId: frontContainer?.id
+    });
+    console.log('🔵 Journal 3D - GLB URL:', glbUrl);
+    console.log('🔵 Journal 3D - Base URL:', baseUrl);
+    console.log('🔵 Journal 3D - Window location:', window.location.href);
 
-    let pathIndex = 0;
-    function tryLoadGLB() {
-      if (pathIndex >= glbPaths.length) {
-        console.warn('GLB not found, using placeholder');
-        const geometry = new THREE.BoxGeometry(50, 150, 50);
-        const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
-        const placeholder = new THREE.Mesh(geometry, material);
-        backFigureGroup.add(placeholder);
-        backFigureGroup.scale.set(2, 2, 2);
-        return;
-      }
-
-      loader.load(
-        glbPaths[pathIndex],
-        (gltf) => {
+    loader.load(
+      glbUrl,
+      (gltf) => {
           figureModel = gltf.scene;
           
           // Center the model
@@ -174,18 +171,33 @@
           camera.position.z = Math.max(400, distance);
           camera.updateProjectionMatrix();
           
-          console.log('GLB loaded from:', glbPaths[pathIndex], 'Scale:', scale, 'Camera Z:', camera.position.z);
+          console.log('✅ GLB loaded successfully! Scale:', scale, 'Camera Z:', camera.position.z);
         },
         undefined,
         (error) => {
-          console.warn('GLB load error for', glbPaths[pathIndex], ':', error);
-          pathIndex++;
-          tryLoadGLB();
+          console.error('❌ GLB load failed:', error);
+          console.warn('Using placeholder cube instead');
+          // Fallback placeholder
+          const geometry = new THREE.BoxGeometry(50, 150, 50);
+          const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
+          const placeholder = new THREE.Mesh(geometry, material);
+          backFigureGroup.add(placeholder);
+          backFigureGroup.scale.set(2, 2, 2);
+          
+          // Also add to front for occlusion
+          const frontPlaceholder = placeholder.clone();
+          frontPlaceholder.traverse((o) => {
+            if (o.isMesh) {
+              o.material = new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                transparent: true,
+                opacity: 0.95
+              });
+            }
+          });
+          frontFigureGroup.add(frontPlaceholder);
         }
       );
-    }
-
-    tryLoadGLB();
 
     // Scroll-based rotation
     let scrollPercent = 0;
