@@ -49,11 +49,10 @@
     backRenderer.setSize(window.innerWidth, window.innerHeight);
     backRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     backRenderer.outputColorSpace = THREE.SRGBColorSpace;
-    backRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    backRenderer.toneMappingExposure = 1.1;
-    backRenderer.physicallyCorrectLights = true;
-    backRenderer.shadowMap.enabled = true;
-    backRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    backRenderer.toneMapping = THREE.NoToneMapping; // Brighter, no tone mapping
+    backRenderer.toneMappingExposure = 1.5; // Increased exposure
+    backRenderer.physicallyCorrectLights = false; // Simpler, brighter lighting
+    backRenderer.shadowMap.enabled = false; // No shadows for lighter look
     backContainer.appendChild(backRenderer.domElement);
 
     // Front renderer (occlusion mask)
@@ -79,24 +78,26 @@
     );
     camera.position.set(0, 0, 400);
 
-    // Lighting - much brighter for visibility
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Increased ambient
+    // Lighting - very bright, flat lighting for light/bright appearance
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8); // Very bright ambient
     backScene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.5); // Much brighter
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5); // Bright directional
     keyLight.position.set(100, 100, 100);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 2048;
-    keyLight.shadow.mapSize.height = 2048;
+    keyLight.castShadow = false; // Disable shadows for lighter look
     backScene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xC9B27F, 1.2); // Brighter fill
+    const fillLight = new THREE.DirectionalLight(0xffffff, 2.0); // Bright white fill
     fillLight.position.set(-100, 50, -50);
     backScene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xC9B27F, 1.5); // Brighter back
+    const backLight = new THREE.DirectionalLight(0xffffff, 2.0); // Bright white back
     backLight.position.set(0, -50, -100);
     backScene.add(backLight);
+    
+    const topLight = new THREE.DirectionalLight(0xffffff, 1.5); // Additional top light
+    topLight.position.set(0, 200, 0);
+    backScene.add(topLight);
 
     // Figure containers
     const backFigureGroup = new THREE.Group();
@@ -140,18 +141,19 @@
           const scale = targetHeight / maxDim;
           figureModel.scale.multiplyScalar(scale);
           
-          // BACK SCENE: Normal materials with improved depth
+          // BACK SCENE: Bright, light materials
           const backClone = figureModel.clone(true);
           backClone.traverse((o) => {
             if (o.isMesh && o.material) {
-              o.castShadow = true;
-              o.receiveShadow = true;
+              o.castShadow = false; // No shadows for lighter look
+              o.receiveShadow = false;
               if (o.material.isMeshStandardMaterial) {
-                // Keep material bright and visible
-                o.material.metalness = 0.15;
-                o.material.roughness = 0.55;
-                o.material.emissive = new THREE.Color(0x222222);
-                o.material.emissiveIntensity = 0.15;
+                // Very light, bright material
+                o.material.metalness = 0.05;
+                o.material.roughness = 0.8;
+                o.material.emissive = new THREE.Color(0x666666); // Much brighter emissive
+                o.material.emissiveIntensity = 0.4;
+                o.material.color.multiplyScalar(1.5); // Brighten base color
               }
             }
           });
