@@ -52,6 +52,9 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
+  // Spiral view is desktop-only; keep it active to avoid visibility flicker.
+  document.body.classList.add("journal-spiral-active");
+
   // Direct scroll tracking (no interpolation to prevent glitching)
   let bounds = null;
   function computeBounds() {
@@ -60,11 +63,12 @@
 
     // start: just after intro section bottom
     let start = 0;
-    if (introSection) {
+    if (introSection && introSection.offsetParent !== null) {
       const r = introSection.getBoundingClientRect();
       start = r.bottom + scrollTop;
     } else {
-      start = scrollTop + vh * 0.25;
+      // If intro is hidden, start immediately to avoid popping.
+      start = 0;
     }
 
     // end: before CTA
@@ -100,13 +104,6 @@
     // Use direct scroll position (no interpolation to prevent glitching)
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const range = Math.max(1, end - start);
-
-    // Toggle body class for CSS visibility control (use direct scroll, not interpolated)
-    if (scrollTop >= start) {
-      document.body.classList.add("journal-spiral-active");
-    } else {
-      document.body.classList.remove("journal-spiral-active");
-    }
 
     // before start: hide cards
     if (scrollTop < start) {

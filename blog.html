@@ -358,7 +358,7 @@
       overflow-x: hidden;
     }
 
-    /* 3D Canvas Containers - Proper occlusion order */
+    /* 3D Canvas Containers - Proper occlusion order (no transition to avoid scroll glitch) */
     #journal-3d-back {
       position: fixed;
       inset: 0;
@@ -371,7 +371,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      transition: none;
     }
     
     #journal-cards-layer {
@@ -385,7 +385,7 @@
       z-index: 5; /* BETWEEN back and front */
       perspective: 1200px;
       transform-style: preserve-3d;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      transition: none;
     }
     
     #journal-3d-front {
@@ -400,7 +400,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      transition: none;
     }
     
     /* Show 3D layers when spiral is active - instant, no transition glitches */
@@ -412,9 +412,14 @@
       transition: none; /* Instant, no transition glitches */
     }
     
-    /* Desktop: always show 3D figure (back layer) so it never disappears */
+    /* When spiral is active, put container below 3D back so the figure is visible behind cards */
+    body.journal-spiral-active .journal-container {
+      z-index: 0;
+    }
+    
+    /* Desktop: always show 3D figure (back layer) when spiral is active */
     @media (min-width: 769px) {
-      #journal-3d-back {
+      body.journal-spiral-active #journal-3d-back {
         opacity: 1 !important;
         visibility: visible !important;
       }
