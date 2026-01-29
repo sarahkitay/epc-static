@@ -457,13 +457,14 @@
     /* Mobile-specific intro section padding reduction */
     @media (max-width: 768px) {
       .intro-section {
-        padding: 10px 20px 20px; /* Much less bottom padding */
-        min-height: 80px;
+        padding: 0; /* Remove all padding */
+        min-height: auto;
       }
       
       .epc-page-header {
-        padding-top: 20px;
-        padding-bottom: 10px;
+        padding-top: 80px; /* Account for fixed nav */
+        padding-bottom: 0;
+        margin-bottom: 0;
       }
       
       /* Hide scroll indicator on mobile */
@@ -663,7 +664,7 @@
 
       .journal-container {
         min-height: auto;
-        padding-top: 20px; /* Further reduced for tighter mobile layout */
+        padding-top: 0; /* No padding - cards right after header */
       }
 
       #journal-3d-back,
