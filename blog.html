@@ -405,6 +405,10 @@
       top: 0 !important;
       left: 0 !important;
       right: auto !important;
+      /* GPU acceleration for smooth transforms */
+      will-change: transform, opacity, filter;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
     }
     
     #journal-3d-front {

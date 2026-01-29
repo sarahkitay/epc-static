@@ -31,6 +31,10 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
+  // Smooth scroll tracking
+  let currentScroll = 0;
+  let targetScroll = 0;
+
   let bounds = null;
   function computeBounds() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -74,11 +78,18 @@
     if (!bounds) computeBounds();
 
     const { start, end } = bounds;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Get actual scroll position
+    targetScroll = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Smooth interpolation (ease scroll position for buttery animation)
+    currentScroll += (targetScroll - currentScroll) * 0.08;
+    
+    const scrollTop = currentScroll;
     const range = Math.max(1, end - start);
 
     // toggle visibility
-    if (scrollTop >= start) document.body.classList.add("journal-spiral-active");
+    if (targetScroll >= start) document.body.classList.add("journal-spiral-active");
     else document.body.classList.remove("journal-spiral-active");
 
     // before start: hide
@@ -87,6 +98,7 @@
         b.style.opacity = "0";
         b.style.pointerEvents = "none";
       });
+      requestAnimationFrame(update); // Keep animating for smooth fade
       return;
     }
 
@@ -147,21 +159,25 @@
         `rotateY(${faceY}deg) rotateZ(${tiltZ}deg) ` +
         `scale(${scale})`;
     });
+    
+    // Continuous animation loop for smooth interpolation
+    requestAnimationFrame(update);
   }
 
-  let raf = null;
-  const onScroll = () => {
-    if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(update);
-  };
-
+  // Initial setup
   computeBounds();
-  window.addEventListener("scroll", onScroll, { passive: true });
+  
+  // Update on scroll (just sets target, smooth interpolation happens in RAF loop)
+  window.addEventListener("scroll", () => {
+    targetScroll = window.pageYOffset || document.documentElement.scrollTop;
+  }, { passive: true });
+  
+  // Recalculate bounds on resize
   window.addEventListener("resize", () => {
     bounds = null;
     computeBounds();
-    onScroll();
-  });
+  }, { passive: true });
 
+  // Start animation loop
   requestAnimationFrame(update);
 })();
