@@ -1,7 +1,23 @@
 // Journal Spiral (3D helix) – cards orbit the figure, spaced cleanly, no clustering
 (function () {
   "use strict";
-  if (window.innerWidth <= 768) return;
+  // Completely disable on mobile - return immediately
+  if (window.innerWidth <= 768) {
+    console.log('📱 Mobile detected - spiral disabled');
+    return;
+  }
+  
+  // Also check on resize and disable if mobile
+  const checkMobile = () => {
+    if (window.innerWidth <= 768) {
+      // Remove active class if it exists
+      document.body.classList.remove("journal-spiral-active");
+      return true;
+    }
+    return false;
+  };
+  
+  if (checkMobile()) return;
 
   const blocks = Array.from(document.querySelectorAll(".journal-block"));
   const introSection = document.querySelector(".intro-section");
@@ -36,10 +52,7 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  // Smooth scroll tracking
-  let currentScroll = 0;
-  let targetScroll = 0;
-
+  // Direct scroll tracking (no interpolation to prevent glitching)
   let bounds = null;
   function computeBounds() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -84,17 +97,12 @@
 
     const { start, end } = bounds;
     
-    // Get actual scroll position
-    targetScroll = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Smooth interpolation (ease scroll position for buttery animation)
-    currentScroll += (targetScroll - currentScroll) * 0.08;
-    
-    const scrollTop = currentScroll;
+    // Use direct scroll position (no interpolation to prevent glitching)
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const range = Math.max(1, end - start);
 
-    // Toggle body class for CSS visibility control
-    if (targetScroll >= start) {
+    // Toggle body class for CSS visibility control (use direct scroll, not interpolated)
+    if (scrollTop >= start) {
       document.body.classList.add("journal-spiral-active");
     } else {
       document.body.classList.remove("journal-spiral-active");
@@ -106,7 +114,7 @@
         b.style.opacity = "0";
         b.style.pointerEvents = "none";
       });
-      requestAnimationFrame(update); // Keep animating for smooth fade
+      requestAnimationFrame(update);
       return;
     }
 

@@ -398,19 +398,50 @@
       transition: opacity 0.4s ease, visibility 0.4s ease;
     }
     
-    /* Show 3D layers when spiral is active */
+    /* Show 3D layers when spiral is active - instant, no transition glitches */
     body.journal-spiral-active #journal-3d-back,
     body.journal-spiral-active #journal-cards-layer,
     body.journal-spiral-active #journal-3d-front {
       opacity: 1;
       visibility: visible;
+      transition: none; /* Instant, no transition glitches */
     }
     
-    /* Hide original cards in journal-container when spiral is active */
+    /* Hide original cards in journal-container when spiral is active (desktop only) */
     body.journal-spiral-active .journal-container .journal-block {
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
+    }
+    
+    /* Mobile: Always show cards, no 3D layers, no transitions */
+    @media (max-width: 768px) {
+      /* Disable all 3D layers on mobile */
+      #journal-3d-back,
+      #journal-cards-layer,
+      #journal-3d-front {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      
+      /* Always show original cards in container on mobile */
+      .journal-container .journal-block {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        display: block !important;
+      }
+      
+      /* Remove any transitions that cause glitching */
+      .journal-container,
+      .journal-block,
+      .epc-page-header,
+      .epc-page-title,
+      .epc-page-subtitle {
+        transition: none !important;
+      }
     }
     
     #journal-cards-layer .journal-block {
