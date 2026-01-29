@@ -50,7 +50,7 @@
     backRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     backRenderer.outputColorSpace = THREE.SRGBColorSpace;
     backRenderer.toneMapping = THREE.NoToneMapping; // Brighter, no tone mapping
-    backRenderer.toneMappingExposure = 1.5; // Increased exposure
+    backRenderer.toneMappingExposure = 2.0; // Even higher exposure for brightness
     backRenderer.physicallyCorrectLights = false; // Simpler, brighter lighting
     backRenderer.shadowMap.enabled = false; // No shadows for lighter look
     backContainer.appendChild(backRenderer.domElement);
@@ -78,26 +78,30 @@
     );
     camera.position.set(0, 0, 400);
 
-    // Lighting - very bright, flat lighting for light/bright appearance
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8); // Very bright ambient
+    // Lighting - extremely bright, flat lighting for light/bright appearance
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.5); // Extremely bright ambient
     backScene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5); // Bright directional
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.5); // Very bright directional
     keyLight.position.set(100, 100, 100);
     keyLight.castShadow = false; // Disable shadows for lighter look
     backScene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 2.0); // Bright white fill
+    const fillLight = new THREE.DirectionalLight(0xffffff, 3.0); // Very bright white fill
     fillLight.position.set(-100, 50, -50);
     backScene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xffffff, 2.0); // Bright white back
+    const backLight = new THREE.DirectionalLight(0xffffff, 3.0); // Very bright white back
     backLight.position.set(0, -50, -100);
     backScene.add(backLight);
     
-    const topLight = new THREE.DirectionalLight(0xffffff, 1.5); // Additional top light
+    const topLight = new THREE.DirectionalLight(0xffffff, 2.5); // Bright top light
     topLight.position.set(0, 200, 0);
     backScene.add(topLight);
+    
+    const sideLight = new THREE.DirectionalLight(0xffffff, 2.0); // Additional side light
+    sideLight.position.set(-150, 0, 0);
+    backScene.add(sideLight);
 
     // Figure containers
     const backFigureGroup = new THREE.Group();
@@ -148,12 +152,12 @@
               o.castShadow = false; // No shadows for lighter look
               o.receiveShadow = false;
               if (o.material.isMeshStandardMaterial) {
-                // Very light, bright material
-                o.material.metalness = 0.05;
-                o.material.roughness = 0.8;
-                o.material.emissive = new THREE.Color(0x666666); // Much brighter emissive
-                o.material.emissiveIntensity = 0.4;
-                o.material.color.multiplyScalar(1.5); // Brighten base color
+                // Extremely light, bright material
+                o.material.metalness = 0.0; // No metalness for lighter look
+                o.material.roughness = 0.9; // More matte = lighter
+                o.material.emissive = new THREE.Color(0x999999); // Very bright emissive
+                o.material.emissiveIntensity = 0.6; // Higher emissive intensity
+                o.material.color.multiplyScalar(2.0); // Double the base color brightness
               }
             }
           });
