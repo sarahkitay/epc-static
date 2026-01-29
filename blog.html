@@ -42,6 +42,11 @@
     <div class="epc-blog-overview">
       <!-- Header Section -->
       <div class="epc-page-header">
+        <nav class="epc-breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="epc-breadcrumbs-separator">/</span>
+          <span>Journal</span>
+        </nav>
         <h1 class="epc-page-title">Journal</h1>
         <p class="epc-page-subtitle">Movement • Recovery • Performance</p>
       </div>
@@ -529,6 +534,12 @@
         text-align: left; /* Left align */
       }
       
+      /* Show breadcrumbs on mobile (match team header) */
+      .epc-breadcrumbs {
+        display: block;
+        margin-bottom: 12px; /* Spacing like team header */
+      }
+      
       .epc-page-title {
         font-size: clamp(24px, 6vw, 32px); /* Match team header exactly */
         margin-top: 0;
@@ -543,11 +554,6 @@
         margin-bottom: 0; /* Zero margin - cards right after */
         line-height: 1.2;
         text-align: left; /* Left align */
-      }
-      
-      /* Hide breadcrumbs on mobile */
-      .epc-breadcrumbs {
-        display: none;
       }
       
       /* Hide scroll indicator on mobile */
