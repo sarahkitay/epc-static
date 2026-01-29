@@ -381,14 +381,14 @@
     }
     
     #journal-3d-back {
-      z-index: 10;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     
     #journal-cards-layer {
-      z-index: 20;
+      z-index: 5;
       pointer-events: none;
       perspective: 1200px;
       transform-style: preserve-3d;
@@ -399,7 +399,7 @@
     }
     
     #journal-3d-front {
-      z-index: 30;
+      z-index: 10;
       pointer-events: none;
       mix-blend-mode: normal;
       display: flex;
@@ -426,7 +426,7 @@
     /* Journal Content */
     .journal-container {
       position: relative;
-      z-index: 2;
+      z-index: 15; /* Above 3D layers so content is visible */
       min-height: 1520vh; /* Last block at 1500vh + 20vh buffer */
       display: block !important;
       visibility: visible !important;
