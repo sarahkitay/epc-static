@@ -20,6 +20,18 @@
   
   console.log('🔵 Journal Spiral - initialized with', blocks.length, 'blocks');
   console.log('🔵 Journal Spiral - cardsLayer:', cardsLayer);
+  
+  // TEST: Make first block immediately visible for debugging
+  if (blocks[0]) {
+    blocks[0].style.position = 'fixed';
+    blocks[0].style.left = '50%';
+    blocks[0].style.top = '50%';
+    blocks[0].style.transform = 'translate(-50%, -50%)';
+    blocks[0].style.opacity = '1';
+    blocks[0].style.zIndex = '9999';
+    blocks[0].style.backgroundColor = 'rgba(201, 178, 127, 0.9)';
+    console.log('🔵 TEST: First block forced visible at center', blocks[0]);
+  }
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
