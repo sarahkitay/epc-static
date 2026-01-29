@@ -1,4 +1,4 @@
-// 3D Journal Figure - Dual renderer for occlusion (back + front)
+// 3D Journal Figure - Single renderer (occlusion layer removed to prevent glitching)
 (function() {
   'use strict';
 
@@ -29,18 +29,13 @@
 
     // Wrap in async IIFE since modules can't use top-level return
     (async function initJournal3D() {
-      // Create TWO renderers (back + front for occlusion)
       const backContainer = document.getElementById('journal-3d-back');
-      const frontContainer = document.getElementById('journal-3d-front');
-      if (!backContainer || !frontContainer) {
-        console.error('❌ Journal 3D - Containers not found!', {
-          backContainer: !!backContainer,
-          frontContainer: !!frontContainer
-        });
-        return; // Exit early if containers don't exist
+      if (!backContainer) {
+        console.error('❌ Journal 3D - Container not found');
+        return;
       }
 
-    // Back renderer (figure)
+    // Single renderer (figure only; no occlusion layer)
     const backRenderer = new THREE.WebGLRenderer({ 
       antialias: true,
       alpha: true 
@@ -49,25 +44,13 @@
     backRenderer.setSize(window.innerWidth, window.innerHeight);
     backRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     backRenderer.outputColorSpace = THREE.SRGBColorSpace;
-    backRenderer.toneMapping = THREE.NoToneMapping; // Brighter, no tone mapping
-    backRenderer.toneMappingExposure = 2.0; // Even higher exposure for brightness
-    backRenderer.physicallyCorrectLights = false; // Simpler, brighter lighting
-    backRenderer.shadowMap.enabled = false; // No shadows for lighter look
+    backRenderer.toneMapping = THREE.NoToneMapping;
+    backRenderer.toneMappingExposure = 2.0;
+    backRenderer.physicallyCorrectLights = false;
+    backRenderer.shadowMap.enabled = false;
     backContainer.appendChild(backRenderer.domElement);
 
-    // Front renderer (occlusion mask)
-    const frontRenderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      alpha: true 
-    });
-    frontRenderer.setClearAlpha(0);
-    frontRenderer.setSize(window.innerWidth, window.innerHeight);
-    frontRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    frontContainer.appendChild(frontRenderer.domElement);
-
-    // Shared scene setup
     const backScene = new THREE.Scene();
-    const frontScene = new THREE.Scene();
 
     // Camera setup - closer for better depth perception
     const camera = new THREE.PerspectiveCamera(
@@ -103,11 +86,8 @@
     sideLight.position.set(-150, 0, 0);
     backScene.add(sideLight);
 
-    // Figure containers
     const backFigureGroup = new THREE.Group();
-    const frontFigureGroup = new THREE.Group();
     backScene.add(backFigureGroup);
-    frontScene.add(frontFigureGroup);
 
     // Load GLB
     const loader = new GLTFLoader();
@@ -118,12 +98,6 @@
     // Use simple relative path - works from root HTML file
     const glbUrl = 'assets/svg/journal.glb';
     
-    console.log('🔵 Journal 3D - Containers found:', {
-      backContainer: !!backContainer,
-      frontContainer: !!frontContainer,
-      backContainerId: backContainer?.id,
-      frontContainerId: frontContainer?.id
-    });
     console.log('🔵 Journal 3D - GLB URL:', glbUrl);
     console.log('🔵 Journal 3D - Full URL will be:', new URL(glbUrl, window.location.href).href);
 
@@ -164,22 +138,6 @@
           backFigureGroup.add(backClone);
           backFigureGroup.position.set(0, 0, 0);
           
-          // FRONT SCENE: Solid black occlusion mask (to make cards appear behind figure)
-          const frontClone = figureModel.clone(true);
-          frontClone.traverse((o) => {
-            if (o.isMesh) {
-              o.material = new THREE.MeshBasicMaterial({
-                color: 0x070707, // Match background
-                transparent: false,
-                opacity: 1.0,
-                depthWrite: true,
-                depthTest: false // Always on top
-              });
-            }
-          });
-          frontFigureGroup.add(frontClone);
-          frontFigureGroup.position.set(0, 0, 0);
-          
           // Adjust camera to ensure full figure is visible
           const newBox = new THREE.Box3().setFromObject(backFigureGroup);
           const newSize = newBox.getSize(new THREE.Vector3());
@@ -200,19 +158,6 @@
           const placeholder = new THREE.Mesh(geometry, material);
           backFigureGroup.add(placeholder);
           backFigureGroup.scale.set(2, 2, 2);
-          
-          // Also add to front for occlusion
-          const frontPlaceholder = placeholder.clone();
-          frontPlaceholder.traverse((o) => {
-            if (o.isMesh) {
-              o.material = new THREE.MeshBasicMaterial({
-                color: 0x000000,
-                transparent: true,
-                opacity: 0.95
-              });
-            }
-          });
-          frontFigureGroup.add(frontPlaceholder);
         }
       );
 
@@ -230,19 +175,13 @@
     function animate() {
       requestAnimationFrame(animate);
 
-      // Smooth rotation (reduced factor for less jitter)
       currentRotation += (targetRotation - currentRotation) * 0.03;
       backFigureGroup.rotation.y = currentRotation;
-      frontFigureGroup.rotation.y = currentRotation;
 
-      // Gentle floating animation (reduced for smoother motion)
       const floatY = Math.sin(Date.now() * 0.0003) * 3;
       backFigureGroup.position.y = floatY;
-      frontFigureGroup.position.y = floatY;
 
-      // Render both scenes
       backRenderer.render(backScene, camera);
-      frontRenderer.render(frontScene, camera);
     }
 
     animate();
@@ -252,7 +191,6 @@
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       backRenderer.setSize(window.innerWidth, window.innerHeight);
-      frontRenderer.setSize(window.innerWidth, window.innerHeight);
       
       // Recalculate camera distance if model is loaded
       if (figureModel) {

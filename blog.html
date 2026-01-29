@@ -388,19 +388,11 @@
       transition: none;
     }
     
+    /* Occlusion layer removed to prevent glitching */
     #journal-3d-front {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      display: none !important;
       pointer-events: none;
-      opacity: 0;
       visibility: hidden;
-      z-index: 10; /* ON TOP of cards */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: none;
     }
     
     /* Show 3D layers when spiral is active - instant, no transition glitches */
