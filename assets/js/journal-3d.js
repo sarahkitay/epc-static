@@ -212,31 +212,18 @@
         }
       );
 
-    // Scroll-based rotation
-    let scrollPercent = 0;
-    let targetRotation = 0;
-    let currentRotation = 0;
-
-    window.addEventListener('scroll', () => {
-      scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      targetRotation = scrollPercent * Math.PI * 2;
-    }, { passive: true });
-
-    // Animation loop - smooth and consistent
+    // Static figure - no scroll rotation or animation (prevents glitching)
+    // Animation loop - completely static for stability
     function animate() {
       requestAnimationFrame(animate);
 
-      // Smooth rotation (reduced factor for less jitter)
-      currentRotation += (targetRotation - currentRotation) * 0.03;
-      backFigureGroup.rotation.y = currentRotation;
-      frontFigureGroup.rotation.y = currentRotation;
+      // Keep figure completely static - no rotation or floating
+      backFigureGroup.rotation.y = 0;
+      frontFigureGroup.rotation.y = 0;
+      backFigureGroup.position.y = 0;
+      frontFigureGroup.position.y = 0;
 
-      // Gentle floating animation (reduced for smoother motion)
-      const floatY = Math.sin(Date.now() * 0.0003) * 3;
-      backFigureGroup.position.y = floatY;
-      frontFigureGroup.position.y = floatY;
-
-      // Render both scenes
+      // Render both scenes consistently at full brightness
       backRenderer.render(backScene, camera);
       frontRenderer.render(frontScene, camera);
     }
