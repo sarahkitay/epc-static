@@ -15,7 +15,7 @@
 
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <script src="./epc-sections.js"></script>
+  <script src="./epc-sections.js" defer></script>
 
   <nav class="epc-nav" id="mainNav" aria-label="Primary">
     <div class="nav-container">
@@ -418,8 +418,8 @@
     /* Ensure canvas doesn't clip content */
     #journal-3d-back canvas,
     #journal-3d-front canvas {
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 100% !important;
+      height: 100% !important;
       display: block;
     }
 
@@ -683,57 +683,7 @@
       overflow-x: hidden;
     }
     
-    /* Spiral Wrapper */
-    .epc-spiral-wrapper {
-      position: relative;
-      width: 100%;
-      min-height: 4000px;
-      padding: 0;
-      margin-top: 0;
-    }
-    
-    /* Spiral Container - the 3D space */
-    .epc-spiral-container {
-      position: relative;
-      width: 100%;
-      height: 4000px;
-      perspective: 2000px;
-      perspective-origin: center center;
-    }
-    
-    /* Center Logo Anchor / 3D Figure Container */
-    .epc-spiral-logo {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      z-index: 1000;
-      width: 600px;
-      height: 600px;
-      pointer-events: none;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
-    }
-    
-    /* 3D Canvas */
-    .epc-spiral-logo canvas {
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
-    }
-    
-    /* Fallback logo (shown if 3D fails or on mobile) */
-    .epc-spiral-logo-fallback {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 10;
-    }
-    
-    .epc-spiral-logo canvas ~ .epc-spiral-logo-fallback {
-      display: none; /* Hide fallback when 3D is active */
-    }
+    /* Old spiral system CSS removed - using journal-spiral.js instead */
     
     .epc-spiral-logo-text {
       font-family: 'Playfair Display', Georgia, serif;

@@ -98,6 +98,10 @@
       }
     }
 
+    // Fade out all cards near the end (before CTA)
+    const nearEnd = t > 0.85;
+    const globalFade = nearEnd ? clamp((0.95 - t) / 0.10, 0, 1) : 1;
+
     // Helix: orbit around figure, depth, readable/clickable, no cluster at stop
     const turns = 2;
     const radius = Math.min(380, vw * 0.24);
@@ -130,9 +134,12 @@
       block.style.left = `${centerX}px`;
       block.style.top = `${centerY}px`;
 
-      block.style.opacity = String(occludedOpacity);
+      // Apply global fade and individual opacity
+      const finalOpacity = occludedOpacity * globalFade;
+      block.style.opacity = String(finalOpacity);
       block.style.filter = blur <= 0 ? "none" : `blur(${blur.toFixed(2)}px)`;
       block.style.zIndex = behind ? "15" : "25";
+      block.style.pointerEvents = finalOpacity < 0.2 ? "none" : "auto";
 
       block.style.transform =
         `translate(-50%, -50%) ` +
