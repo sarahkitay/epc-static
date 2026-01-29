@@ -16,15 +16,13 @@
     document.body.appendChild(cardsLayer);
   }
 
-  blocks.forEach((b) => cardsLayer.appendChild(b));
-  
-  console.log('🔵 Journal Spiral - initialized with', blocks.length, 'blocks');
-  console.log('🔵 Journal Spiral - cardsLayer:', cardsLayer);
-  
-  // Set all blocks to fixed positioning so they float over content
+  // Move blocks to cards layer and set fixed positioning
   blocks.forEach((b) => {
     b.style.position = 'fixed';
+    cardsLayer.appendChild(b);
   });
+  
+  console.log('✅ Journal Spiral initialized:', blocks.length, 'blocks');
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -54,21 +52,25 @@
     return { start, end };
   }
 
+  // Debug flag - set to false in production
+  const DEBUG = false;
+  let logFrame = 0;
+
   function update() {
     const { start, end } = getScrollBounds();
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const range = Math.max(1, end - start);
 
-    console.log('🔵 Journal Spiral - scrollTop:', scrollTop, 'start:', start, 'end:', end);
-    console.log('🔵 Journal Spiral - blocks count:', blocks.length);
+    // Only log occasionally to avoid UI blocking
+    if (DEBUG && ++logFrame % 60 === 0) {
+      console.log('🔵 Spiral:', scrollTop.toFixed(0), 'start:', start.toFixed(0));
+    }
 
     // Toggle body class so 3D + cards layer become visible only after scroll past CTA
     if (scrollTop >= start) {
       document.body.classList.add("journal-spiral-active");
-      console.log('✅ Journal Spiral - ACTIVE (past intro)');
     } else {
       document.body.classList.remove("journal-spiral-active");
-      console.log('⚠️ Journal Spiral - INACTIVE (still in intro)');
     }
 
     if (scrollTop < start) {
@@ -79,7 +81,6 @@
       return;
     }
 
-    console.log('✅ Journal Spiral - Making blocks visible and interactive');
     blocks.forEach((b) => { b.style.pointerEvents = "auto"; });
 
     const t = clamp((scrollTop - start) / range, 0, 1);
@@ -134,14 +135,10 @@
       block.style.zIndex = behind ? "15" : "25";
 
       block.style.transform =
+        `translate(-50%, -50%) ` +
         `translate3d(${x}px, ${y}px, ${z}px) ` +
-        `translate3d(-50%, -50%, 0) ` +
         `rotateY(${faceY}deg) rotateZ(${tiltZ}deg) ` +
         `scale(${scale})`;
-        
-      if (i === 0) {
-        console.log('🔵 Block 0 - center:', {centerX, centerY}, 'offset:', {x, y, z}, 'opacity:', occludedOpacity);
-      }
     });
   }
 
