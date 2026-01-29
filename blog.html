@@ -380,14 +380,14 @@
     }
     
     #journal-3d-back {
-      z-index: 1;
+      z-index: 5;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     
     #journal-cards-layer {
-      z-index: 20; /* Above everything so cards are visible */
+      z-index: 20;
       pointer-events: none;
       perspective: 1200px;
       transform-style: preserve-3d;
@@ -395,11 +395,14 @@
     
     #journal-cards-layer .journal-block {
       pointer-events: auto;
-      /* Let JavaScript control opacity for spiral effect */
+      /* Override inline positioning that causes clustering */
+      top: 0 !important;
+      left: 0 !important;
+      right: auto !important;
     }
     
     #journal-3d-front {
-      z-index: 10;
+      z-index: 30; /* Front must be ABOVE cards for occlusion */
       pointer-events: none;
       mix-blend-mode: normal;
       display: flex;
