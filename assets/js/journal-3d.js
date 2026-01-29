@@ -27,16 +27,18 @@
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    // Create TWO renderers (back + front for occlusion)
-    const backContainer = document.getElementById('journal-3d-back');
-    const frontContainer = document.getElementById('journal-3d-front');
-    if (!backContainer || !frontContainer) {
-      console.error('❌ Journal 3D - Containers not found!', {
-        backContainer: !!backContainer,
-        frontContainer: !!frontContainer
-      });
-      throw new Error('Journal 3D containers not found');
-    }
+    // Wrap in async IIFE since modules can't use top-level return
+    (async function initJournal3D() {
+      // Create TWO renderers (back + front for occlusion)
+      const backContainer = document.getElementById('journal-3d-back');
+      const frontContainer = document.getElementById('journal-3d-front');
+      if (!backContainer || !frontContainer) {
+        console.error('❌ Journal 3D - Containers not found!', {
+          backContainer: !!backContainer,
+          frontContainer: !!frontContainer
+        });
+        return; // Exit early if containers don't exist
+      }
 
     // Back renderer (figure)
     const backRenderer = new THREE.WebGLRenderer({ 
@@ -251,6 +253,7 @@
         camera.updateProjectionMatrix();
       }
     });
+    })(); // End of async IIFE
   `;
   document.head.appendChild(moduleScript);
 })();
