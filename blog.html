@@ -412,6 +412,14 @@
       transition: none; /* Instant, no transition glitches */
     }
     
+    /* Desktop: always show 3D figure (back layer) so it never disappears */
+    @media (min-width: 769px) {
+      #journal-3d-back {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    }
+    
     /* Hide original cards in journal-container when spiral is active (desktop only) */
     body.journal-spiral-active .journal-container .journal-block {
       opacity: 0 !important;
