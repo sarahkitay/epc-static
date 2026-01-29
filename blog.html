@@ -388,7 +388,7 @@
     }
     
     #journal-cards-layer {
-      z-index: 5;
+      z-index: 20; /* Above everything so cards are visible */
       pointer-events: none;
       perspective: 1200px;
       transform-style: preserve-3d;
@@ -396,6 +396,8 @@
     
     #journal-cards-layer .journal-block {
       pointer-events: auto;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
     
     #journal-3d-front {
@@ -426,7 +428,7 @@
     /* Journal Content */
     .journal-container {
       position: relative;
-      z-index: 15; /* Above 3D layers so content is visible */
+      z-index: 2; /* Lower so cards layer (z-20) is above it */
       min-height: 1520vh; /* Last block at 1500vh + 20vh buffer */
       display: block !important;
       visibility: visible !important;
@@ -531,7 +533,8 @@
       text-decoration: none;
       color: inherit;
       display: block;
-      z-index: 20; /* Ensure blocks visible above 3D layers */
+      opacity: 1 !important;
+      visibility: visible !important;
     }
     
     .journal-block:hover {
