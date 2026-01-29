@@ -132,6 +132,10 @@
         `translate3d(-50%, -50%, 0) ` +
         `rotateY(${faceY}deg) rotateZ(${tiltZ}deg) ` +
         `scale(${scale})`;
+        
+      if (i === 0) {
+        console.log('🔵 Block 0 - position:', {px, py, z}, 'opacity:', occludedOpacity, 'transform:', block.style.transform);
+      }
     });
   }
 
