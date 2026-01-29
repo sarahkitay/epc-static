@@ -147,22 +147,27 @@
               o.castShadow = true;
               o.receiveShadow = true;
               if (o.material.isMeshStandardMaterial) {
+                // Keep material bright and visible
                 o.material.metalness = 0.15;
                 o.material.roughness = 0.55;
+                o.material.emissive = new THREE.Color(0x222222);
+                o.material.emissiveIntensity = 0.15;
               }
             }
           });
           backFigureGroup.add(backClone);
           backFigureGroup.position.set(0, 0, 0);
           
-          // FRONT SCENE: Alpha-only occlusion mask
+          // FRONT SCENE: Solid black occlusion mask (to make cards appear behind figure)
           const frontClone = figureModel.clone(true);
           frontClone.traverse((o) => {
             if (o.isMesh) {
               o.material = new THREE.MeshBasicMaterial({
-                color: 0x000000,
-                transparent: true,
-                opacity: 0.95 // Slight transparency for subtle occlusion
+                color: 0x070707, // Match background
+                transparent: false,
+                opacity: 1.0,
+                depthWrite: true,
+                depthTest: false // Always on top
               });
             }
           });
