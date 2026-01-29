@@ -88,11 +88,7 @@
     const scrollTop = currentScroll;
     const range = Math.max(1, end - start);
 
-    // toggle visibility
-    if (targetScroll >= start) document.body.classList.add("journal-spiral-active");
-    else document.body.classList.remove("journal-spiral-active");
-
-    // before start: hide
+    // before start: hide cards (but keep 3D figure visible)
     if (scrollTop < start) {
       blocks.forEach((b) => {
         b.style.opacity = "0";
