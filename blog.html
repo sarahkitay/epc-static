@@ -529,16 +529,16 @@
         margin: 0;
       }
       
-      /* Remove ALL spacing from journal container */
+      /* Small spacing from journal container to prevent header overlap */
       .journal-container {
         padding: 0 !important;
         margin: 0 !important;
-        margin-top: -4px !important; /* Negative margin to pull cards up */
+        margin-top: 12px !important; /* Small gap to prevent header overlap */
       }
       
-      /* First blog card - no top margin at all */
+      /* First blog card - small top margin */
       .journal-block:first-child {
-        margin-top: 0 !important;
+        margin-top: 0;
         margin-bottom: 20px;
       }
     }
