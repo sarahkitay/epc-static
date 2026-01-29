@@ -523,19 +523,16 @@
       }
       
       .epc-page-header {
-        padding-top: 60px; /* Minimal nav clearance */
-        padding-bottom: 0;
-        padding-left: 20px; /* Left align like team header */
+        padding: 100px 20px 32px; /* Match team header exactly */
         margin-top: 0;
         margin-bottom: 0;
         text-align: left; /* Left align */
       }
       
       .epc-page-title {
-        font-size: 24px;
+        font-size: clamp(24px, 6vw, 32px); /* Match team header exactly */
         margin-top: 0;
         margin-bottom: 2px;
-        margin-left: 0; /* Left align */
         line-height: 1.2;
         text-align: left; /* Left align */
       }
@@ -544,7 +541,6 @@
         font-size: 10px;
         margin-top: 0;
         margin-bottom: 0; /* Zero margin - cards right after */
-        margin-left: 0; /* Left align */
         line-height: 1.2;
         text-align: left; /* Left align */
       }
