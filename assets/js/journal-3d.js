@@ -226,6 +226,5 @@
     });
     })(); // End of async IIFE
   `;
-    document.head.appendChild(moduleScript);
-  }
+  document.head.appendChild(moduleScript);
 })();
