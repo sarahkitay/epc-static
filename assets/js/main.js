@@ -176,9 +176,26 @@
     io.observe(drawSection);
   }
 
-  // Hero video: pause when out of view (optional)
+  // Hero video: ensure autoplay on mobile
   const heroVideo = document.querySelector(".hero-video");
   if (heroVideo) {
+    // Force play on load (especially for mobile)
+    const attemptPlay = () => {
+      heroVideo.play().catch(() => {
+        // If autoplay fails, try again on user interaction
+        document.addEventListener('touchstart', () => {
+          heroVideo.play().catch(() => {});
+        }, { once: true });
+      });
+    };
+    
+    // Try to play immediately
+    attemptPlay();
+    
+    // Also try when video metadata is loaded
+    heroVideo.addEventListener('loadedmetadata', attemptPlay);
+    
+    // Pause when out of view (optional)
     const vio = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) heroVideo.play().catch(() => {});
