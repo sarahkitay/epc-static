@@ -176,24 +176,44 @@
     io.observe(drawSection);
   }
 
-  // Hero video: ensure autoplay on mobile
+  // Hero video: ensure autoplay on mobile (especially iOS)
   const heroVideo = document.querySelector(".hero-video");
   if (heroVideo) {
+    // Set additional properties for iOS
+    heroVideo.setAttribute('muted', '');
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.setAttribute('playsinline', '');
+    heroVideo.setAttribute('webkit-playsinline', '');
+    
     // Force play on load (especially for mobile)
     const attemptPlay = () => {
-      heroVideo.play().catch(() => {
-        // If autoplay fails, try again on user interaction
-        document.addEventListener('touchstart', () => {
-          heroVideo.play().catch(() => {});
-        }, { once: true });
-      });
+      const playPromise = heroVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If autoplay fails, try again on any user interaction
+          const playOnInteraction = () => {
+            heroVideo.play().catch(() => {});
+            document.removeEventListener('touchstart', playOnInteraction);
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('scroll', playOnInteraction);
+          };
+          document.addEventListener('touchstart', playOnInteraction, { once: true, passive: true });
+          document.addEventListener('click', playOnInteraction, { once: true });
+          document.addEventListener('scroll', playOnInteraction, { once: true, passive: true });
+        });
+      }
     };
     
-    // Try to play immediately
+    // Try multiple times with delays for iOS
     attemptPlay();
+    setTimeout(attemptPlay, 100);
+    setTimeout(attemptPlay, 500);
     
     // Also try when video metadata is loaded
     heroVideo.addEventListener('loadedmetadata', attemptPlay);
+    heroVideo.addEventListener('loadeddata', attemptPlay);
+    heroVideo.addEventListener('canplay', attemptPlay);
     
     // Pause when out of view (optional)
     const vio = new IntersectionObserver((entries) => {
