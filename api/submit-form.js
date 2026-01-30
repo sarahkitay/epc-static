@@ -501,37 +501,44 @@ export default async function handler(req, res) {
     }
 
     // Send email notification (if configured and needed)
+    let emailSent = false;
     if (emailSubject && emailHtml && emailTo.length > 0) {
       try {
         if (!process.env.RESEND_API_KEY) {
           console.warn(`RESEND_API_KEY missing - skipping email notification (submit-form, ${formType})`);
-          return successResponse(res, { emailSent: false });
-        }
+        } else {
+          // From must use a domain verified in Resend; override with RESEND_FROM for testing (e.g. onboarding@resend.dev)
+          const fromAddress = process.env.RESEND_FROM || 'Elite Performance Clinic <noreply@epcla.com>';
+          const emailResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              from: fromAddress,
+              to: emailTo,
+              subject: emailSubject,
+              html: emailHtml
+            })
+          });
 
-        const emailResponse = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            from: 'Elite Performance Clinic <noreply@epcla.com>',
-            to: emailTo,
-            subject: emailSubject,
-            html: emailHtml
-          })
-        });
-
-        if (!emailResponse.ok) {
-          console.error(`Resend email error (submit-form, ${formType}):`, await emailResponse.text());
+          const resendBody = await emailResponse.text();
+          if (emailResponse.ok) {
+            emailSent = true;
+          } else {
+            let errData;
+            try { errData = JSON.parse(resendBody); } catch { errData = { raw: resendBody }; }
+            console.error(`Resend email failed (submit-form, ${formType}):`, emailResponse.status, errData);
+            // Common: 403 = domain not verified; 422 = invalid from/to; 401 = bad API key
+          }
         }
       } catch (emailError) {
         console.error(`Email sending error (submit-form, ${formType}):`, emailError);
-        // Continue even if email fails
       }
     }
 
-    return successResponse(res);
+    return successResponse(res, { emailSent });
   } catch (error) {
     console.error(`Handler error (submit-form, ${formType}):`, error);
     return errorResponse(res, 500, 'Internal server error', sanitizeError(error));

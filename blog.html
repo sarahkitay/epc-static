@@ -60,9 +60,7 @@
     <!-- Journal Content -->
     <div class="journal-container">
       <!-- Intro Section - hidden on mobile -->
-      <div class="intro-section" style="display: none;">
-        <div class="scroll-indicator">Scroll to explore</div>
-      </div>
+      <div class="intro-section" style="display: none;"></div>
 
       <!-- Journal Blocks -->
         <a href="blog/newyear.html" class="journal-block" style="top: 100vh; left: 15%;">
@@ -514,7 +512,7 @@
       transform-style: preserve-3d;
     }
 
-    /* Intro Section – tall enough so "Scroll to explore" is clear; spiral starts below it */
+    /* Intro Section – spiral starts below it */
     .intro-section {
       text-align: center;
       padding: 20px 50px 120px;
@@ -569,11 +567,6 @@
         text-align: left; /* Left align */
       }
       
-      /* Hide scroll indicator on mobile */
-      .scroll-indicator {
-        display: none;
-      }
-      
       /* Reduce overall blog overview padding */
       .epc-blog-overview {
         padding-top: 0;
@@ -593,24 +586,6 @@
         margin-top: 0;
         margin-bottom: 20px;
       }
-    }
-
-    /* Scroll indicator – CTA; tiles + 3D start directly below this */
-    .scroll-indicator {
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(201, 178, 127, 0.6);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(10px); }
     }
 
     /* Cards layer - between back and front renderers for occlusion */
