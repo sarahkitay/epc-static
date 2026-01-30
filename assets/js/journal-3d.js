@@ -1,4 +1,4 @@
-// 3D Journal Figure - Lazy-loaded single renderer (no occlusion layer)
+// 3D Journal Figure - Single renderer (no occlusion layer)
 (function() {
   'use strict';
 
@@ -7,48 +7,21 @@
   const backContainer = document.getElementById('journal-3d-back');
   if (!backContainer) return;
 
-  // Lazy-init: defer 3D until after first paint (speed) and/or when journal is in view (no glitch)
-  let started = false;
-  function startJournal3D() {
-    if (started) return;
-    started = true;
-    if (observer) observer.disconnect();
-    injectThreeJS();
+  if (!document.querySelector('script[type="importmap"]')) {
+    const importMap = document.createElement('script');
+    importMap.type = 'importmap';
+    importMap.textContent = JSON.stringify({
+      imports: {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+      }
+    });
+    document.head.appendChild(importMap);
   }
 
-  var observer = null;
-  try {
-    observer = new IntersectionObserver(
-      function(entries) {
-        if (entries[0].isIntersecting) startJournal3D();
-      },
-      { rootMargin: '200px', threshold: 0 }
-    );
-    observer.observe(backContainer);
-  } catch (e) {}
-
-  if (typeof requestIdleCallback !== 'undefined') {
-    requestIdleCallback(function() { startJournal3D(); }, { timeout: 900 });
-  } else {
-    setTimeout(startJournal3D, 400);
-  }
-
-  function injectThreeJS() {
-    if (!document.querySelector('script[type="importmap"]')) {
-      const importMap = document.createElement('script');
-      importMap.type = 'importmap';
-      importMap.textContent = JSON.stringify({
-        imports: {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
-        }
-      });
-      document.head.appendChild(importMap);
-    }
-
-    const moduleScript = document.createElement('script');
-    moduleScript.type = 'module';
-    moduleScript.textContent = `
+  const moduleScript = document.createElement('script');
+  moduleScript.type = 'module';
+  moduleScript.textContent = `
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -167,19 +140,21 @@
           const distance = maxSize * 3;
           camera.position.z = Math.max(400, distance);
           camera.updateProjectionMatrix();
-          
-          console.log('✅ GLB loaded successfully! Scale:', scale, 'Camera Z:', camera.position.z);
+          requestAnimationFrame(function() {
+            backContainer.classList.add('journal-3d-ready');
+          });
         },
         undefined,
         (error) => {
-          console.error('❌ GLB load failed:', error);
-          console.warn('Using placeholder cube instead');
-          // Fallback placeholder
+          console.warn('GLB load failed, using placeholder:', error?.message || error);
           const geometry = new THREE.BoxGeometry(50, 150, 50);
           const material = new THREE.MeshStandardMaterial({ color: 0xC9B27F });
           const placeholder = new THREE.Mesh(geometry, material);
           backFigureGroup.add(placeholder);
           backFigureGroup.scale.set(2, 2, 2);
+          requestAnimationFrame(function() {
+            backContainer.classList.add('journal-3d-ready');
+          });
         }
       );
 
