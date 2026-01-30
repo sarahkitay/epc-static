@@ -63,13 +63,14 @@ export default async function handler(req, res) {
           'Email': email,
           'Subject': subject,
           'Message': message,
-          'Submitted At': submittedAt
+          'Submitted At': submittedAt,
+          'Source': 'Website'  // Airtable Single Select: only "Website" accepted
         };
         if (phone) fields['Phone'] = phone;
 
         tableName = 'Contact Form Submissions';
         emailSubject = `📧 New Contact Form: ${subject}`;
-        emailTo = ['info@epcla.com', 'sarahk@epcla.com'];
+        emailTo = ['info@epcla.com', 'sarahk@epcla.com', 'sasha@epcla.com'];
         emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -155,7 +156,7 @@ export default async function handler(req, res) {
 
         tableName = 'Booking Requests';
         emailSubject = service ? `📅 New Booking Request: ${service}` : '📅 New Booking Request';
-        emailTo = ['info@epcla.com', 'sarahk@epcla.com'];
+        emailTo = ['info@epcla.com', 'sarahk@epcla.com', 'sasha@epcla.com'];
         emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -246,7 +247,7 @@ export default async function handler(req, res) {
         const { firstName, lastName, parentName, phone, email, grade, sport, dob, startTerm, homeschoolProgram, academicPriorities, highlightTapeUrl, additionalNotes } = req.body || {};
         const requiredFields = { firstName, lastName, parentName, phone, email };
         const missingFields = Object.entries(requiredFields)
-          .filter(([_, value]) => !value)
+          .filter(([_, value]) => value === undefined || String(value).trim() === '')
           .map(([key]) => key);
 
         if (missingFields.length > 0) {
@@ -254,25 +255,25 @@ export default async function handler(req, res) {
         }
 
         fields = {
-          'Athlete First Name': firstName,
-          'Athlete Last Name': lastName,
-          'Parent/Guardian Name': parentName,
-          'Preferred Contact Phone': phone,
-          'Email': email,
+          'Athlete First Name': String(firstName).trim(),
+          'Athlete Last Name': String(lastName).trim(),
+          'Parent/Guardian Name': String(parentName).trim(),
+          'Preferred Contact Phone': String(phone).trim(),
+          'Email': String(email).trim(),
           'Submitted At': submittedAt
         };
-        if (grade) fields['Grade'] = grade;
-        if (sport) fields['Sport'] = sport;
-        if (dob) fields['Date of Birth'] = dob;
-        if (startTerm) fields['Desired Start Term'] = startTerm;
-        if (homeschoolProgram) fields['Current/Preferred Homeschool Program'] = homeschoolProgram;
-        if (academicPriorities) fields['Academic Priorities'] = academicPriorities;
-        if (highlightTapeUrl) fields['Highlight Tape URL'] = highlightTapeUrl;
-        if (additionalNotes) fields['Additional Notes'] = additionalNotes;
+        if (grade && String(grade).trim()) fields['Grade'] = String(grade).trim();
+        if (sport && String(sport).trim()) fields['Sport'] = String(sport).trim();
+        if (dob && String(dob).trim()) fields['Date of Birth'] = String(dob).trim();
+        if (startTerm && String(startTerm).trim()) fields['Desired Start Term'] = String(startTerm).trim();
+        if (homeschoolProgram && String(homeschoolProgram).trim()) fields['Current/Preferred Homeschool Program'] = String(homeschoolProgram).trim();
+        if (academicPriorities && String(academicPriorities).trim()) fields['Academic Priorities'] = String(academicPriorities).trim();
+        if (highlightTapeUrl && String(highlightTapeUrl).trim()) fields['Highlight Tape URL'] = String(highlightTapeUrl).trim();
+        if (additionalNotes && String(additionalNotes).trim()) fields['Additional Notes'] = String(additionalNotes).trim();
 
         tableName = 'Full-Time Academy Applications';
         emailSubject = '🎓 New Full-Time Academy Application';
-        emailTo = ['sarahk@epcla.com', 'sasha@epcla.com', 'info@epcla.com', 'aguadoc7@yahoo.com'];
+        emailTo = ['info@epcla.com', 'sarahk@epcla.com', 'sasha@epcla.com'];
         emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -319,10 +320,10 @@ export default async function handler(req, res) {
       }
 
       case 'parttime-academy': {
-        const { firstName, lastName, parentName, phone, email, grade, sport, dob, startTerm, trainingSchedule, developmentGoals, highlightTapeUrl, additionalNotes } = req.body;
+        const { firstName, lastName, parentName, phone, email, grade, sport, dob, startTerm, trainingSchedule, developmentGoals, highlightTapeUrl, additionalNotes } = req.body || {};
         const requiredFields = { firstName, lastName, parentName, phone, email };
         const missingFields = Object.entries(requiredFields)
-          .filter(([_, value]) => !value)
+          .filter(([_, value]) => value === undefined || String(value).trim() === '')
           .map(([key]) => key);
 
         if (missingFields.length > 0) {
@@ -330,25 +331,25 @@ export default async function handler(req, res) {
         }
 
         fields = {
-          'Athlete First Name': firstName,
-          'Athlete Last Name': lastName,
-          'Parent/Guardian Name': parentName,
-          'Preferred Contact Phone': phone,
-          'Email': email,
+          'Athlete First Name': String(firstName).trim(),
+          'Athlete Last Name': String(lastName).trim(),
+          'Parent/Guardian Name': String(parentName).trim(),
+          'Preferred Contact Phone': String(phone).trim(),
+          'Email': String(email).trim(),
           'Submitted At': submittedAt
         };
-        if (grade) fields['Grade'] = grade;
-        if (sport) fields['Sport'] = sport;
-        if (dob) fields['Date of Birth'] = dob;
-        if (startTerm) fields['Desired Start Term'] = startTerm;
-        if (trainingSchedule) fields['Training Schedule/Availability'] = trainingSchedule;
-        if (developmentGoals) fields['Primary Development Goals'] = developmentGoals;
-        if (highlightTapeUrl) fields['Highlight Tape URL'] = highlightTapeUrl;
-        if (additionalNotes) fields['Additional Notes'] = additionalNotes;
+        if (grade && String(grade).trim()) fields['Grade'] = String(grade).trim();
+        if (sport && String(sport).trim()) fields['Sport'] = String(sport).trim();
+        if (dob && String(dob).trim()) fields['Date of Birth'] = String(dob).trim();
+        if (startTerm && String(startTerm).trim()) fields['Desired Start Term'] = String(startTerm).trim();
+        if (trainingSchedule && String(trainingSchedule).trim()) fields['Training Schedule/Availability'] = String(trainingSchedule).trim();
+        if (developmentGoals && String(developmentGoals).trim()) fields['Primary Development Goals'] = String(developmentGoals).trim();
+        if (highlightTapeUrl && String(highlightTapeUrl).trim()) fields['Highlight Tape URL'] = String(highlightTapeUrl).trim();
+        if (additionalNotes && String(additionalNotes).trim()) fields['Additional Notes'] = String(additionalNotes).trim();
 
         tableName = 'Part-Time Academy Applications';
         emailSubject = '⚡ New Part-Time Academy Application';
-        emailTo = ['sarahk@epcla.com', 'sasha@epcla.com', 'info@epcla.com', 'aguadoc7@yahoo.com'];
+        emailTo = ['info@epcla.com', 'sarahk@epcla.com', 'sasha@epcla.com'];
         emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -395,31 +396,44 @@ export default async function handler(req, res) {
       }
 
       case 'winter-ball': {
-        const { athleteName, age, position, clubOrSchool, parentName, phone, email, program } = req.body;
+        const { athleteName, age, position, clubOrSchool, parentName, phone, email, program } = req.body || {};
         const requiredFields = { athleteName, parentName, phone, email, program };
         const missingFields = Object.entries(requiredFields)
-          .filter(([_, value]) => !value)
+          .filter(([_, value]) => value === undefined || String(value).trim() === '')
           .map(([key]) => key);
 
         if (missingFields.length > 0) {
           return errorResponse(res, 400, `Missing required fields: ${missingFields.join(', ')}`);
         }
 
+        // Airtable Single Select accepts only: Outdoor, Indoor, Full Bundle
+        const programVal = String(program || '').trim();
+        const programMap = {
+          'outdoor': 'Outdoor',
+          'indoor': 'Indoor',
+          'full bundle': 'Full Bundle',
+          'outdoor ($500/month)': 'Outdoor',
+          'indoor ($600/month)': 'Indoor',
+          'full bundle ($1,400 for 8 weeks)': 'Full Bundle'
+        };
+        const programForAirtable = programMap[programVal.toLowerCase()] || (programVal.replace(/\s*\([^)]*\).*$/i, '').trim() || 'Outdoor');
+
         fields = {
-          'Athlete Name': athleteName,
-          'Parent/Guardian Name': parentName,
-          'Phone Number': phone,
-          'Email': email,
-          'Program': program,
+          'Athlete Name': String(athleteName).trim(),
+          'Parent/Guardian Name': String(parentName).trim(),
+          'Phone Number': String(phone).trim(),
+          'Email': String(email).trim(),
+          'Program': programForAirtable,
           'Submitted At': submittedAt
         };
-        if (age) fields['Age'] = age;
-        if (position) fields['Position'] = position;
-        if (clubOrSchool) fields['Club or School Team'] = clubOrSchool;
+        const ageNum = age !== undefined && age !== '' && !isNaN(Number(age)) ? Number(age) : null;
+        if (ageNum != null) fields['Age'] = ageNum;
+        if (position && String(position).trim()) fields['Position'] = String(position).trim();
+        if (clubOrSchool && String(clubOrSchool).trim()) fields['Club or School Team'] = String(clubOrSchool).trim();
 
         tableName = 'Winter Ball Registrations';
         emailSubject = '⚽ New Winter Ball Registration';
-        emailTo = ['sarahk@epcla.com', 'sasha@epcla.com', 'info@epcla.com', 'aguadoc7@yahoo.com'];
+        emailTo = ['info@epcla.com', 'sarahk@epcla.com', 'sasha@epcla.com'];
         emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -480,7 +494,11 @@ export default async function handler(req, res) {
       let errorData;
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error(`Airtable error (submit-form, ${formType}):`, airtableResponse.status, errorData);
-      return errorResponse(res, 502, 'Failed to save to Airtable', sanitizeError({ message: 'Airtable error' }, true));
+      const airtableMsg = errorData?.error?.message || errorData?.message || (airtableResponse.status === 404 ? `Table "${tableName}" not found in Airtable base.` : 'Invalid field or table. Check Airtable table and field names.');
+      const clientMsg = process.env.NODE_ENV === 'production'
+        ? 'Failed to save. Please try again or contact support.'
+        : `Airtable: ${airtableMsg}`;
+      return errorResponse(res, 502, clientMsg, process.env.NODE_ENV !== 'production' ? { tableName, airtable: errorData } : null);
     }
 
     // Send email notification (if configured and needed)

@@ -474,12 +474,20 @@
 
           form.reset();
           showSuccess();
+          // Keep nav clickable: close mobile menu and ensure nav stays on top
+          document.querySelector('.nav-menu')?.classList.remove('active');
+          document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
         } catch (err) {
           showError(err.message || 'Failed to send booking request.');
         }
       });
     })();
   </script>
+  <style>
+    /* Ensure nav stays clickable after form success (no overlay blocking) */
+    .epc-nav { z-index: 9999; }
+    #main { position: relative; z-index: 0; }
+  </style>
 </body>
 </html>
 

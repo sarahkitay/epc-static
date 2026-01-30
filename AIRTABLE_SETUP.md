@@ -29,18 +29,18 @@
 - `Submitted At` (Date with time)
 
 ### 3. Winter Ball Registrations
-**Table Name:** `Winter Ball Registrations`
+**Table Name:** `Winter Ball Registrations` (exact name required)
 
-**Fields:**
+**Fields (names must match exactly):**
 - `Athlete Name` (Single line text)
-- `Age` (Number) - Optional
-- `Position` (Single line text) - Optional
-- `Club or School` (Single line text) - Optional
-- `Parent Name` (Single line text)
-- `Phone` (Phone number)
+- `Parent/Guardian Name` (Single line text)
+- `Phone Number` (Phone number)
 - `Email` (Email)
 - `Program` (Single line text)
-- `Submitted At` (Date with time)
+- `Submitted At` (Date or Single line text)
+- `Age` (Number) - Optional
+- `Position` (Single line text) - Optional
+- `Club or School Team` (Single line text) - Optional
 
 ### 4. Full-Time Academy Applications
 **Table Name:** `Full-Time Academy Applications`

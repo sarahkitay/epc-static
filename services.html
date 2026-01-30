@@ -759,20 +759,30 @@
 
         /* Mobile optimizations */
         @media (max-width: 768px) {
-          /* Prevent scroll lock on mobile: ensure page can always scroll */
-          html, body {
+          /* Prevent scroll lock: document is the only scroll container */
+          html {
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+          }
+          body {
             overflow-y: auto !important;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            height: auto !important;
             min-height: 100%;
+            height: auto !important;
             touch-action: pan-y;
             overscroll-behavior-y: auto;
           }
           #main, .epc-services-pro {
-            overflow-x: hidden;
-            overflow-y: visible !important;
+            overflow: visible !important;
             min-height: 0;
+          }
+          .epc-services-pro::before,
+          .services-bg-gradient {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 100%;
           }
           .services-hero {
             padding: 100px 0 40px;

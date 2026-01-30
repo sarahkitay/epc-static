@@ -7,30 +7,27 @@
  * Note: For production, implement proper CSRF protection with tokens
  */
 function validateCSRF(req) {
-  // For now, check Origin header
   const origin = req.headers.origin || req.headers.referer;
-  const allowedOrigins = [
-    'https://www.epcla.com',
-    'https://epcla.com',
-    'http://localhost:3000', // Development
-    'http://localhost:3001'
+  const allowedHosts = [
+    'www.epcla.com',
+    'epcla.com',
+    'localhost',
+    '127.0.0.1'
   ];
-  
-  if (!origin) {
-    // Allow requests without origin (e.g., Postman, curl) in development
-    // In production, you might want to be stricter
-    return true;
+  // Vercel preview and production
+  const allowVercel = (host) => host.endsWith('.vercel.app') || host === 'vercel.app';
+
+  if (!origin) return true;
+
+  try {
+    const originUrl = new URL(origin);
+    const host = originUrl.hostname.toLowerCase();
+    if (allowedHosts.some(h => host === h || host.endsWith('.' + h))) return true;
+    if (allowVercel(host)) return true;
+    return false;
+  } catch {
+    return false;
   }
-  
-  const originUrl = new URL(origin);
-  return allowedOrigins.some(allowed => {
-    try {
-      const allowedUrl = new URL(allowed);
-      return originUrl.hostname === allowedUrl.hostname;
-    } catch {
-      return false;
-    }
-  });
 }
 
 /**
