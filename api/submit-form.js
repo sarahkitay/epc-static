@@ -476,7 +476,8 @@ export default async function handler(req, res) {
       }
     }
 
-    // Save to Airtable
+    // Save to Airtable (typecast: true lets Single Select accept/new options and coerces types)
+    const airtableBody = { fields, typecast: true };
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`,
       {
@@ -485,7 +486,7 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${process.env.AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ fields })
+        body: JSON.stringify(airtableBody)
       }
     );
 
@@ -495,10 +496,8 @@ export default async function handler(req, res) {
       try { errorData = JSON.parse(errorText); } catch { errorData = { raw: errorText }; }
       console.error(`Airtable error (submit-form, ${formType}):`, airtableResponse.status, errorData);
       const airtableMsg = errorData?.error?.message || errorData?.message || (airtableResponse.status === 404 ? `Table "${tableName}" not found in Airtable base.` : 'Invalid field or table. Check Airtable table and field names.');
-      const clientMsg = process.env.NODE_ENV === 'production'
-        ? 'Failed to save. Please try again or contact support.'
-        : `Airtable: ${airtableMsg}`;
-      return errorResponse(res, 502, clientMsg, process.env.NODE_ENV !== 'production' ? { tableName, airtable: errorData } : null);
+      // Always return Airtable message to client so user can see what failed
+      return errorResponse(res, 502, airtableMsg, process.env.NODE_ENV !== 'production' ? { tableName, airtable: errorData } : null);
     }
 
     // Send email notification (if configured and needed)
