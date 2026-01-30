@@ -809,8 +809,32 @@
             font-size: 11px;
           }
 
+          /* Match desktop: keep image + accordion side-by-side (imagery, not dropdown-only) */
+          .category-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+          }
+
           .category-media {
-            min-height: 280px;
+            min-height: 240px;
+          }
+
+          .category-accordion {
+            min-height: 0;
+          }
+
+          /* Performance section: image above/left of text to match Recovery and Wellness */
+          .service-category[data-category="performance"] .category-grid .category-media {
+            order: -1;
+          }
+
+          /* Very small screens: stack so image and accordion remain usable */
+          @media (max-width: 480px) {
+            .category-grid {
+              grid-template-columns: 1fr;
+              gap: 24px;
+            }
           }
 
           .acc-trigger {
