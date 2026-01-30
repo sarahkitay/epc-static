@@ -476,8 +476,8 @@ export default async function handler(req, res) {
       }
     }
 
-    // Save to Airtable (typecast: true lets Single Select accept/new options and coerces types)
-    const airtableBody = { fields, typecast: true };
+    // Save to Airtable (records array required by API; typecast for Single Select/type coercion)
+    const airtableBody = { records: [{ fields }], typecast: true };
     const airtableResponse = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`,
       {
