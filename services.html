@@ -759,6 +759,21 @@
 
         /* Mobile optimizations */
         @media (max-width: 768px) {
+          /* Prevent scroll lock on mobile: ensure page can always scroll */
+          html, body {
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            height: auto !important;
+            min-height: 100%;
+            touch-action: pan-y;
+            overscroll-behavior-y: auto;
+          }
+          #main, .epc-services-pro {
+            overflow-x: hidden;
+            overflow-y: visible !important;
+            min-height: 0;
+          }
           .services-hero {
             padding: 100px 0 40px;
             margin-bottom: 40px;
