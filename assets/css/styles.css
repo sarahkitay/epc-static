@@ -595,11 +595,7 @@ img {
 .epc-mission,
 #services-accordion { display: none; }
 
-/* Services hybrid: cards on desktop, accordion on mobile */
-@media (max-width: 980px){
-  #services.epc-services-snapshot { display: none; }
-  #services-accordion { display: block; }
-}
+/* Services: image cards on desktop and mobile (no accordion) */
 
 /* Keep the old SVG quick-links hidden (user prefers clean / uncluttered) */
 .epc-draw-break { display: none !important; }
