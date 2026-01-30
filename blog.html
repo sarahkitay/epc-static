@@ -490,6 +490,14 @@
       height: 100% !important;
       display: block;
     }
+    /* Smooth fade-in when 3D model is ready (no pop) */
+    #journal-3d-back canvas {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    #journal-3d-back.journal-3d-ready canvas {
+      opacity: 1;
+    }
 
     /* Journal Content */
     .journal-container {

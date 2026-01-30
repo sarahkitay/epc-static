@@ -1,29 +1,54 @@
-// 3D Journal Figure - Single renderer (occlusion layer removed to prevent glitching)
+// 3D Journal Figure - Lazy-loaded single renderer (no occlusion layer)
 (function() {
   'use strict';
 
-  // Check if we're on mobile (skip 3D on mobile)
-  if (window.innerWidth <= 768) {
-    return;
+  if (window.innerWidth <= 768) return;
+
+  const backContainer = document.getElementById('journal-3d-back');
+  if (!backContainer) return;
+
+  // Lazy-init: defer 3D until after first paint (speed) and/or when journal is in view (no glitch)
+  let started = false;
+  function startJournal3D() {
+    if (started) return;
+    started = true;
+    if (observer) observer.disconnect();
+    injectThreeJS();
   }
 
-  // Add importmap if not present
-  if (!document.querySelector('script[type="importmap"]')) {
-    const importMap = document.createElement('script');
-    importMap.type = 'importmap';
-    importMap.textContent = JSON.stringify({
-      imports: {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
-      }
-    });
-    document.head.appendChild(importMap);
+  var observer = null;
+  try {
+    observer = new IntersectionObserver(
+      function(entries) {
+        if (entries[0].isIntersecting) startJournal3D();
+      },
+      { rootMargin: '200px', threshold: 0 }
+    );
+    observer.observe(backContainer);
+  } catch (e) {}
+
+  if (typeof requestIdleCallback !== 'undefined') {
+    requestIdleCallback(function() { startJournal3D(); }, { timeout: 900 });
+  } else {
+    setTimeout(startJournal3D, 400);
   }
 
-  // Load as ES module
-  const moduleScript = document.createElement('script');
-  moduleScript.type = 'module';
-  moduleScript.textContent = `
+  function injectThreeJS() {
+    if (!document.querySelector('script[type="importmap"]')) {
+      const importMap = document.createElement('script');
+      importMap.type = 'importmap';
+      importMap.textContent = JSON.stringify({
+        imports: {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+        }
+      });
+      document.head.appendChild(importMap);
+    }
+
+    const moduleScript = document.createElement('script');
+    moduleScript.type = 'module';
+    moduleScript.textContent = `
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -97,9 +122,6 @@
     // blog.html is at root, GLB is at assets/svg/journal.glb
     // Use simple relative path - works from root HTML file
     const glbUrl = 'assets/svg/journal.glb';
-    
-    console.log('🔵 Journal 3D - GLB URL:', glbUrl);
-    console.log('🔵 Journal 3D - Full URL will be:', new URL(glbUrl, window.location.href).href);
 
     loader.load(
       glbUrl,
@@ -204,5 +226,6 @@
     });
     })(); // End of async IIFE
   `;
-  document.head.appendChild(moduleScript);
+    document.head.appendChild(moduleScript);
+  }
 })();
