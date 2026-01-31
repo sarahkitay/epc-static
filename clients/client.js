@@ -434,9 +434,9 @@ async function loadAllAssessmentsModal() {
     
     // Use DOMPurify to sanitize HTML before rendering
     if (typeof setSafeHTML !== 'undefined') {
-      setSafeHTML(allAssessmentsList, htmlContent);
+      setSafeHTML(allAssessmentsList, html);
     } else if (typeof sanitizeHTML !== 'undefined') {
-      allAssessmentsList.innerHTML = sanitizeHTML(htmlContent);
+      allAssessmentsList.innerHTML = sanitizeHTML(html);
     } else {
       // Fallback: use textContent for safety
       allAssessmentsList.textContent = 'Assessment data loaded';
